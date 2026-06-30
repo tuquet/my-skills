@@ -49,6 +49,21 @@ export async function runWizard() {
       process.exit(0);
     }
 
+    const targetLocation = await p.select({
+      message: 'Bạn muốn cài đặt Kỹ năng ở đâu?',
+      options: [
+        { value: 'local', label: '📁 Workspace hiện tại (Local)' },
+        { value: 'global', label: '🌍 Toàn cục máy tính (Global - ~/.gemini/config)' },
+      ],
+    });
+
+    if (p.isCancel(targetLocation)) {
+      p.outro(chalk.yellow('Đã hủy tác vụ.'));
+      process.exit(0);
+    }
+
+    const isGlobal = targetLocation === 'global';
+
     const force = await p.confirm({
       message: 'Bạn có muốn ghi đè nếu tệp tin đã tồn tại không? (Force overwrite)',
       initialValue: false,
@@ -65,7 +80,7 @@ export async function runWizard() {
     // @ts-ignore
     for (const skillName of selectedSkills) {
       console.log(chalk.bold(`\n> Đang cài đặt skill: ${skillName}`));
-      await installSkill(skillName, force);
+      await installSkill(skillName, force, isGlobal);
     }
 
     p.outro(chalk.green('✓ Tất cả kỹ năng được chọn đã được xử lý xong!'));
@@ -94,6 +109,34 @@ export async function runWizard() {
       process.exit(0);
     }
 
+    const targetLocation = await p.select({
+      message: 'Bạn muốn cài đặt Quy tắc ở đâu?',
+      options: [
+        { value: 'local', label: '📁 Workspace hiện tại (Local)' },
+        { value: 'global', label: '🌍 Toàn cục máy tính (Global - ~/.gemini/config)' },
+      ],
+    });
+
+    if (p.isCancel(targetLocation)) {
+      p.outro(chalk.yellow('Đã hủy tác vụ.'));
+      process.exit(0);
+    }
+
+    const isGlobal = targetLocation === 'global';
+    let shouldIgnore = false;
+
+    if (!isGlobal) {
+      const gitIgnoreConfirm = await p.confirm({
+        message: 'Bạn có muốn tự động thêm (ignore) các tệp quy tắc này vào .gitignore của dự án không?',
+        initialValue: true,
+      });
+      if (p.isCancel(gitIgnoreConfirm)) {
+        p.outro(chalk.yellow('Đã hủy tác vụ.'));
+        process.exit(0);
+      }
+      shouldIgnore = gitIgnoreConfirm;
+    }
+
     const force = await p.confirm({
       message: 'Bạn có muốn ghi đè tệp tin AGENTS.md cũ nếu đã tồn tại? (Chọn No để chèn thêm nội dung mới vào cuối tệp)',
       initialValue: false,
@@ -110,7 +153,7 @@ export async function runWizard() {
     // @ts-ignore
     for (const ruleName of selectedRules) {
       console.log(chalk.bold(`\n> Đang cài đặt rule: ${ruleName}`));
-      await installRule(ruleName, force);
+      await installRule(ruleName, force, isGlobal, shouldIgnore);
     }
 
     p.outro(chalk.green('✓ Tất cả quy tắc được chọn đã được xử lý xong!'));

@@ -3,8 +3,10 @@ import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'fs';
 import { join, resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
+import os from 'os';
 import chalk from 'chalk';
 import ora from 'ora';
+import { updateGitIgnore } from '../utils/gitignore.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -29,7 +31,7 @@ function getRuleSourcePath(ruleFileName) {
 /**
  * Install a rule template to the target .agents/AGENTS.md
  */
-export async function installRule(ruleName, force = false) {
+export async function installRule(ruleName, force = false, isGlobal = false, autoIgnore = true) {
   const spinner = ora().start();
 
   try {
@@ -47,7 +49,9 @@ export async function installRule(ruleName, force = false) {
       process.exit(1);
     }
 
-    const targetDir = resolve(process.cwd(), '.agents');
+    const targetDir = isGlobal
+      ? resolve(os.homedir(), '.gemini/config')
+      : resolve(process.cwd(), '.agents');
     const targetPath = join(targetDir, 'AGENTS.md');
 
     // Create target directory if it doesn't exist
@@ -61,12 +65,12 @@ export async function installRule(ruleName, force = false) {
     if (!existsSync(targetPath) || force) {
       const template = `---
 type: rule
-project: ${resolve(process.cwd()).split(/[\\/]/).pop()}
+project: ${isGlobal ? 'global' : resolve(process.cwd()).split(/[\\/]/).pop()}
 status: active
 tags: #rule, #setup
 ---
 
-# Quy tắc Dự án (Workspace Rules)
+# ${isGlobal ? 'Quy tắc Toàn cục (Global Rules)' : 'Quy tắc Dự án (Workspace Rules)'}
 
 ${ruleContent}
 `;
@@ -89,7 +93,14 @@ ${ruleContent}
     }
 
     console.log(chalk.dim(`  Path: ${targetPath}`));
-    console.log(chalk.dim(`  Run "npx skills sync-rules" to propagate to other IDE agents.`));
+
+    if (!isGlobal) {
+      console.log(chalk.dim(`  Run "npx skills sync-rules" to propagate to other IDE agents.`));
+      // Auto ignore local rules
+      if (autoIgnore) {
+        updateGitIgnore();
+      }
+    }
 
   } catch (err) {
     spinner.fail(chalk.red(`Installation failed: ${err.message}`));

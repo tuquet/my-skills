@@ -17,18 +17,20 @@ program
   .command('install <skill>')
   .description('Download a skill to .agents/skills/ in the current directory')
   .option('-f, --force', 'Overwrite existing files')
+  .option('-g, --global', 'Install globally to ~/.gemini/config/')
   .action(async (skill, opts) => {
     const { installSkill } = await import('../src/commands/install.js');
-    await installSkill(skill, opts.force);
+    await installSkill(skill, opts.force, opts.global);
   });
 
 program
   .command('install-rule <rule>')
   .description('Download and append a rule template to .agents/AGENTS.md')
   .option('-f, --force', 'Overwrite the existing AGENTS.md file completely')
+  .option('-g, --global', 'Install globally to ~/.gemini/config/AGENTS.md')
   .action(async (rule, opts) => {
     const { installRule } = await import('../src/commands/install-rule.js');
-    await installRule(rule, opts.force);
+    await installRule(rule, opts.force, opts.global);
   });
 
 program

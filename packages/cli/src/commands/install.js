@@ -2,6 +2,8 @@
 import { existsSync, mkdirSync, writeFileSync, readFileSync, cpSync } from 'fs';
 import { join, resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
+import os from 'os';
 import chalk from 'chalk';
 import ora from 'ora';
 
@@ -27,7 +29,7 @@ function getSkillSourceDir(skillName) {
 /**
  * Install a skill to the target .agents/skills/ directory
  */
-export async function installSkill(skillName, force = false) {
+export async function installSkill(skillName, force = false, isGlobal = false) {
   const spinner = ora().start();
 
   try {
@@ -45,7 +47,9 @@ export async function installSkill(skillName, force = false) {
       process.exit(1);
     }
 
-    const targetDir = resolve(process.cwd(), '.agents/skills', skillName);
+    const targetDir = isGlobal
+      ? resolve(os.homedir(), '.gemini/config/skills', skillName)
+      : resolve(process.cwd(), '.agents/skills', skillName);
 
     // Check if already installed
     if (existsSync(targetDir) && !force) {
@@ -81,7 +85,10 @@ export async function installSkill(skillName, force = false) {
     spinner.succeed(chalk.green(`✓ Skill "${skillName}" installed successfully!`));
     console.log(chalk.dim(`  Location: ${targetDir}`));
     console.log(chalk.dim(`  Files:    ${filesToCopy.length} files copied`));
-    console.log(chalk.dim(`  Usage:    Refer to .agents/skills/${skillName}/SKILL.md for instructions`));
+    const usagePath = isGlobal
+      ? `~/.gemini/config/skills/${skillName}/SKILL.md`
+      : `.agents/skills/${skillName}/SKILL.md`;
+    console.log(chalk.dim(`  Usage:    Refer to ${usagePath} for instructions`));
 
   } catch (err) {
     spinner.fail(chalk.red(`Installation failed: ${err.message}`));
