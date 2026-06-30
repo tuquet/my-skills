@@ -1,0 +1,25 @@
+{
+  "name": "@tuquet/skills-cli",
+  "version": "0.1.0",
+  "description": "Install OpenCode AI skills with one command — npx @tuquet/skills-cli install <skill-name>",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "opencode-skills": "./bin/index.js",
+    "skills": "./bin/index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "commander": "^12.0.0",
+    "chalk": "^5.3.0",
+    "ora": "^8.0.0"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "README.md",
+    "LICENSE"
+  ]
+}
