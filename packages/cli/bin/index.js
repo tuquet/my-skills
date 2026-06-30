@@ -10,7 +10,7 @@ const pkg = JSON.parse(readFileSync(resolve(__dirname, '../package.json'), 'utf-
 
 program
   .name('skills')
-  .description('Install OpenCode AI skills with one command')
+  .description('Install OmniAgent skills with one command')
   .version(pkg.version);
 
 program
@@ -55,4 +55,18 @@ program
     await showInfo(skill);
   });
 
-program.parse(process.argv);
+program
+  .command('wizard')
+  .description('Start interactive wizard')
+  .action(async () => {
+    const { runWizard } = await import('../src/commands/wizard.js');
+    await runWizard();
+  });
+
+// If no arguments, default to wizard
+if (process.argv.length <= 2) {
+  const { runWizard } = await import('../src/commands/wizard.js');
+  await runWizard();
+} else {
+  program.parse(process.argv);
+}

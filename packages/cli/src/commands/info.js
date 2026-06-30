@@ -16,5 +16,5 @@ export async function showInfo(skillName) {
   console.log(`  ${chalk.dim('Files:')}        ${skill.files.length} files`);
   console.log(`  ${chalk.dim('Keywords:')}     ${skill.keywords.join(', ')}`);
 
-  console.log(chalk.dim(`\n  Install: npx @tuquet/skills-cli install ${skill.name}\n`));
+  console.log(chalk.dim(`\n  Install: npx @opencode-skills/cli install ${skill.name}\n`));
 }

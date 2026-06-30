@@ -1,12 +1,12 @@
 export const SKILLS = {
-  'automa-schema': {
-    name: 'automa-schema',
+  'automa': {
+    name: 'automa',
     description: 'Hiểu và thao tác với cấu trúc kịch bản Automa (JSON).',
     version: '1.0.0',
     category: 'Automa / Omni Extension',
     author: 'OpenCode Skills',
     keywords: ['automa', 'workflow', 'automation', 'omni-extension'],
-    path: 'automa-schema/',
+    path: 'automa/',
     files: [
       'SKILL.md',
       'references/blocks_usage.md',

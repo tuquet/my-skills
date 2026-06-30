@@ -5,7 +5,7 @@ status: active
 tags: #cli, #nodejs, #monorepo, #rule
 ---
 
-# Quy tắc Phát triển Dự án `my-skills` (OpenCode Skills CLI & Registry)
+# Quy tắc Phát triển Dự án `my-skills` (OmniAgent Skills CLI & Registry)
 
 ## Tài liệu liên quan (Related Documents)
 - [[my_skills_rules_proposal]]
@@ -36,7 +36,7 @@ tags: #cli, #nodejs, #monorepo, #rule
     ```
   * Ví dụ chạy lệnh cài đặt:
     ```bash
-    node packages/cli/bin/index.js install automa-schema --force
+    node packages/cli/bin/index.js install automa --force
     ```
   * Ví dụ chạy lệnh danh sách:
     ```bash

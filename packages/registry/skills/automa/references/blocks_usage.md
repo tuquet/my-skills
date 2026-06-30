@@ -1,6 +1,6 @@
 # Chi tiết Input / Output các khối Node (Blocks)
 
-Dưới đây là chi tiết cấu hình đầu vào (`data`) và đầu ra của tất cả các block trong Omni Extension. Các tham số này được thiết lập trong thuộc tính `data` của mỗi block.
+Dưới đây là chi tiết cấu hình đầu vào (`data`) và đầu ra của tất cả các block trong Automa. Các tham số này được thiết lập trong thuộc tính `data` của mỗi block.
 
 > **Trường chung của mọi block**: `description` (string), `disableBlock` (boolean), `selected` (boolean), `inGroup` (boolean), `onError` (string). Các trường này không được liệt kê lại ở từng block để tránh trùng lặp.
 

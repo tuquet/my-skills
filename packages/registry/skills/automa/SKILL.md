@@ -1,17 +1,17 @@
 ---
-name: automa-schema
+name: automa
 description: Hiểu và thao tác với cấu trúc kịch bản Automa (JSON).
 ---
 
-# Cấu trúc Kịch bản Automa / Omni Extension
+# Cấu trúc Kịch bản Automa
 
-Các file `*.automa.json` là các workflow tự động hóa của Omni Extension (dựa trên cấu trúc Automa).
+Các file `*.automa.json` là các workflow tự động hóa của Automa.
 
-## Vị trí khai báo khối Node (Blocks) trong Omni Extension
+## Vị trí khai báo khối Node (Blocks) trong Automa
 Dựa trên kiến trúc của dự án, các blocks được định nghĩa và xử lý tại:
-1. **Giao diện chỉnh sửa thông số (Vue Components):** `src/components/newtab/workflow/edit/` (Chứa các form để nhập liệu cấu hình của node).
-2. **Logic thực thi Background (Workflow Engine):** `src/workflowEngine/blocksHandler/` (Chứa các file `handler[TênBlock].js` xử lý logic chạy ngầm độc lập với DOM).
-3. **Logic thực thi Content Script:** `src/content/blocksHandler/` (Chứa các logic tương tác trực tiếp lên DOM của trang web đang mở).
+1. **Giao diện chỉnh sửa thông số (Vue Components):** Chứa các form để nhập liệu cấu hình của node.
+2. **Logic thực thi Background (Workflow Engine):** Chứa các file handler xử lý logic chạy ngầm độc lập với DOM.
+3. **Logic thực thi Content Script:** Chứa các logic tương tác trực tiếp lên DOM của trang web đang mở.
 
 ## Danh sách Toàn bộ các khối Node (Blocks) và Phân loại
 

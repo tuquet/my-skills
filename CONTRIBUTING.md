@@ -26,6 +26,6 @@
 
 ```bash
 npm run cli list
-npm run cli info automa-schema
-npm run cli install automa-schema
+npm run cli info automa
+npm run cli install automa
 ```
