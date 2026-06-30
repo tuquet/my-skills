@@ -1,7 +1,7 @@
 {
-  "name": "@tuquet/skills-cli",
+  "name": "tuquet-skills-cli",
   "version": "0.1.0",
-  "description": "Install OmniAgent skills with one command — npx @tuquet/skills-cli install <skill-name>",
+  "description": "Install OmniAgent skills with one command — npx tuquet-skills-cli install <skill-name>",
   "license": "MIT",
   "type": "module",
   "bin": {

@@ -15,9 +15,9 @@ function getSkillSourceDir(skillName) {
   const localPath = resolve(__dirname, '../../../registry/skills', skillName);
   if (existsSync(localPath)) return localPath;
 
-    // Fallback: resolve from installed @tuquet/skills-registry package
+    // Fallback: resolve from installed tuquet-skills-registry package
     try {
-      const regPath = createRequire(import.meta.url).resolve('@tuquet/skills-registry/skills/' + skillName);
+      const regPath = createRequire(import.meta.url).resolve('tuquet-skills-registry/skills/' + skillName);
     return dirname(regPath);
   } catch {
     return null;

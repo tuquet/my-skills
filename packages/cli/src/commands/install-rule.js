@@ -16,10 +16,10 @@ function getRuleSourcePath(ruleFileName) {
   const localPath = resolve(__dirname, '../../../registry/rules', ruleFileName);
   if (existsSync(localPath)) return localPath;
 
-  // Fallback: resolve from installed @opencode-skills/registry package
+  // Fallback: resolve from installed tuquet-skills-registry package
   try {
     const require = createRequire(import.meta.url);
-    const regPath = require.resolve('@opencode-skills/registry/rules/' + ruleFileName);
+    const regPath = require.resolve('tuquet-skills-registry/rules/' + ruleFileName);
     return regPath;
   } catch {
     return null;

@@ -16,5 +16,5 @@ export async function listSkills() {
     console.log(chalk.cyan(`  ${name.padEnd(20)}`) + chalk.dim(skill.description));
   }
 
-  console.log(chalk.dim(`\n  Run: npx @opencode-skills/cli install <skill-name>\n`));
+  console.log(chalk.dim(`\n  Run: npx tuquet-skills-cli install <skill-name>\n`));
 }

@@ -1,5 +1,5 @@
 {
-  "name": "@tuquet/skills-registry",
+  "name": "tuquet-skills-registry",
   "version": "0.1.0",
   "description": "Registry of OpenCode AI skills for CLI installation",
   "license": "MIT",
