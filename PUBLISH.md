@@ -12,17 +12,34 @@ npm whoami
 # => tuquet
 ```
 
-## Bước 3: Publish registry trước
+## Bước 3: Tạo token (nếu chưa có)
+```bash
+npm token create --read-only=false --name=automa-publish --scopes=@tuquet --bypass-2fa
+```
+Nhập password, OTP từ email, copy token hiện ra.
+
+## Bước 4: Set token vào .npmrc
+```bash
+npm config set //registry.npmjs.org/:_authToken <token>
+```
+
+Kiểm tra:
+```bash
+npm whoami
+# => tuquet
+```
+
+## Bước 5: Publish registry trước
 ```bash
 npm run publish:registry
 ```
 
-## Bước 4: Publish CLI
+## Bước 6: Publish CLI
 ```bash
 npm run publish:cli
 ```
 
-## Bước 5: Kiểm tra
+## Bước 7: Kiểm tra
 ```bash
 npm view @tuquet/skills-registry
 npm view @tuquet/skills-cli

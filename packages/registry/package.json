@@ -8,5 +8,8 @@
   },
   "files": [
     "skills/"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }
