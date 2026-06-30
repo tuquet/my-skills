@@ -1,6 +1,6 @@
-# OmniAgent Skills CLI
+# Tuquet AI Skills CLI
 
-Install OmniAgent skills with a single command.
+Install AI agent skills with a single command.
 
 ```
 npx tuquet-skills-cli install automa

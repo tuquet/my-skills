@@ -9,7 +9,7 @@ import { getSkillNames, SKILLS, getRuleNames, RULES } from '../registry.js';
 export async function runWizard() {
   console.clear();
   
-  p.intro(chalk.bgCyan.black(' OmniAgent Skills & Rules Customizer '));
+  p.intro(chalk.bgCyan.black(' Tuquet AI Skills & Rules Customizer '));
 
   const action = await p.select({
     message: 'Bạn muốn thực hiện tác vụ nào?',

@@ -5,7 +5,7 @@ status: active
 tags: #cli, #nodejs, #monorepo, #rule
 ---
 
-# Quy tắc Phát triển Dự án `my-skills` (OmniAgent Skills CLI & Registry)
+# Quy tắc Phát triển Dự án `my-skills` (Tuquet AI Skills CLI & Registry)
 
 ## Tài liệu liên quan (Related Documents)
 - [[my_skills_rules_proposal]]

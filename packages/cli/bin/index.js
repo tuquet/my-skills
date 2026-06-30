@@ -10,7 +10,7 @@ const pkg = JSON.parse(readFileSync(resolve(__dirname, '../package.json'), 'utf-
 
 program
   .name('skills')
-  .description('Install OmniAgent skills with one command')
+  .description('Install AI agent skills with one command')
   .version(pkg.version);
 
 program

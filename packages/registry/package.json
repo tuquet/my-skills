@@ -1,7 +1,7 @@
 {
   "name": "tuquet-skills-registry",
   "version": "0.1.0",
-  "description": "Registry of OpenCode AI skills for CLI installation",
+  "description": "Registry of AI agent skills and rules for CLI installation",
   "license": "MIT",
   "engines": {
     "node": ">=18"
