@@ -17,10 +17,14 @@ function getSkillSourceDir(skillName) {
   const localPath = resolve(__dirname, '../../../registry/skills', skillName);
   if (existsSync(localPath)) return localPath;
 
-    // Fallback: resolve from installed tuquet-skills-registry package
-    try {
-      const regPath = createRequire(import.meta.url).resolve('tuquet-skills-registry/skills/' + skillName);
-    return dirname(regPath);
+  // Fallback: resolve from installed tuquet-skills-registry package
+  try {
+    const require = createRequire(import.meta.url);
+    const regJsonPath = require.resolve('tuquet-skills-registry/package.json');
+    const regDir = dirname(regJsonPath);
+    const skillPath = join(regDir, 'skills', skillName);
+    if (existsSync(skillPath)) return skillPath;
+    return null;
   } catch {
     return null;
   }
@@ -43,7 +47,7 @@ export async function installSkill(skillName, force = false, isGlobal = false) {
 
     const sourceDir = getSkillSourceDir(skillName);
     if (!sourceDir) {
-      spinner.fail(chalk.red(`Cannot locate skill files for "${skillName}". Is @tuquet/skills-registry installed?`));
+      spinner.fail(chalk.red(`Cannot locate skill files for "${skillName}". Is tuquet-skills-registry installed?`));
       process.exit(1);
     }
 

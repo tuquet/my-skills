@@ -21,8 +21,11 @@ function getRuleSourcePath(ruleFileName) {
   // Fallback: resolve from installed tuquet-skills-registry package
   try {
     const require = createRequire(import.meta.url);
-    const regPath = require.resolve('tuquet-skills-registry/rules/' + ruleFileName);
-    return regPath;
+    const regJsonPath = require.resolve('tuquet-skills-registry/package.json');
+    const regDir = dirname(regJsonPath);
+    const rulePath = join(regDir, 'rules', ruleFileName);
+    if (existsSync(rulePath)) return rulePath;
+    return null;
   } catch {
     return null;
   }

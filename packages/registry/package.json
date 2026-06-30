@@ -1,13 +1,14 @@
 {
   "name": "tuquet-skills-registry",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Registry of AI agent skills and rules for CLI installation",
   "license": "MIT",
   "engines": {
     "node": ">=18"
   },
   "files": [
-    "skills/"
+    "skills/",
+    "rules/"
   ],
   "publishConfig": {
     "access": "public"
