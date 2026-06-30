@@ -1,6 +1,6 @@
 {
   "name": "tuquet-skills-registry",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Registry of AI agent skills and rules for CLI installation",
   "license": "MIT",
   "engines": {

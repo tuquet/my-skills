@@ -98,10 +98,17 @@ ${ruleContent}
     console.log(chalk.dim(`  Path: ${targetPath}`));
 
     if (!isGlobal) {
-      console.log(chalk.dim(`  Run "npx skills sync-rules" to propagate to other IDE agents.`));
       // Auto ignore local rules
       if (autoIgnore) {
         updateGitIgnore();
+      }
+      // Auto sync rules to other IDEs
+      try {
+        const { syncRules } = await import('./sync-rules.js');
+        await syncRules(true); // Run silently
+        console.log(chalk.green('✓ Automatically synchronized rules to IDE agents (.cursorrules, .windsurfrules, etc.)'));
+      } catch (syncErr) {
+        console.log(chalk.yellow(`⚠ Auto-sync rules failed: ${syncErr.message}`));
       }
     }
 

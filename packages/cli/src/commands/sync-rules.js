@@ -7,18 +7,20 @@ import ora from 'ora';
 /**
  * Sync .agents/AGENTS.md rules to other IDE agent rules configurations
  */
-export async function syncRules() {
-  const spinner = ora().start('Syncing rules...');
+export async function syncRules(silent = false) {
+  const spinner = silent ? null : ora().start('Syncing rules...');
 
   try {
     const rootDir = process.cwd();
     const sourcePath = resolve(rootDir, '.agents/AGENTS.md');
 
     if (!existsSync(sourcePath)) {
-      spinner.fail(
-        chalk.red('Source rule file .agents/AGENTS.md not found.\n') +
-        chalk.dim('  Please run "npx skills install-rule <rule>" first to initialize.')
-      );
+      if (spinner) {
+        spinner.fail(
+          chalk.red('Source rule file .agents/AGENTS.md not found.\n') +
+          chalk.dim('  Please run "npx skills install-rule <rule>" first to initialize.')
+        );
+      }
       process.exit(1);
     }
 
@@ -50,15 +52,21 @@ export async function syncRules() {
       syncedFiles.push(target.name);
     }
 
-    spinner.succeed(chalk.green('✓ Rules synchronized successfully!'));
-    console.log(chalk.dim('  Source: .agents/AGENTS.md'));
-    console.log(chalk.dim('  Targets updated:'));
-    for (const file of syncedFiles) {
-      console.log(chalk.dim(`    - ${file}`));
+    if (spinner) {
+      spinner.succeed(chalk.green('✓ Rules synchronized successfully!'));
+      console.log(chalk.dim('  Source: .agents/AGENTS.md'));
+      console.log(chalk.dim('  Targets updated:'));
+      for (const file of syncedFiles) {
+        console.log(chalk.dim(`    - ${file}`));
+      }
+    } else if (!silent) {
+      console.log(chalk.green('✓ Rules synchronized to other IDE configurations successfully.'));
     }
 
   } catch (err) {
-    spinner.fail(chalk.red(`Synchronization failed: ${err.message}`));
+    if (spinner) {
+      spinner.fail(chalk.red(`Synchronization failed: ${err.message}`));
+    }
     process.exit(1);
   }
 }
