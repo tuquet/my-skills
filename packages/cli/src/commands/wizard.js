@@ -152,9 +152,11 @@ export async function runWizard() {
     
     const { installRule } = await import('./install-rule.js');
     // @ts-ignore
+    let isFirst = true;
     for (const ruleName of selectedRules) {
       console.log(chalk.bold(`\n> Đang cài đặt rule: ${ruleName}`));
-      await installRule(ruleName, force, isGlobal, shouldIgnore);
+      await installRule(ruleName, isFirst ? force : false, isGlobal, shouldIgnore);
+      isFirst = false;
     }
 
     p.outro(chalk.green('✓ Tất cả quy tắc được chọn đã được xử lý xong!'));
