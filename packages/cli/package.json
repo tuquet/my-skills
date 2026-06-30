@@ -1,12 +1,12 @@
 {
   "name": "tuquet-skills-cli",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Install AI agent skills with one command — npx tuquet-skills-cli install <skill-name>",
   "license": "MIT",
   "type": "module",
   "bin": {
-    "opencode-skills": "./bin/index.js",
-    "skills": "./bin/index.js"
+    "tuquet-skills": "bin/index.js",
+    "skills": "bin/index.js"
   },
   "engines": {
     "node": ">=18"
