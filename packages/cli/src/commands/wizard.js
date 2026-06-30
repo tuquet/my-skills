@@ -16,6 +16,7 @@ export async function runWizard() {
     options: [
       { value: 'skills', label: '🛠️  Cài đặt Kỹ năng mới (Install Skills)' },
       { value: 'rules', label: '📝 Cài đặt Quy tắc mới (Install Rules)' },
+      { value: 'update', label: '🔄 Cập nhật Kỹ năng hiện có (Update Skills)' },
       { value: 'sync', label: '🔄 Đồng bộ quy tắc chéo IDE (Sync Rules)' },
       { value: 'exit', label: '❌ Thoát' },
     ],
@@ -157,6 +158,13 @@ export async function runWizard() {
     }
 
     p.outro(chalk.green('✓ Tất cả quy tắc được chọn đã được xử lý xong!'));
+  }
+
+  if (action === 'update') {
+    p.note(chalk.cyan('Bắt đầu quét và cập nhật các kỹ năng hiện có...'));
+    const { updateSkills } = await import('./update.js');
+    await updateSkills();
+    p.outro(chalk.green('✓ Quá trình cập nhật hoàn tất!'));
   }
 
   if (action === 'sync') {

@@ -42,6 +42,14 @@ program
   });
 
 program
+  .command('update')
+  .description('Update all installed skills in the current workspace')
+  .action(async () => {
+    const { updateSkills } = await import('../src/commands/update.js');
+    await updateSkills();
+  });
+
+program
   .command('list')
   .description('List all available skills')
   .action(async () => {
