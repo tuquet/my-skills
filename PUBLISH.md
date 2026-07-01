@@ -41,7 +41,7 @@ npm run publish:cli
 
 ## Bước 7: Kiểm tra
 ```bash
-npm view @tuquet/skills-registry
-npm view @tuquet/skills-cli
-npx @tuquet/skills-cli --help
+npm view tuquet-skills-registry
+npm view tuquet-skills-cli
+npx tuquet-skills-cli --help
 ```

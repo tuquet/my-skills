@@ -1,52 +1,41 @@
-# Tuquet AI Skills CLI
+# my-skills
 
-Install AI agent skills with a single command.
+Skills cá nhân cho AI agents. Mỗi skill là một bộ kiến thức chuyên sâu giúp AI hiểu domain, viết code, và xử lý tác vụ đúng cách.
 
+## Cài đặt
+
+```bash
+npx tuquet-skills-cli install <skill-name>
 ```
-npx tuquet-skills-cli install automa
-```
+
+## Skills hiện có
+
+| Skill | Mô tả |
+|-------|-------|
+| `automa` | Workflow automation — JSON structure, blocks, patterns, debugging |
 
 ## Commands
 
-| Command                              | Description                               |
-| ------------------------------------ | ----------------------------------------- |
-| `npx tuquet-skills-cli install <skill>` | Download a skill to `.agents/skills/` |
-| `npx tuquet-skills-cli list`           | List all available skills             |
-| `npx tuquet-skills-cli info <skill>`   | Show details about a skill            |
-| `npx tuquet-skills-cli --help`         | Show full help                        |
-
-## Quick Start
-
 ```bash
-# Install a skill
-npx tuquet-skills-cli install automa
-
-# List available skills
-npx tuquet-skills-cli list
-
-# Get info about a skill
-npx tuquet-skills-cli info automa
+npx tuquet-skills-cli list              # Danh sách skills
+npx tuquet-skills-cli info <skill>      # Chi tiết skill
+npx tuquet-skills-cli install <skill>   # Cài đặt skill
+npx tuquet-skills-cli update            # Cập nhật skills đã cài
 ```
 
-## How it works
+## Cập nhật skill
 
-The CLI copies skill `.md` files from the registry into your project's `.agents/skills/<skill-name>/` directory.
+Khi skill được cập nhật trên registry:
+
+```bash
+npx tuquet-skills-cli install <skill> --force
+# hoặc update tất cả
+npx tuquet-skills-cli update
+```
 
 ## Development
 
 ```bash
-# Install dependencies
 npm install
-
-# Run CLI locally
 npm run cli install automa
-# or
-node packages/cli/bin/index.js install automa
-```
-
-## Publishing
-
-```bash
-# Publish registry package first, then CLI
-npm run publish:all
 ```

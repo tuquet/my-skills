@@ -1,5 +1,5 @@
 // @ts-check
-import { existsSync, mkdirSync, writeFileSync, readFileSync, cpSync } from 'fs';
+import { existsSync, mkdirSync, writeFileSync, readFileSync, cpSync, readdirSync } from 'fs';
 import { join, resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
@@ -41,7 +41,7 @@ export async function installSkill(skillName, force = false, isGlobal = false) {
     const skill = getSkill(skillName);
 
     if (!skill) {
-      spinner.fail(chalk.red(`Skill "${skillName}" not found. Run "npx skills list" to see available skills.`));
+      spinner.fail(chalk.red(`Skill "${skillName}" not found. Run "npx tuquet-skills-cli list" to see available skills.`));
       process.exit(1);
     }
 
@@ -71,7 +71,7 @@ export async function installSkill(skillName, force = false, isGlobal = false) {
     const filesToCopy = ['SKILL.md'];
     const refDir = join(sourceDir, 'references');
     if (existsSync(refDir)) {
-      const refFiles = ['references/blocks_usage.md', 'references/directoring_structure.md'];
+      const refFiles = readdirSync(refDir).filter(f => f.endsWith('.md') || f.endsWith('.json')).map(f => `references/${f}`);
       for (const f of refFiles) {
         const src = join(sourceDir, f);
         if (existsSync(src)) filesToCopy.push(f);
