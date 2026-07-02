@@ -17,6 +17,7 @@ Automa Workflows require absolute precision regarding Data Structure (Schema) an
 ## 2. Documentation (Knowledge Base)
 - **[Blocks Usage (Semantics)](./docs/blocks-usage.md)**: Explains the role and usage of each block in business logic.
 - **[Advanced Blocks](./docs/advanced-blocks.md)**: Guide on Loops (`loop-elements`, `loop-data`), Data Tables, Google Sheets syncing, and Branching Logic (`conditions`).
+- **[Self-Healing Workflows](./docs/self-healing.md)**: Design patterns for error recovery, retries, fallbacks, and defensive DOM operations.
 - **[Knowledge Base (Q&A)](./docs/qa-knowledge.md)**: Common patterns, sub-workflow, loop, variable injection, logging.
 
 ## 3. Schemas & Assets (Data Standards)

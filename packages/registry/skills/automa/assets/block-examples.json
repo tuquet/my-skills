@@ -128,6 +128,7 @@
   },
   "event-click": {
     "disableBlock": false,
+    "onError": "fallback",
     "description": "",
     "findBy": "",
     "waitForSelector": false,
@@ -142,6 +143,7 @@
   },
   "get-text": {
     "disableBlock": false,
+    "onError": "fallback",
     "description": "",
     "findBy": "",
     "waitForSelector": false,
@@ -335,6 +337,7 @@
   },
   "webhook": {
     "disableBlock": false,
+    "onError": "stop-workflow",
     "description": "",
     "url": "",
     "body": "",

@@ -14,4 +14,8 @@ When reviewing a Workflow (or before completing the initialization), the Agent m
 5. **Redundancy Check**: Do not add `element-exists` before `element-scroll`, `forms`, `event-click` — those blocks already have `waitForSelector: true` to self-check the element. `element-exists` is only used to **branch logic** (e.g., element exists → do A, does not exist → do B).
 6. **Selector Check**: Prioritize XPath, inspect actual DOM, do not guess DOM (read `dom-selection.md`).
 7. **Condition Check**: `conditions` must always have both output branches (true + false). Do not miss the fallback.
-8. **Error Handling Check**: Are blocks prone to errors (webhook, new-tab, DOM blocks) handled upon failure? (Use onError in the block or an edge fallback).
+8. **Resiliency & Self-Healing Check**: Does the workflow anticipate failures?
+   - Are `onError: "fallback"` paths explicitly defined for critical network or DOM operations (and connected to a recovery block)?
+   - Are `waitForSelector` and safe `waitSelectorTimeout` (e.g., 5000ms+) configured for dynamic elements?
+   - If using `conditions`, are `retryConditions`, `retryCount`, and `retryTimeout` appropriately configured to poll for async events rather than failing instantly?
+   - Do `javascript-code` blocks wrap risky parsing in `try...catch` and exit via `automaNextBlock({ $error: true })`?
