@@ -1,6 +1,8 @@
 # Chi tiết Input / Output các khối Node (Blocks)
 
-Dưới đây là chi tiết cấu hình đầu vào (`data`) và đầu ra của tất cả các block trong Automa. Các tham số này được thiết lập trong thuộc tính `data` của mỗi block.
+Dưới đây là chi tiết các block trong Automa.
+
+> **Lưu ý quan trọng**: Mọi cấu trúc dữ liệu JSON chính xác (Data Schema) cho từng Block đã được chuyển vào file `automa.schema.json`. Hãy sử dụng file Schema đó làm nguồn chân lý (Source of Truth) khi lập trình, tài liệu này chỉ dùng để giải thích ý nghĩa logic của các trường dữ liệu.
 
 > **Trường chung của mọi block**: `description` (string), `disableBlock` (boolean), `selected` (boolean), `inGroup` (boolean), `onError` (string). Các trường này không được liệt kê lại ở từng block để tránh trùng lặp.
 
@@ -733,19 +735,4 @@ Luồng chạy luôn xuất phát từ block có `label: "trigger"`. Dùng mản
 
 ## Cấu trúc JSON mẫu của một block node
 
-```json
-{
-  "id": "my-block-id",
-  "label": "forms",
-  "type": "BlockBasic",
-  "position": { "x": 200, "y": 300 },
-  "data": {
-    "selector": "#username",
-    "value": "{{loopData.testcases.username}}",
-    "clearValue": true,
-    "delay": 50,
-    "waitForSelector": true,
-    "waitSelectorTimeout": 10000
-  }
-}
-```
+> _(Tham chiếu cấu trúc JSON chính xác tại file automa.schema.json)_
