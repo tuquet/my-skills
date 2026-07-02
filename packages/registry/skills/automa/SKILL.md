@@ -17,7 +17,6 @@ When participating in building or reviewing a workflow, you MUST strictly COMPLY
 ## 2. Documentation (Knowledge Base)
 - **[Blocks Usage (Semantics)](file:///D:/Repository/my-skills/packages/registry/skills/automa/docs/blocks-usage.md)**: Explains the role and usage of each block in business logic.
 - **[Knowledge Base (Q&A)](file:///D:/Repository/my-skills/packages/registry/skills/automa/docs/qa-knowledge.md)**: Common patterns, sub-workflow, loop, variable injection, logging.
-- **[Architecture](file:///D:/Repository/my-skills/packages/registry/skills/automa/docs/architecture.md)**: Source code architecture of a large workflow project.
 
 ## 3. Schemas & Assets (Data Standards)
 - **[JSON Schema (Data Types)](file:///D:/Repository/my-skills/packages/registry/skills/automa/schemas/automa.schema.json)**: Source of Truth to ensure the output JSON format is 100% valid.
