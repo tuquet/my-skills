@@ -1,738 +1,738 @@
-# Chi tiết Input / Output các khối Node (Blocks)
+# Detailed Input / Output for Node Blocks
 
-Dưới đây là chi tiết các block trong Automa.
+Below are the details of the blocks in Automa.
 
-> **Lưu ý quan trọng**: Mọi cấu trúc dữ liệu JSON chính xác (Data Schema) cho từng Block đã được chuyển vào file `automa.schema.json`. Hãy sử dụng file Schema đó làm nguồn chân lý (Source of Truth) khi lập trình, tài liệu này chỉ dùng để giải thích ý nghĩa logic của các trường dữ liệu.
+> **Important Note**: Every exact JSON Data Schema for each Block has been moved to the `automa.schema.json` file. Please use that Schema file as the Source of Truth when programming; this document is only meant to explain the logical meaning of the data fields.
 
-> **Trường chung của mọi block**: `description` (string), `disableBlock` (boolean), `selected` (boolean), `inGroup` (boolean), `onError` (string). Các trường này không được liệt kê lại ở từng block để tránh trùng lặp.
+> **Common fields for all blocks**: `description` (string), `disableBlock` (boolean), `selected` (boolean), `inGroup` (boolean), `onError` (string). These fields are not listed again in each block to avoid duplication.
 
-## Mục lục
+## Table of Contents
 
-### 1. Khối Khởi tạo & Sự kiện
-- [`trigger`](#trigger) — Bắt đầu workflow
-- [`browser-event`](#browser-event) — Lắng nghe sự kiện trình duyệt
-- [`trigger-event`](#trigger-event) — Bắn sự kiện DOM giả lập
-- [`workflow-state`](#workflow-state) — Quản lý trạng thái workflow
+### 1. Triggers & Events
+- [`trigger`](#trigger) — Start the workflow
+- [`browser-event`](#browser-event) — Listen for browser events
+- [`trigger-event`](#trigger-event) — Trigger simulated DOM events
+- [`workflow-state`](#workflow-state) — Manage workflow state
 
-### 2. Khối Trình duyệt & Cửa sổ
-- [`new-tab`](#new-tab) — Mở tab mới
-- [`go-back`](#go-back) — Quay lại trang trước
-- [`reload-tab`](#reload-tab) — Tải lại trang
-- [`close-tab`](#close-tab) — Đóng tab
-- [`active-tab`](#active-tab) — Chuyển focus tab
-- [`switch-tab`](#switch-tab) — Chuyển tab
-- [`new-window`](#new-window) — Mở cửa sổ mới
-- [`switch-to`](#switch-to) — Chuyển iframe/shadow DOM
-- [`forward-page`](#forward-page) — Tiến trang
-- [`tab-url`](#tab-url) — Điều hướng URL
+### 2. Browser & Tabs
+- [`new-tab`](#new-tab) — Open a new tab
+- [`go-back`](#go-back) — Go back to previous page
+- [`reload-tab`](#reload-tab) — Reload the page
+- [`close-tab`](#close-tab) — Close tab
+- [`active-tab`](#active-tab) — Change active tab
+- [`switch-tab`](#switch-tab) — Switch tab
+- [`new-window`](#new-window) — Open a new window
+- [`switch-to`](#switch-to) — Switch iframe/shadow DOM context
+- [`forward-page`](#forward-page) — Go forward page
+- [`tab-url`](#tab-url) — Navigate URL
 
-### 3. Khối Tương tác DOM & Website
-- [`event-click`](#event-click) — Click phần tử
-- [`forms`](#forms) — Nhập/đọc form
-- [`get-text`](#get-text) — Trích xuất text
-- [`element-scroll`](#element-scroll) — Cuộn trang
-- [`hover-element`](#hover-element) — Hover chuột
-- [`attribute-value`](#attribute-value) — Lấy thuộc tính HTML
-- [`element-exists`](#element-exists) — Kiểm tra phần tử
-- [`take-screenshot`](#take-screenshot) — Chụp màn hình
-- [`upload-file`](#upload-file) — Tải file lên
-- [`press-key`](#press-key) — Gõ phím
-- [`create-element`](#create-element) — Tạo thẻ HTML
-- [`verify-selector`](#verify-selector) — Xác minh selector
-- [`link`](#link) — Trích xuất link
-- [`save-assets`](#save-assets) — Lưu tài nguyên
+### 3. Web Interactions
+- [`event-click`](#event-click) — Click element
+- [`forms`](#forms) — Input/extract forms
+- [`get-text`](#get-text) — Extract text
+- [`element-scroll`](#element-scroll) — Scroll element
+- [`hover-element`](#hover-element) — Hover element
+- [`attribute-value`](#attribute-value) — Get HTML attribute
+- [`element-exists`](#element-exists) — Check element existence
+- [`take-screenshot`](#take-screenshot) — Take screenshot
+- [`upload-file`](#upload-file) — Upload file
+- [`press-key`](#press-key) — Press key
+- [`create-element`](#create-element) — Create HTML element
+- [`verify-selector`](#verify-selector) — Verify selector
+- [`link`](#link) — Extract link
+- [`save-assets`](#save-assets) — Save assets
 
-### 4. Khối Điều khiển & Vòng lặp
-- [`delay`](#delay) — Tạm dừng
-- [`conditions`](#conditions) — Rẽ nhánh If/Else
-- [`loop-data`](#loop-data) — Lặp qua mảng
-- [`loop-elements`](#loop-elements) — Lặp qua DOM
+### 4. Flow & Logic
+- [`delay`](#delay) — Delay execution
+- [`conditions`](#conditions) — If/Else branching
+- [`loop-data`](#loop-data) — Loop through array
+- [`loop-elements`](#loop-elements) — Loop through DOM elements
 - [`loop-breakpoint`](#loop-breakpoint) — Break/Continue loop
-- [`while-loop`](#while-loop) — Lặp theo điều kiện
-- [`repeat-task`](#repeat-task) — Lặp số lần cố định
-- [`execute-workflow`](#execute-workflow) — Gọi sub-workflow
-- [`blocks-group`](#blocks-group) — Nhóm block
-- [`block-package`](#block-package) — Gói mở rộng
-- [`ai-workflow`](#ai-workflow) — Tích hợp AI
+- [`while-loop`](#while-loop) — Loop based on condition
+- [`repeat-task`](#repeat-task) — Repeat for a fixed number of times
+- [`execute-workflow`](#execute-workflow) — Execute sub-workflow
+- [`blocks-group`](#blocks-group) — Group blocks
+- [`block-package`](#block-package) — Extension package
+- [`ai-workflow`](#ai-workflow) — AI integration
 
-### 5. Khối Xử lý Dữ liệu & Biến
-- [`insert-data`](#insert-data) — Lưu vào bảng
-- [`export-data`](#export-data) — Xuất file
-- [`log-data`](#log-data) — Ghi log
-- [`increase-variable`](#increase-variable) — Tăng/giảm biến
-- [`slice-variable`](#slice-variable) — Cắt chuỗi/mảng
-- [`regex-variable`](#regex-variable) — Regex trên biến
-- [`data-mapping`](#data-mapping) — Ánh xạ dữ liệu
-- [`sort-data`](#sort-data) — Sắp xếp
-- [`delete-data`](#delete-data) — Xóa dữ liệu
+### 5. Data & Variables
+- [`insert-data`](#insert-data) — Save into table
+- [`export-data`](#export-data) — Export data
+- [`log-data`](#log-data) — Log data
+- [`increase-variable`](#increase-variable) — Increase/decrease variable
+- [`slice-variable`](#slice-variable) — Slice string/array
+- [`regex-variable`](#regex-variable) — Regex on variable
+- [`data-mapping`](#data-mapping) — Map data structure
+- [`sort-data`](#sort-data) — Sort data
+- [`delete-data`](#delete-data) — Delete data
 
-### 6. Khối Tích hợp & Nâng cao
-- [`javascript-code`](#javascript-code) — Chạy JS tùy chỉnh
-- [`webhook`](#webhook) — Gọi HTTP API
-- [`google-sheets`](#google-sheets) — Google Sheets
-- [`notification`](#notification) — Thông báo
-- [`parameter-prompt`](#parameter-prompt) — Popup nhập liệu
+### 6. Integrations & Advanced
+- [`javascript-code`](#javascript-code) — Run custom JS
+- [`webhook`](#webhook) — Call HTTP API
+- [`google-sheets`](#google-sheets) — Google Sheets integration
+- [`notification`](#notification) — Push notification
+- [`parameter-prompt`](#parameter-prompt) — Input prompt popup
 - [`clipboard`](#clipboard) — Copy/Paste
-- [`handle-dialog`](#handle-dialog) — Xử lý alert/confirm
-- [`handle-download`](#handle-download) — Quản lý tải file
-- [`wait-connections`](#wait-connections) — Chờ network idle
-- [`proxy`](#proxy) — Thiết lập proxy
-- [`interaction-block`](#interaction-block) — Chờ tương tác thủ công
-- [`google-drive`](#google-drive) — Google Drive
+- [`handle-dialog`](#handle-dialog) — Handle alert/confirm dialogs
+- [`handle-download`](#handle-download) — Manage file downloads
+- [`wait-connections`](#wait-connections) — Wait for network idle
+- [`proxy`](#proxy) — Configure proxy
+- [`interaction-block`](#interaction-block) — Wait for manual interaction
+- [`google-drive`](#google-drive) — Google Drive integration
 - [`google-sheets-drive`](#google-sheets-drive) — Sheets + Drive
-- [`note`](#note) — Ghi chú
+- [`note`](#note) — Non-executing note
 
 ---
 
-## 1. Khối Khởi tạo & Sự kiện (Triggers & Events)
+## 1. Triggers & Events
 
 ### `trigger`
-Block khởi đầu workflow, định nghĩa cách kịch bản được kích hoạt.
+The starting block of the workflow, defining how the script is activated.
 - **Input (`data`)**:
-  - `type` (string): Cách khởi chạy. Các giá trị: `"manual"`, `"interval"`, `"context-menu"`, `"specific-day"`, `"cron"`, `"on-element"`, `"webhook"`.
-  - `interval` (number): Chu kỳ lặp (giây) — dùng khi `type = "interval"`.
-  - `delay` (number): Độ trễ trước khi chạy (giây).
-  - `shortcut` (string): Phím tắt bàn phím để kích hoạt.
-  - `url` (string): Pattern URL để tự động kích hoạt.
-  - `isUrlRegex` (boolean): Cho phép dùng regex trong `url`.
-  - `contextMenuName` (string): Tên hiển thị trong menu chuột phải.
-  - `contextTypes` (array): Kiểu context menu (`["selection"]`, `["link"]`, `["image"]`, `["page"]`...).
-  - `parameters` (array): Danh sách tham số đầu vào — mỗi phần tử gồm `id`, `label`, `type` (`"text"`, `"number"`, `"select"`, `"file"`), `defaultValue`, `required`, `options`.
-  - `activeInInput` (boolean): Kích hoạt ngay cả khi con trỏ đang ở ô input.
-  - `date` (string): Ngày chạy (yyyy-MM-dd).
-  - `time` (string): Giờ chạy (HH:mm).
-  - `days` (array): Các ngày trong tuần (`["mon","tue","wed","thu","fri","sat","sun"]`).
-  - `observeElement` (object): Cấu hình theo dõi phần tử DOM — gồm `selector`, `baseSelector`, `baseElOptions`, `targetOptions`, `matchPattern`.
-  - `preferParamsInTab` (boolean): Hiện popup nhập tham số trong tab thay vì popup nhỏ.
-- **Output**: Khởi tạo workflow context và truyền điều khiển tới block kế tiếp. Nếu có `parameters`, dữ liệu nhập từ người dùng được lưu vào biến `$params.<tên>`.
+  - `type` (string): Activation method. Values: `"manual"`, `"interval"`, `"context-menu"`, `"specific-day"`, `"cron"`, `"on-element"`, `"webhook"`.
+  - `interval` (number): Loop interval (seconds) — used when `type = "interval"`.
+  - `delay` (number): Delay before execution (seconds).
+  - `shortcut` (string): Keyboard shortcut to trigger.
+  - `url` (string): URL pattern to trigger automatically.
+  - `isUrlRegex` (boolean): Allow regex in `url`.
+  - `contextMenuName` (string): Display name in the right-click context menu.
+  - `contextTypes` (array): Type of context menu (`["selection"]`, `["link"]`, `["image"]`, `["page"]`...).
+  - `parameters` (array): List of input parameters — each element contains `id`, `label`, `type` (`"text"`, `"number"`, `"select"`, `"file"`), `defaultValue`, `required`, `options`.
+  - `activeInInput` (boolean): Activate even when the cursor is in an input field.
+  - `date` (string): Execution date (yyyy-MM-dd).
+  - `time` (string): Execution time (HH:mm).
+  - `days` (array): Days of the week (`["mon","tue","wed","thu","fri","sat","sun"]`).
+  - `observeElement` (object): Observe DOM element configuration — includes `selector`, `baseSelector`, `baseElOptions`, `targetOptions`, `matchPattern`.
+  - `preferParamsInTab` (boolean): Show parameter prompt popup in tab instead of a small popup.
+- **Output**: Initializes workflow context and transfers control to the next block. If `parameters` exist, user input data is saved to `$params.<name>` variables.
 
 ### `browser-event`
-Lắng nghe sự kiện từ trình duyệt (như tab được tạo, tab được cập nhật, tab được đóng, cửa sổ thay đổi).
+Listen to browser events (such as tab created, tab updated, tab removed, window changed).
 - **Input (`data`)**:
-  - `eventType` (string): Loại sự kiện — `"tab-created"`, `"tab-updated"`, `"tab-removed"`, `"tab-activated"`, `"window-created"`, `"window-removed"`, `"download-completed"`.
-  - `urlFilter` (string): Pattern URL để lọc sự kiện (chỉ kích hoạt khi URL khớp).
-  - `isUrlRegex` (boolean): Cho phép regex trong `urlFilter`.
-- **Output**: Khi sự kiện xảy ra, thông tin chi tiết về sự kiện được lưu vào biến (ví dụ `$tabId`, `$url`, `$windowId`).
+  - `eventType` (string): Event type — `"tab-created"`, `"tab-updated"`, `"tab-removed"`, `"tab-activated"`, `"window-created"`, `"window-removed"`, `"download-completed"`.
+  - `urlFilter` (string): URL pattern to filter events (triggers only when URL matches).
+  - `isUrlRegex` (boolean): Allow regex in `urlFilter`.
+- **Output**: When the event occurs, detailed event information is saved to variables (e.g., `$tabId`, `$url`, `$windowId`).
 
 ### `trigger-event`
-Bắn một sự kiện DOM giả lập lên phần tử trang web.
+Trigger a simulated DOM event on a webpage element.
 - **Input (`data`)**:
-  - `selector` (string): CSS selector của phần tử đích.
-  - `eventType` (string): Loại sự kiện — `"click"`, `"mouseover"`, `"mouseout"`, `"keydown"`, `"keyup"`, `"focus"`, `"blur"`, `"change"`, `"submit"`, `"scroll"`, `"custom"`.
-  - `eventDetail` (object): Dữ liệu bổ sung cho sự kiện (ví dụ `keyCode` cho keyboard event, `clientX`/`clientY` cho mouse event).
-- **Output**: Sự kiện được kích hoạt trên DOM, không trả về dữ liệu.
+  - `selector` (string): CSS selector of the target element.
+  - `eventType` (string): Event type — `"click"`, `"mouseover"`, `"mouseout"`, `"keydown"`, `"keyup"`, `"focus"`, `"blur"`, `"change"`, `"submit"`, `"scroll"`, `"custom"`.
+  - `eventDetail` (object): Additional data for the event (e.g., `keyCode` for keyboard events, `clientX`/`clientY` for mouse events).
+- **Output**: Event is triggered on the DOM, returns no data.
 
 ### `workflow-state`
-Quản lý trạng thái của workflow đang chạy (tạm dừng, dừng, chờ).
+Manage the state of the running workflow (pause, stop, wait).
 - **Input (`data`)**:
-  - `action` (string): Hành động — `"pause"`, `"stop"`, `"wait"`, `"resume"`.
-  - `condition` (string): Điều kiện kích hoạt (ví dụ dựa trên biến hoặc kết quả block trước).
-- **Output**: Workflow chuyển trạng thái theo hành động đã chỉ định.
+  - `action` (string): Action — `"pause"`, `"stop"`, `"wait"`, `"resume"`.
+  - `condition` (string): Trigger condition (e.g., based on a variable or result from a previous block).
+- **Output**: Workflow transitions to the state specified by the action.
 
 ---
 
-## 2. Khối Trình duyệt & Cửa sổ (Browser & Tabs)
+## 2. Browser & Tabs
 
 ### `new-tab`
-Mở một tab mới trên trình duyệt.
+Open a new tab in the browser.
 - **Input (`data`)**:
-  - `url` (string): Đường dẫn trang web cần mở (bắt buộc). Hỗ trợ nội suy biến `{{variable}}`.
-  - `updatePrevTab` (boolean): Nếu `true`, cập nhật tab hiện hành thay vì mở tab mới.
-  - `active` (boolean): Chuyển focus sang tab này ngay sau khi mở.
-  - `customUserAgent` (boolean) + `userAgent` (string): Bật/tắt và thiết lập User-Agent giả lập thiết bị.
-  - `waitTabLoaded` (boolean): Chờ cho đến khi tab tải xong hoàn toàn.
-- **Output**: Tab mới được tạo và kích hoạt. URL vừa mở được lưu vào biến nội bộ của engine.
+  - `url` (string): Webpage URL to open (required). Supports variable interpolation `{{variable}}`.
+  - `updatePrevTab` (boolean): If `true`, update the current tab instead of opening a new tab.
+  - `active` (boolean): Change focus to this tab immediately after opening.
+  - `customUserAgent` (boolean) + `userAgent` (string): Enable/disable and set a simulated device User-Agent.
+  - `waitTabLoaded` (boolean): Wait until the tab is fully loaded.
+- **Output**: New tab is created and activated. The opened URL is saved to internal engine variables.
 
 ### `go-back`
-Quay lại trang trước trong lịch sử tab hiện tại.
+Go back to the previous page in the current tab's history.
 - **Input (`data`)**:
-  - `onError` (string): Hành vi khi lỗi (`"stop-workflow"`, `"continue"`,...).
-- **Output**: Quay lại trang trước, không trả về dữ liệu.
+  - `onError` (string): Behavior on error (`"stop-workflow"`, `"continue"`,...).
+- **Output**: Goes back to the previous page, returns no data.
 
 ### `reload-tab`
-Tải lại trang hiện tại.
-- **Input (`data`)**: Không có tham số đặc biệt.
-- **Output**: Trang được reload, không trả về dữ liệu.
+Reload the current page.
+- **Input (`data`)**: No special parameters.
+- **Output**: Page is reloaded, returns no data.
 
 ### `close-tab`
-Đóng tab hiện tại.
-- **Input (`data`)**: Không có tham số.
-- **Output**: Tab đóng, workflow chuyển sang block tiếp theo.
+Close the current tab.
+- **Input (`data`)**: No parameters.
+- **Output**: Tab is closed, workflow moves to the next block.
 
 ### `active-tab`
-Chuyển focus về một tab cụ thể theo chỉ số hoặc URL.
+Change focus to a specific tab based on index or URL.
 - **Input (`data`)**:
-  - `tab` (string): Cách xác định tab — `"by-index"`, `"by-url"`, `"last-tab"`, `"next-tab"`, `"previous-tab"`, `"first-tab"`.
-  - `value` (string): Giá trị tương ứng — chỉ số tab (số) hoặc URL pattern.
-- **Output**: Chuyển focus tới tab đích, không trả về dữ liệu.
+  - `tab` (string): Method to identify tab — `"by-index"`, `"by-url"`, `"last-tab"`, `"next-tab"`, `"previous-tab"`, `"first-tab"`.
+  - `value` (string): Corresponding value — tab index (number) or URL pattern.
+- **Output**: Focus switches to the target tab, returns no data.
 
 ### `switch-tab`
-Chuyển đổi qua lại giữa các tab đang mở (tương tự tổ hợp phím Ctrl+Tab).
+Switch back and forth between open tabs (similar to the Ctrl+Tab shortcut).
 - **Input (`data`)**:
-  - `direction` (string): Hướng chuyển — `"next"` hoặc `"previous"`.
-  - `times` (number): Số lần chuyển (mặc định 1).
-- **Output**: Chuyển tab, không trả về dữ liệu.
+  - `direction` (string): Switch direction — `"next"` or `"previous"`.
+  - `times` (number): Number of switches (default is 1).
+- **Output**: Switches tab, returns no data.
 
 ### `new-window`
-Mở một cửa sổ trình duyệt mới.
+Open a new browser window.
 - **Input (`data`)**:
-  - `url` (string): URL mở trong cửa sổ mới.
-  - `active` (boolean): Focus vào cửa sổ mới ngay sau khi mở.
-  - `width` / `height` (number): Kích thước cửa sổ (pixel).
-  - `left` / `top` (number): Vị trí cửa sổ trên màn hình.
-  - `incognito` (boolean): Mở ở chế độ ẩn danh.
-- **Output**: Cửa sổ mới được tạo, tab được kích hoạt.
+  - `url` (string): URL to open in the new window.
+  - `active` (boolean): Focus on the new window immediately after opening.
+  - `width` / `height` (number): Window size (pixels).
+  - `left` / `top` (number): Window position on screen.
+  - `incognito` (boolean): Open in incognito mode.
+- **Output**: New window is created, tab is activated.
 
 ### `switch-to`
-Chuyển vùng focus sang iframe, shadow DOM hoặc cửa sổ khác.
+Switch focus context to an iframe, shadow DOM, or another frame.
 - **Input (`data`)**:
-  - `target` (string): Đích chuyển đến — `"iframe"`, `"shadow-dom"`, `"parent-frame"`, `"default-content"`.
-  - `selector` (string): CSS selector của iframe hoặc shadow host (dùng khi `target = "iframe"` hoặc `"shadow-dom"`).
-  - `index` (number): Chỉ số iframe nếu có nhiều iframe (0-indexed).
-- **Output**: Context được chuyển sang vùng mới, các block DOM phía sau sẽ tương tác trong vùng đó.
+  - `target` (string): Target context — `"iframe"`, `"shadow-dom"`, `"parent-frame"`, `"default-content"`.
+  - `selector` (string): CSS selector of the iframe or shadow host (used when `target = "iframe"` or `"shadow-dom"`).
+  - `index` (number): iframe index if there are multiple iframes (0-indexed).
+- **Output**: Context switches to the new region, subsequent DOM blocks will interact within that region.
 
 ### `forward-page`
-Tiến tới trang tiếp theo trong lịch sử trình duyệt của tab hiện tại.
-- **Input (`data`)**: Không có tham số đặc biệt.
-- **Output**: Tiến trang, không trả về dữ liệu.
+Go forward to the next page in the current tab's browser history.
+- **Input (`data`)**: No special parameters.
+- **Output**: Goes forward page, returns no data.
 
 ### `tab-url`
-Điều hướng URL trực tiếp trên tab hiện tại.
+Navigate to a URL directly on the current tab.
 - **Input (`data`)**:
-  - `url` (string): URL cần điều hướng đến.
-- **Output**: Tab được điều hướng tới URL mới.
+  - `url` (string): URL to navigate to.
+- **Output**: Tab is navigated to the new URL.
 
 ---
 
-## 3. Khối Tương tác DOM & Website (Web Interactions)
+## 3. Web Interactions
 
 ### `event-click`
-Mô phỏng thao tác nhấp chuột (click) vào một phần tử trên trang.
+Simulate a mouse click on an element on the page.
 - **Input (`data`)**:
-  - `selector` (string): CSS selector của thẻ HTML cần click. Hỗ trợ nội suy biến.
-  - `findBy` (string): Phương thức tìm kiếm phần tử. Thường là `"cssSelector"`.
-  - `waitForSelector` (boolean): Chờ phần tử xuất hiện trước khi click.
-  - `waitSelectorTimeout` (number): Thời gian chờ tối đa (ms).
-  - `multiple` (boolean): Click lần lượt vào tất cả phần tử khớp selector.
-  - `markEl` (boolean): Đánh dấu phần tử bằng viền đỏ để dễ debug.
-- **Output**: Không có dữ liệu trả về trực tiếp, tự động chuyển điều khiển sang node tiếp theo sau khi click thành công.
+  - `selector` (string): CSS selector of the HTML element to click. Supports variable interpolation.
+  - `findBy` (string): Element search method. Usually `"cssSelector"`.
+  - `waitForSelector` (boolean): Wait for the element to appear before clicking.
+  - `waitSelectorTimeout` (number): Maximum wait time (ms).
+  - `multiple` (boolean): Click consecutively on all elements matching the selector.
+  - `markEl` (boolean): Mark the element with a red border for easier debugging.
+- **Output**: Returns no data directly, automatically transfers control to the next node after a successful click.
 
 ### `forms`
-Nhập liệu hoặc lấy dữ liệu từ các form (input, textarea, select, checkbox).
+Input or extract data from forms (input, textarea, select, checkbox).
 - **Input (`data`)**:
-  - `selector` (string): CSS selector của thẻ input. Hỗ trợ nội suy biến.
-  - `type` (string): Loại thẻ form: `"text-field"`, `"checkbox"`, `"select"`, `"radio"`, `"file"`.
-  - `value` (string/number): Giá trị cần điền (áp dụng khi `getValue = false`). Hỗ trợ nội suy biến `{{variable}}`.
-  - `getValue` (boolean): Nếu `true`, block sẽ **lấy** giá trị hiện hành thay vì **nhập**.
-  - `clearValue` (boolean): Xóa sạch khung nhập liệu trước khi điền.
-  - `multiple` (boolean): Áp dụng thao tác lên tất cả các thẻ khớp với selector.
-  - `delay` (number): Độ trễ (ms) giữa mỗi lần gõ phím nhằm vượt qua cơ chế chống bot.
-  - `assignVariable` (boolean): Gán kết quả vào biến.
-  - `variableName` (string): Tên biến để lưu kết quả.
-  - `saveData` (boolean): Lưu kết quả vào bảng dữ liệu.
-  - `dataColumn` (string): ID cột trong bảng để lưu.
-  - `selectOptionBy` (string): Chọn option trong dropdown theo `"value"` hoặc `"text"`.
-  - `optionPosition` (number): Vị trí option trong dropdown (1-indexed).
-  - `waitForSelector` (boolean) + `waitSelectorTimeout` (number): Chờ phần tử xuất hiện.
-  - `markEl` (boolean): Đánh dấu phần tử để debug.
-  - `findBy` (string): Phương thức tìm kiếm (`"cssSelector"`).
-  - `events` (array): Danh sách event phụ (ví dụ `change`, `blur`) kích hoạt sau khi nhập.
+  - `selector` (string): CSS selector of the form input element. Supports variable interpolation.
+  - `type` (string): Form element type: `"text-field"`, `"checkbox"`, `"select"`, `"radio"`, `"file"`.
+  - `value` (string/number): Value to input (applied when `getValue = false`). Supports variable interpolation `{{variable}}`.
+  - `getValue` (boolean): If `true`, the block will **extract** the current value instead of **inputting**.
+  - `clearValue` (boolean): Clear the input field before filling.
+  - `multiple` (boolean): Apply action to all elements matching the selector.
+  - `delay` (number): Delay (ms) between each keystroke to bypass anti-bot mechanisms.
+  - `assignVariable` (boolean): Assign result to a variable.
+  - `variableName` (string): Variable name to store the result.
+  - `saveData` (boolean): Save result to the data table.
+  - `dataColumn` (string): Column ID in the table to save.
+  - `selectOptionBy` (string): Select option in dropdown by `"value"` or `"text"`.
+  - `optionPosition` (number): Option position in dropdown (1-indexed).
+  - `waitForSelector` (boolean) + `waitSelectorTimeout` (number): Wait for the element to appear.
+  - `markEl` (boolean): Mark element for debugging.
+  - `findBy` (string): Search method (`"cssSelector"`).
+  - `events` (array): List of secondary events (e.g., `change`, `blur`) triggered after input.
 - **Output**: 
-  - Nếu `getValue = true`: Trả về giá trị chuỗi (string) hoặc mảng (array) nếu `multiple = true`.
-  - Nếu `getValue = false`: Trả về `null`.
+  - If `getValue = true`: Returns a string value or an array if `multiple = true`.
+  - If `getValue = false`: Returns `null`.
 
 ### `get-text`
-Trích xuất nội dung văn bản từ một hoặc nhiều phần tử.
+Extract text content from one or multiple elements.
 - **Input (`data`)**:
-  - `selector` (string): CSS selector phần tử. Hỗ trợ nội suy biến `{{loopData@items}}` để dùng với `loop-elements`.
-  - `multiple` (boolean): Trích xuất từ tất cả thẻ khớp (trả về mảng).
-  - `includeTags` (boolean): Lấy `outerHTML` thay vì text.
-  - `useTextContent` (boolean): Lấy qua `textContent` thay cho `innerText` (giữ lại khoảng trắng nguyên thủy).
-  - `regex` (string) + `regexExp` (array): Regex và flags (`"g"`, `"i"`) để bóc tách phần cụ thể.
-  - `prefixText` / `suffixText` (string): Chuỗi chèn thêm trước/sau text trích xuất.
-  - `findBy` (string): Phương thức tìm kiếm.
-  - `saveData` (boolean): Lưu vào bảng dữ liệu.
-  - `dataColumn` (string): ID cột trong bảng.
-  - `assignVariable` (boolean) + `variableName` (string): Lưu vào biến.
-  - `addExtraRow` (boolean) + `extraRowDataColumn` (string) + `extraRowValue` (string): Thêm dòng phụ với giá trị tĩnh.
-  - `waitForSelector` (boolean) + `waitSelectorTimeout` (number): Chờ phần tử xuất hiện.
-  - `markEl` (boolean): Đánh dấu phần tử để debug.
-- **Output**: Trả về `string` (nếu `multiple = false`) hoặc `array` (nếu `multiple = true`).
+  - `selector` (string): CSS selector of the element. Supports variable interpolation `{{loopData@items}}` for use with `loop-elements`.
+  - `multiple` (boolean): Extract from all matching tags (returns an array).
+  - `includeTags` (boolean): Extract `outerHTML` instead of text.
+  - `useTextContent` (boolean): Extract via `textContent` instead of `innerText` (preserves original whitespace).
+  - `regex` (string) + `regexExp` (array): Regex pattern and flags (`"g"`, `"i"`) to extract specific parts.
+  - `prefixText` / `suffixText` (string): String inserted before/after the extracted text.
+  - `findBy` (string): Search method.
+  - `saveData` (boolean): Save to the data table.
+  - `dataColumn` (string): Column ID in the table.
+  - `assignVariable` (boolean) + `variableName` (string): Save to a variable.
+  - `addExtraRow` (boolean) + `extraRowDataColumn` (string) + `extraRowValue` (string): Add an extra row with a static value.
+  - `waitForSelector` (boolean) + `waitSelectorTimeout` (number): Wait for the element to appear.
+  - `markEl` (boolean): Mark element for debugging.
+- **Output**: Returns a `string` (if `multiple = false`) or `array` (if `multiple = true`).
 
 ### `element-scroll`
-Cuộn trang web tới một phần tử hoặc vị trí cụ thể.
+Scroll the webpage to a specific element or position.
 - **Input (`data`)**:
-  - `selector` (string): CSS selector phần tử cần cuộn tới.
-  - `findBy` (string): Phương thức tìm kiếm.
-  - `scrollIntoView` (boolean): Cuộn phần tử vào khung nhìn.
-  - `scrollX` / `scrollY` (number): Cuộn tới tọa độ pixel cụ thể.
-  - `incX` / `incY` (boolean): Cuộn tương đối (thêm vào vị trí hiện tại).
-  - `smooth` (boolean): Cuộn mượt (smooth scroll).
-  - `waitForSelector` (boolean) + `waitSelectorTimeout` (number): Chờ phần tử xuất hiện.
-  - `markEl` (boolean): Đánh dấu phần tử để debug.
-- **Output**: Không trả về dữ liệu, chỉ thao tác cuộn.
+  - `selector` (string): CSS selector of the element to scroll to.
+  - `findBy` (string): Search method.
+  - `scrollIntoView` (boolean): Scroll the element into the viewport.
+  - `scrollX` / `scrollY` (number): Scroll to specific pixel coordinates.
+  - `incX` / `incY` (boolean): Relative scrolling (added to the current position).
+  - `smooth` (boolean): Smooth scrolling behavior.
+  - `waitForSelector` (boolean) + `waitSelectorTimeout` (number): Wait for the element to appear.
+  - `markEl` (boolean): Mark element for debugging.
+- **Output**: Returns no data, only performs the scroll action.
 
 ### `hover-element`
-Mô phỏng di chuột (hover) vào phần tử.
+Simulate hovering the mouse over an element.
 - **Input (`data`)**:
-  - `selector` (string): CSS selector phần tử cần hover.
-- **Output**: Không trả về dữ liệu.
+  - `selector` (string): CSS selector of the element to hover.
+- **Output**: Returns no data.
 
 ### `attribute-value`
-Lấy giá trị thuộc tính HTML của phần tử.
+Get the HTML attribute value of an element.
 - **Input (`data`)**:
   - `selector` (string): CSS selector.
-  - `attributeName` (string): Tên thuộc tính (ví dụ `href`, `src`, `data-id`).
-- **Output**: Trả về giá trị thuộc tính dưới dạng string.
+  - `attributeName` (string): Attribute name (e.g., `href`, `src`, `data-id`).
+- **Output**: Returns the attribute value as a string.
 
 ### `element-exists`
-Chờ hoặc kiểm tra sự tồn tại của phần tử trên DOM.
+Wait for or check the existence of an element on the DOM.
 - **Input (`data`)**:
   - `selector` (string): CSS selector.
-  - `timeout` (number): Thời gian chờ tối đa (ms).
-- **Output**: Boolean — `true` nếu phần tử tồn tại, `false` nếu hết thời gian chờ.
+  - `timeout` (number): Maximum wait time (ms).
+- **Output**: Boolean — `true` if the element exists, `false` if wait time expires.
 
 ### `take-screenshot`
-Chụp màn hình trang web hiện tại.
+Take a screenshot of the current webpage.
 - **Input (`data`)**:
-  - `type` (string): Kiểu chụp — `"full-page"` (toàn trang), `"viewport"` (vùng nhìn thấy), `"element"` (chụp phần tử).
-  - `selector` (string): CSS selector phần tử cần chụp (dùng khi `type = "element"`).
-  - `format` (string): Định dạng ảnh — `"png"`, `"jpeg"`, `"webp"`.
-  - `quality` (number): Chất lượng ảnh (0-100, chỉ dùng cho JPEG/WebP).
-  - `saveData` (boolean): Lưu vào bảng dữ liệu.
-  - `assignVariable` (boolean) + `variableName` (string): Lưu vào biến dạng base64.
-- **Output**: Trả về dữ liệu ảnh dạng base64 string hoặc đường dẫn file đã lưu.
+  - `type` (string): Capture type — `"full-page"`, `"viewport"`, `"element"`.
+  - `selector` (string): CSS selector of the element to capture (used when `type = "element"`).
+  - `format` (string): Image format — `"png"`, `"jpeg"`, `"webp"`.
+  - `quality` (number): Image quality (0-100, only for JPEG/WebP).
+  - `saveData` (boolean): Save to the data table.
+  - `assignVariable` (boolean) + `variableName` (string): Save to a variable as a base64 string.
+- **Output**: Returns image data as a base64 string or the saved file path.
 
 ### `upload-file`
-Mô phỏng tải file lên qua `<input type="file">`.
+Simulate file upload via `<input type="file">`.
 - **Input (`data`)**:
-  - `selector` (string): CSS selector của thẻ input file.
-  - `filePath` (string): Đường dẫn file cần tải lên.
-  - `multiple` (boolean): Chọn nhiều file cùng lúc.
-  - `filePaths` (array): Danh sách nhiều file (dùng khi `multiple = true`).
-- **Output**: File được chọn, không trả về dữ liệu.
+  - `selector` (string): CSS selector of the file input element.
+  - `filePath` (string): Path of the file to upload.
+  - `multiple` (boolean): Select multiple files at once.
+  - `filePaths` (array): List of multiple files (used when `multiple = true`).
+- **Output**: File is selected, returns no data.
 
 ### `press-key`
-Mô phỏng gõ phím trên trang web.
+Simulate keystrokes on the webpage.
 - **Input (`data`)**:
-  - `keys` (array): Danh sách phím cần gõ — mỗi phần tử là key code (ví dụ `"Tab"`, `"Enter"`, `"Escape"`, `"ArrowDown"`, `"a"`, `"ctrl+c"`, `"Control"`, `"Shift"`, `"Alt"`).
-  - `target` (string): CSS selector phần tử đích để gửi sự kiện phím (nếu để trống thì gửi lên document).
-  - `delay` (number): Độ trễ (ms) giữa mỗi lần gõ phím.
-  - `times` (number): Số lần lặp lại tổ hợp phím.
-- **Output**: Thao tác bàn phím được thực thi, không trả về dữ liệu.
+  - `keys` (array): List of keys to press — each element is a key code (e.g., `"Tab"`, `"Enter"`, `"Escape"`, `"ArrowDown"`, `"a"`, `"ctrl+c"`, `"Control"`, `"Shift"`, `"Alt"`).
+  - `target` (string): CSS selector of the target element to send key events (if empty, sends to the document).
+  - `delay` (number): Delay (ms) between each keystroke.
+  - `times` (number): Number of times to repeat the keystroke combination.
+- **Output**: Keyboard action is executed, returns no data.
 
 ### `create-element`
-Tạo một thẻ HTML mới và tiêm (inject) vào DOM của trang hiện tại.
+Create a new HTML element and inject it into the current page's DOM.
 - **Input (`data`)**:
-  - `html` (string): Chuỗi HTML của phần tử cần tạo (ví dụ `'<div class="my-banner">Hello</div>'`).
-  - `targetSelector` (string): CSS selector phần tử cha để chèn vào.
-  - `position` (string): Vị trí chèn — `"beforebegin"`, `"afterbegin"`, `"beforeend"`, `"afterend"` (tương tự `insertAdjacentHTML`).
-- **Output**: Phần tử HTML được tiêm vào DOM, không trả về dữ liệu.
+  - `html` (string): HTML string of the element to create (e.g., `'<div class="my-banner">Hello</div>'`).
+  - `targetSelector` (string): CSS selector of the parent element to insert into.
+  - `position` (string): Insertion position — `"beforebegin"`, `"afterbegin"`, `"beforeend"`, `"afterend"` (similar to `insertAdjacentHTML`).
+- **Output**: HTML element is injected into the DOM, returns no data.
 
 ### `verify-selector`
-Xác minh CSS selector hợp lệ và tồn tại trên trang.
+Verify if a CSS selector is valid and exists on the page.
 - **Input (`data`)**:
-  - `selector` (string): CSS selector cần kiểm tra.
-- **Output**: Boolean — `true` nếu selector hợp lệ và phần tử tồn tại, `false` nếu không.
+  - `selector` (string): CSS selector to verify.
+- **Output**: Boolean — `true` if selector is valid and element exists, `false` otherwise.
 
 ### `link`
-Tìm và trích xuất đường dẫn liên kết từ các thẻ `<a>` trên trang.
+Find and extract link URLs from `<a>` tags on the page.
 - **Input (`data`)**:
-  - `selector` (string): CSS selector (mặc định `"a"`).
-  - `attribute` (string): Thuộc tính cần lấy — `"href"`, `"text"`, `"title"`.
-- **Output**: Trả về mảng các URL hoặc text của các liên kết tìm được.
+  - `selector` (string): CSS selector (default `"a"`).
+  - `attribute` (string): Attribute to extract — `"href"`, `"text"`, `"title"`.
+- **Output**: Returns an array of URLs or texts of the found links.
 
 ### `save-assets`
-Tự động tải và lưu tài nguyên (hình ảnh, video, file) từ trang web.
+Automatically download and save assets (images, videos, files) from the webpage.
 - **Input (`data`)**:
-  - `assetType` (string): Loại tài nguyên — `"images"`, `"videos"`, `"audios"`, `"documents"`, `"all"`.
-  - `selector` (string): CSS selector để lọc tài nguyên cụ thể.
-  - `downloadPath` (string): Thư mục lưu file trên máy.
-  - `renamePattern` (string): Pattern đặt tên file (ví dụ `"image_{index}"`).
-- **Output**: Tài nguyên được tải xuống thư mục chỉ định, trả về danh sách đường dẫn file.
+  - `assetType` (string): Asset type — `"images"`, `"videos"`, `"audios"`, `"documents"`, `"all"`.
+  - `selector` (string): CSS selector to filter specific assets.
+  - `downloadPath` (string): Local directory path to save the files.
+  - `renamePattern` (string): File renaming pattern (e.g., `"image_{index}"`).
+- **Output**: Assets are downloaded to the specified directory, returns a list of file paths.
 
 ---
 
-## 4. Khối Điều khiển & Vòng lặp (Flow & Logic)
+## 4. Flow & Logic
 
 ### `delay`
-Tạm dừng kịch bản trong một khoảng thời gian.
+Pause the script execution for a specified amount of time.
 - **Input (`data`)**:
-  - `time` (number): Thời gian chờ tính bằng milliseconds (mặc định 500ms).
-- **Output**: Tiếp tục block kế sau khi hết thời gian chờ.
+  - `time` (number): Wait time in milliseconds (default 500ms).
+- **Output**: Continues to the next block after the wait time expires.
 
 ### `conditions`
-Rẽ nhánh kịch bản (If/Else) theo nhiều điều kiện.
+Branch the script execution (If/Else) based on multiple conditions.
 - **Input (`data`)**:
-  - `conditions` (array): Danh sách điều kiện. Mỗi điều kiện gồm `id` (định danh nhánh) và biểu thức so sánh.
-  - `retryConditions` (boolean): Lặp lại kiểm tra nếu không có điều kiện nào đúng.
-- **Output**: Chuyển hướng luồng tới nhánh có điều kiện khớp.
+  - `conditions` (array): List of conditions. Each condition contains `id` (branch identifier) and a comparison expression.
+  - `retryConditions` (boolean): Retry checking if no conditions are true.
+- **Output**: Redirects flow to the matching condition branch.
 
 ### `loop-data`
-Vòng lặp qua một mảng dữ liệu.
+Loop through an array of data.
 - **Input (`data`)**:
-  - `loopId` (string): UUID định danh vòng lặp.
-  - `loopThrough` (string): Kiểu dữ liệu lặp — `"custom-data"`, `"numbers"`, `"table"`, `"elements"`, `"google-sheets"`, `"variable"`.
-  - `loopData` (array): Mảng dữ liệu tĩnh (dùng khi `loopThrough = "custom-data"`).
-  - `variableName` (string): Tên biến chứa mảng (dùng khi `loopThrough = "variable"`).
-  - `referenceKey` (string): Key tham chiếu.
-  - `fromNumber` / `toNumber` (number): Khoảng số (dùng khi `loopThrough = "numbers"`).
-  - `maxLoop` (number): Giới hạn số lần lặp (0 = không giới hạn).
-  - `startIndex` (number): Chỉ số bắt đầu (0-indexed).
-  - `resumeLastWorkflow` (boolean): Tiếp tục từ vị trí dừng lần trước.
-  - `elementSelector` (string): CSS selector (dùng khi `loopThrough = "elements"`).
-  - `waitForSelector` (boolean) + `waitSelectorTimeout` (number): Chờ phần tử xuất hiện.
-- **Output**: Ở mỗi chu kỳ, engine ghi:
-  - `{{loopData.<loopId>.data}}` — giá trị phần tử hiện tại.
-  - `{{loopData.<loopId>.<field>}}` — field cụ thể nếu phần tử là object.
-  - Cú pháp `{{loopData@<loopId>}}` — tham chiếu phần tử hiện tại trong selector.
+  - `loopId` (string): UUID identifying the loop.
+  - `loopThrough` (string): Data type to loop — `"custom-data"`, `"numbers"`, `"table"`, `"elements"`, `"google-sheets"`, `"variable"`.
+  - `loopData` (array): Static data array (used when `loopThrough = "custom-data"`).
+  - `variableName` (string): Variable name containing the array (used when `loopThrough = "variable"`).
+  - `referenceKey` (string): Reference key.
+  - `fromNumber` / `toNumber` (number): Number range (used when `loopThrough = "numbers"`).
+  - `maxLoop` (number): Maximum number of iterations (0 = unlimited).
+  - `startIndex` (number): Starting index (0-indexed).
+  - `resumeLastWorkflow` (boolean): Resume from the last stopped position.
+  - `elementSelector` (string): CSS selector (used when `loopThrough = "elements"`).
+  - `waitForSelector` (boolean) + `waitSelectorTimeout` (number): Wait for the element to appear.
+- **Output**: On each cycle, the engine records:
+  - `{{loopData.<loopId>.data}}` — current element value.
+  - `{{loopData.<loopId>.<field>}}` — specific field if the element is an object.
+  - Syntax `{{loopData@<loopId>}}` — reference current element in selectors.
 
 ### `loop-elements`
-Vòng lặp qua danh sách phần tử DOM trên trang.
+Loop through a list of DOM elements on the page.
 - **Input (`data`)**:
-  - `loopId` (string): UUID định danh vòng lặp.
-  - `selector` (string): CSS selector để tìm danh sách phần tử DOM.
-  - `findBy` (string): Phương thức tìm kiếm.
-  - `maxLoop` (number): Giới hạn số phần tử duyệt (0 = không giới hạn).
-  - `reverseLoop` (boolean): Duyệt từ cuối lên đầu.
-  - `loadMoreAction` (string): Hành động tải thêm — `"scroll"`, `"click"`, hoặc `""` (không).
-  - `scrollToBottom` (boolean): Cuộn xuống cuối trang để kích hoạt lazy load.
-  - `actionElSelector` (string): CSS selector của nút "Load more" (dùng khi `loadMoreAction = "click"`).
-  - `actionElMaxWaitTime` (number): Thời gian chờ tối đa (giây) cho nút load more.
-  - `actionPageMaxWaitTime` (number): Thời gian chờ tối đa (giây) cho mỗi lần load.
-  - `waitForSelector` (boolean) + `waitSelectorTimeout` (number): Chờ danh sách xuất hiện.
-- **Output**: Tại mỗi chu kỳ, phần tử DOM hiện tại có thể tham chiếu qua `{{loopData.<loopId>}}` trong selector của các block con.
+  - `loopId` (string): UUID identifying the loop.
+  - `selector` (string): CSS selector to find the list of DOM elements.
+  - `findBy` (string): Search method.
+  - `maxLoop` (number): Maximum number of elements to iterate (0 = unlimited).
+  - `reverseLoop` (boolean): Iterate backwards from the end.
+  - `loadMoreAction` (string): Load more action — `"scroll"`, `"click"`, or `""` (none).
+  - `scrollToBottom` (boolean): Scroll to the bottom to trigger lazy loading.
+  - `actionElSelector` (string): CSS selector of the "Load more" button (used when `loadMoreAction = "click"`).
+  - `actionElMaxWaitTime` (number): Maximum wait time (seconds) for the load more button.
+  - `actionPageMaxWaitTime` (number): Maximum wait time (seconds) per load action.
+  - `waitForSelector` (boolean) + `waitSelectorTimeout` (number): Wait for the list to appear.
+- **Output**: On each cycle, the current DOM element can be referenced via `{{loopData.<loopId>}}` in the selector of child blocks.
 
 ### `loop-breakpoint`
-Điểm ngắt vòng lặp (`break`/`continue`).
+Loop breakpoint (`break`/`continue`).
 - **Input (`data`)**:
-  - `loopId` (string): UUID của vòng lặp cần tác động.
-  - `clearLoop` (boolean): Nếu `true`, thoát vòng lặp (break). Nếu `false`, chuyển sang phần tử kế tiếp (continue).
-- **Output**: Điều khiển loop, không trả về dữ liệu.
-- **Vị trí**: Thường được đặt ở cuối vòng lặp, kết nối ngược về block đầu vòng lặp để tạo chu trình.
+  - `loopId` (string): UUID of the target loop.
+  - `clearLoop` (boolean): If `true`, exit the loop (break). If `false`, move to the next iteration (continue).
+- **Output**: Controls the loop, returns no data.
+- **Usage**: Typically placed at the end of the loop, connected back to the beginning of the loop block to form a cycle.
 
 ### `while-loop`
-Vòng lặp chạy cho đến khi điều kiện trở thành sai.
+Loop execution until a condition becomes false.
 - **Input (`data`)**:
-  - `loopId` (string): UUID định danh vòng lặp.
-  - `condition` (object): Cấu hình điều kiện gồm:
-    - `variable` (string): Tên biến cần kiểm tra.
-    - `comparison` (string): Phép so sánh — `"equals"`, `"not-equals"`, `"greater-than"`, `"less-than"`, `"contains"`, `"starts-with"`, `"ends-with"`, `"empty"`, `"not-empty"`.
-    - `value` (string): Giá trị so sánh.
-  - `maxLoop` (number): Giới hạn số lần lặp (tránh infinite loop).
-- **Output**: Lặp cho đến khi điều kiện sai. Biến `{{loopData.<loopId>.count}}` ghi số lần đã lặp.
+  - `loopId` (string): UUID identifying the loop.
+  - `condition` (object): Condition configuration containing:
+    - `variable` (string): Variable name to check.
+    - `comparison` (string): Comparison operator — `"equals"`, `"not-equals"`, `"greater-than"`, `"less-than"`, `"contains"`, `"starts-with"`, `"ends-with"`, `"empty"`, `"not-empty"`.
+    - `value` (string): Value to compare against.
+  - `maxLoop` (number): Maximum loop limit (prevents infinite loops).
+- **Output**: Loops until the condition is false. Variable `{{loopData.<loopId>.count}}` stores the iteration count.
 
 ### `repeat-task`
-Lặp lại một nhóm tác vụ theo số lần định trước.
+Repeat a group of tasks for a predefined number of times.
 - **Input (`data`)**:
-  - `repeatFor` (number): Số lần lặp.
-- **Output**: Lặp lại các block con theo số lần đã chỉ định. Biến `{{$repeatIndex}}` chứa chỉ số lần lặp hiện tại (bắt đầu từ 0).
+  - `repeatFor` (number): Number of repetitions.
+- **Output**: Repeats child blocks for the specified times. Variable `{{$repeatIndex}}` contains the current iteration index (starts from 0).
 
 ### `execute-workflow`
-Gọi và thực thi một workflow Automa khác (sub-workflow) và chờ kết quả trả về.
+Call and execute another Automa workflow (sub-workflow) and wait for the result.
 - **Input (`data`)**:
-  - `workflowId` (string): ID của workflow cần gọi (có thể chọn từ danh sách workflow có sẵn).
-  - `params` (array): Tham số truyền vào sub-workflow — mảng các object `{ name: "...", value: "..." }`.
-  - `waitForResult` (boolean): Chờ sub-workflow hoàn thành trước khi tiếp tục.
-  - `assignVariable` (boolean) + `variableName` (string): Lưu kết quả từ sub-workflow vào biến.
-- **Output**: Kết quả từ sub-workflow được trả về (nếu `waitForResult = true`).
+  - `workflowId` (string): ID of the workflow to call (can be selected from available workflows).
+  - `params` (array): Parameters passed to the sub-workflow — array of objects `{ name: "...", value: "..." }`.
+  - `waitForResult` (boolean): Wait for the sub-workflow to complete before continuing.
+  - `assignVariable` (boolean) + `variableName` (string): Save sub-workflow result to a variable.
+- **Output**: Result returned from the sub-workflow (if `waitForResult = true`).
 
 ### `blocks-group`
-Nhóm các block lại để quản lý, thu gọn giao diện canvas.
+Group blocks together to organize and collapse the canvas UI.
 - **Input (`data`)**:
-  - `groupId` (string): UUID định danh nhóm.
-  - `groupName` (string): Tên hiển thị của nhóm.
-  - `collapsed` (boolean): Thu gọn nhóm khi hiển thị.
-  - `color` (string): Màu viền nhóm.
-- **Output**: Không ảnh hưởng đến luồng dữ liệu, chỉ tổ chức giao diện.
+  - `groupId` (string): UUID identifying the group.
+  - `groupName` (string): Display name of the group.
+  - `collapsed` (boolean): Collapse the group visually.
+  - `color` (string): Group border color.
+- **Output**: Does not affect data flow, only organizes the interface.
 
 ### `block-package`
-Sử dụng một gói tính năng mở rộng (extension package) trong workflow.
+Use an extension package within the workflow.
 - **Input (`data`)**:
-  - `packageId` (string): ID của gói cài đặt.
-  - `blockName` (string): Tên block trong gói.
-  - `config` (object): Cấu hình tùy chỉnh theo định nghĩa của gói.
-- **Output**: (Phụ thuộc vào gói tính năng cụ thể)
+  - `packageId` (string): Installed package ID.
+  - `blockName` (string): Block name inside the package.
+  - `config` (object): Custom configuration based on the package definition.
+- **Output**: (Depends on the specific extension package)
 
 ### `ai-workflow`
-Khối tích hợp AI — gọi đến các dịch vụ AI (chat, sinh text, phân tích) trong workflow.
+AI integration block — calls AI services (chat, text generation, analysis) within the workflow.
 - **Input (`data`)**:
-  - `provider` (string): Nhà cung cấp AI — `"openai"`, `"google-gemini"`, `"anthropic"`, `"custom"`.
-  - `model` (string): Tên model (ví dụ `"gpt-4"`, `"gpt-3.5-turbo"`, `"gemini-pro"`).
-  - `prompt` (string): Prompt gửi đến AI. Hỗ trợ nội suy biến.
-  - `systemPrompt` (string): System prompt để định hướng AI.
-  - `temperature` (number): Độ sáng tạo (0-1, mặc định 0.7).
-  - `maxTokens` (number): Số token tối đa trong response.
-  - `assignVariable` (boolean) + `variableName` (string): Lưu kết quả vào biến.
-- **Output**: Trả về text response từ AI model.
+  - `provider` (string): AI provider — `"openai"`, `"google-gemini"`, `"anthropic"`, `"custom"`.
+  - `model` (string): Model name (e.g., `"gpt-4"`, `"gpt-3.5-turbo"`, `"gemini-pro"`).
+  - `prompt` (string): Prompt sent to AI. Supports variable interpolation.
+  - `systemPrompt` (string): System prompt to guide AI behavior.
+  - `temperature` (number): Creativity degree (0-1, default 0.7).
+  - `maxTokens` (number): Maximum tokens in response.
+  - `assignVariable` (boolean) + `variableName` (string): Save result to a variable.
+- **Output**: Returns text response from the AI model.
 
 ---
 
-## 5. Khối Xử lý Dữ liệu & Biến (Data & Variables)
+## 5. Data & Variables
 
 ### `insert-data`
-Lưu dữ liệu vào bảng (table) của workflow.
+Save data into the workflow's table.
 - **Input (`data`)**:
-  - `dataList` (array): Danh sách các cặp column-value cần lưu. Mỗi phần tử: `{ column: "<columnId>", value: "<giá trị>" }`. Hỗ trợ nội suy biến trong `value`.
-- **Output**: Dữ liệu được thêm một dòng mới vào bảng, không trả về giá trị.
+  - `dataList` (array): List of column-value pairs to save. Each element: `{ column: "<columnId>", value: "<value>" }`. Supports variable interpolation in `value`.
+- **Output**: Data is added as a new row to the table, returns no value.
 
 ### `export-data`
-Xuất dữ liệu từ bảng ra file.
+Export data from the table to a file.
 - **Input (`data`)**:
-  - `type` (string): Định dạng xuất — `"csv"`, `"json"`, `"plain-text"`.
-  - `name` (string): Tên file xuất ra.
-  - `dataToExport` (string): Nguồn dữ liệu — `"data-columns"` (xuất bảng), hoặc tên biến.
-  - `csvDelimiter` (string): Dấu phân cách CSV (mặc định `","`).
-  - `addBOMHeader` (boolean): Thêm BOM header cho UTF-8 (hỗ trợ Excel hiển thị đúng tiếng Việt).
-  - `onConflict` (string): Xử lý khi file đã tồn tại — `"uniquify"` (thêm số hậu tố), `"overwrite"` (ghi đè), `"skip"` (bỏ qua).
-  - `refKey` (string): Key tham chiếu.
-- **Output**: File được tải xuống hoặc lưu vào thư mục chỉ định.
+  - `type` (string): Export format — `"csv"`, `"json"`, `"plain-text"`.
+  - `name` (string): Exported file name.
+  - `dataToExport` (string): Data source — `"data-columns"` (export table), or variable name.
+  - `csvDelimiter` (string): CSV delimiter (default `","`).
+  - `addBOMHeader` (boolean): Add BOM header for UTF-8 (supports Excel for displaying characters properly).
+  - `onConflict` (string): Behavior when file exists — `"uniquify"` (add numeric suffix), `"overwrite"`, `"skip"`.
+  - `refKey` (string): Reference key.
+- **Output**: File is downloaded or saved to a specified directory.
 
 ### `log-data`
-In log ra console hoặc lịch sử chạy (Execution Log).
+Print logs to the console or execution log history.
 - **Input (`data`)**:
-  - `message` (string): Nội dung cần log. Hỗ trợ nội suy biến.
-  - `level` (string): Mức độ log — `"info"`, `"warn"`, `"error"`, `"debug"`.
-- **Output**: Hiển thị log, không ảnh hưởng luồng thực thi.
+  - `message` (string): Content to log. Supports variable interpolation.
+  - `level` (string): Log level — `"info"`, `"warn"`, `"error"`, `"debug"`.
+- **Output**: Displays the log, doesn't affect execution flow.
 
 ### `increase-variable`
-Tăng hoặc giảm giá trị số của một biến.
+Increase or decrease the numeric value of a variable.
 - **Input (`data`)**:
-  - `variableName` (string): Tên biến cần thay đổi.
-  - `step` (number): Giá trị tăng/giảm (số âm để giảm, mặc định 1).
-  - `min` (number): Giá trị tối thiểu (nếu xuống dưới sẽ gán bằng min).
-  - `max` (number): Giá trị tối đa (nếu lên trên sẽ gán bằng max).
-  - `loopMode` (boolean): Nếu `true`, quay vòng (về `min` khi vượt `max` và ngược lại).
-- **Output**: Biến được cập nhật giá trị mới.
+  - `variableName` (string): Variable name to modify.
+  - `step` (number): Increment/decrement step (negative for decrement, default 1).
+  - `min` (number): Minimum value (if falls below, sets to min).
+  - `max` (number): Maximum value (if exceeds, sets to max).
+  - `loopMode` (boolean): If `true`, loop around (returns to `min` when exceeding `max` and vice versa).
+- **Output**: Variable is updated with the new value.
 
 ### `slice-variable`
-Cắt (slice) chuỗi hoặc mảng từ một biến.
+Slice a string or array from a variable.
 - **Input (`data`)**:
-  - `variableName` (string): Tên biến nguồn (string hoặc array).
-  - `start` (number): Chỉ số bắt đầu (0-indexed, hỗ trợ số âm).
-  - `end` (number): Chỉ số kết thúc (không bao gồm, hỗ trợ số âm).
-  - `assignVariable` (boolean) + `resultVariableName` (string): Tên biến để lưu kết quả.
-- **Output**: Trả về phần đã cắt (string con hoặc mảng con).
+  - `variableName` (string): Source variable name (string or array).
+  - `start` (number): Starting index (0-indexed, supports negative).
+  - `end` (number): Ending index (exclusive, supports negative).
+  - `assignVariable` (boolean) + `resultVariableName` (string): Variable name to store the result.
+- **Output**: Returns the sliced portion (substring or sub-array).
 
 ### `regex-variable`
-Áp dụng biểu thức chính quy (Regex) vào biến string.
+Apply Regular Expression (Regex) to a string variable.
 - **Input (`data`)**:
-  - `variableName` (string): Tên biến nguồn.
-  - `pattern` (string): Pattern regex (ví dụ `\d+`, `[a-z]+`).
-  - `flags` (string): Flags regex — `"g"` (global), `"i"` (case-insensitive), `"m"` (multiline).
-  - `replace` (string): Nếu có, thực hiện replace thay vì match.
-  - `replaceWith` (string): Giá trị thay thế (dùng khi `replace` được chỉ định).
-  - `assignVariable` (boolean) + `resultVariableName` (string): Tên biến để lưu kết quả.
-- **Output**: Trả về mảng kết quả match hoặc string đã được replace.
+  - `variableName` (string): Source variable name.
+  - `pattern` (string): Regex pattern (e.g., `\d+`, `[a-z]+`).
+  - `flags` (string): Regex flags — `"g"` (global), `"i"` (case-insensitive), `"m"` (multiline).
+  - `replace` (string): If provided, performs replace instead of match.
+  - `replaceWith` (string): Replacement value (used when `replace` is specified).
+  - `assignVariable` (boolean) + `resultVariableName` (string): Variable name to store the result.
+- **Output**: Returns a match array or the replaced string.
 
 ### `data-mapping`
-Chuyển đổi và ánh xạ cấu trúc dữ liệu (transform object keys).
+Transform and map data structures (transform object keys).
 - **Input (`data`)**:
-  - `inputVariable` (string): Tên biến đầu vào.
-  - `mappings` (array): Danh sách quy tắc ánh xạ — mỗi phần tử: `{ from: "key_cũ", to: "key_mới", transform: "lowercase"|"uppercase"|"trim"|"number"|"string" }`.
-  - `assignVariable` (boolean) + `resultVariableName` (string): Tên biến lưu kết quả.
-- **Output**: Dữ liệu đã được transform với key mới.
+  - `inputVariable` (string): Input variable name.
+  - `mappings` (array): List of mapping rules — each element: `{ from: "old_key", to: "new_key", transform: "lowercase"|"uppercase"|"trim"|"number"|"string" }`.
+  - `assignVariable` (boolean) + `resultVariableName` (string): Variable name to store the result.
+- **Output**: Transformed data with new keys.
 
 ### `sort-data`
-Sắp xếp dữ liệu trong bảng hoặc mảng.
+Sort data in a table or an array.
 - **Input (`data`)**:
-  - `sourceType` (string): Nguồn dữ liệu — `"data-columns"` (bảng) hoặc `"variable"` (biến mảng).
-  - `variableName` (string): Tên biến (dùng khi `sourceType = "variable"`).
-  - `sortBy` (string): Key để sắp xếp (nếu dữ liệu là object array).
-  - `order` (string): Thứ tự — `"asc"` (tăng dần) hoặc `"desc"` (giảm dần).
-  - `assignVariable` (boolean) + `resultVariableName` (string): Tên biến lưu kết quả.
-- **Output**: Dữ liệu đã sắp xếp.
+  - `sourceType` (string): Data source — `"data-columns"` (table) or `"variable"` (array variable).
+  - `variableName` (string): Variable name (used when `sourceType = "variable"`).
+  - `sortBy` (string): Key to sort by (if data is an object array).
+  - `order` (string): Order — `"asc"` (ascending) or `"desc"` (descending).
+  - `assignVariable` (boolean) + `resultVariableName` (string): Variable name to store the result.
+- **Output**: Sorted data.
 
 ### `delete-data`
-Xóa biến, dữ liệu trong bảng, hoặc toàn bộ bảng.
+Delete a variable, data in the table, or the entire table.
 - **Input (`data`)**:
-  - `targetType` (string): Mục tiêu — `"variable"`, `"data-columns"`, `"all-data"`.
-  - `variableName` (string): Tên biến cần xóa (dùng khi `targetType = "variable"`).
-  - `rowIndex` (number): Chỉ số dòng cần xóa trong bảng (-1 để xóa tất cả).
-- **Output**: Dữ liệu được xóa, không trả về giá trị.
+  - `targetType` (string): Target — `"variable"`, `"data-columns"`, `"all-data"`.
+  - `variableName` (string): Variable name to delete (used when `targetType = "variable"`).
+  - `rowIndex` (number): Row index to delete in the table (-1 to delete all).
+- **Output**: Data is deleted, returns no value.
 
 ---
 
-## 6. Khối Tích hợp & Nâng cao (Integrations & Advanced)
+## 6. Integrations & Advanced
 
 ### `javascript-code`
-Chạy mã JS tùy chỉnh với quyền truy cập API của Automa.
+Run custom JS code with access to Automa's APIs.
 - **Input (`data`)**:
-  - `code` (string): Đoạn mã JavaScript.
-  - `everyNewTab` (boolean): Tự động inject script vào mọi tab mới.
-  - `timeout` (number): Thời gian chờ tối đa (ms) trước khi timeout.
-  - `preloadScripts` (array): Danh sách URL thư viện tải trước (jQuery, Lodash...).
-  - `runBeforeLoad` (boolean): Chạy script trước khi trang load.
-- **API functions có sẵn trong sandbox**:
-  - `automaNextBlock(data)`: Kích hoạt block tiếp theo và truyền dữ liệu.
-  - `automaSetVariable(name, value)`: Ghi biến.
-  - `automaRefData(type, name)`: Đọc dữ liệu (variables, table, globalData...).
-- **Output**: Dữ liệu từ `automaNextBlock({...})` trở thành input cho block kế tiếp.
+  - `code` (string): JavaScript code block.
+  - `everyNewTab` (boolean): Automatically inject script into every new tab.
+  - `timeout` (number): Maximum wait time (ms) before timeout.
+  - `preloadScripts` (array): List of preloaded library URLs (jQuery, Lodash...).
+  - `runBeforeLoad` (boolean): Run script before the page loads.
+- **Available API functions in sandbox**:
+  - `automaNextBlock(data)`: Trigger next block and pass data.
+  - `automaSetVariable(name, value)`: Write variable.
+  - `automaRefData(type, name)`: Read data (variables, table, globalData...).
+- **Output**: Data passed from `automaNextBlock({...})` becomes input for the next block.
 
 ### `webhook`
-Gửi HTTP request (gọi API).
+Send HTTP requests (API calls).
 - **Input (`data`)**:
-  - `url` (string): Endpoint API (bắt buộc). Hỗ trợ nội suy biến.
+  - `url` (string): API endpoint (required). Supports variable interpolation.
   - `method` (string): HTTP method — `GET`, `POST`, `PUT`, `DELETE`, `PATCH`.
-  - `headers` (array): Mảng các object `{ name: "...", value: "..." }`.
-  - `body` (string/object): Nội dung request body.
-  - `responseType` (string): Kiểu response — `"json"`, `"text"`, `"base64"`.
-  - `assignVariable` (boolean) + `variableName` (string): Lưu vào biến.
-  - `saveData` (boolean) + `dataPath` (string): Lưu vào bảng theo đường dẫn object path (ví dụ `$response.data.id`).
-- **Output**: Response payload. Hỗ trợ fallback — nếu request thất bại, luồng có thể rẽ nhánh theo đường nối lỗi.
+  - `headers` (array): Array of objects `{ name: "...", value: "..." }`.
+  - `body` (string/object): Request body content.
+  - `responseType` (string): Response type — `"json"`, `"text"`, `"base64"`.
+  - `assignVariable` (boolean) + `variableName` (string): Save to a variable.
+  - `saveData` (boolean) + `dataPath` (string): Save to the table by object path (e.g., `$response.data.id`).
+- **Output**: Response payload. Supports fallback — if request fails, the flow can branch to an error connection.
 
 ### `google-sheets`
-Tương tác với Google Sheets API.
+Interact with Google Sheets API.
 - **Input (`data`)**:
-  - `type` (string): Hành động — `"update"`, `"get"`, `"append"`, `"clear"`.
-  - `spreadsheetId` (string): ID của Google Sheet.
-  - `range` (string): Range (ví dụ `"Sheet1!A1:C10"`).
-  - `dataFrom` (string): Nguồn dữ liệu — `"data-columns"` (từ bảng), `"custom-data"`.
-  - `customData` (string): Dữ liệu tùy chỉnh dạng JSON string.
-  - `InsertDataOption` (string): `"INSERT_ROWS"` hoặc `"OVERWRITE"`.
-  - `valueInputOption` (string): `"RAW"` hoặc `"USER_ENTERED"`.
-  - `assignVariable` (boolean) + `variableName` (string): Lưu kết quả từ Sheet vào biến.
-  - `saveData` (boolean): Lưu kết quả vào bảng.
-  - `keysAsFirstRow` (boolean): Dùng key làm hàng đầu tiên.
-  - `firstRowAsKey` (boolean): Dùng hàng đầu làm key.
-  - `refKey` (string): Key tham chiếu.
-- **Output**: Dữ liệu từ Sheet hoặc xác nhận ghi thành công.
+  - `type` (string): Action — `"update"`, `"get"`, `"append"`, `"clear"`.
+  - `spreadsheetId` (string): Google Sheet ID.
+  - `range` (string): Range (e.g., `"Sheet1!A1:C10"`).
+  - `dataFrom` (string): Data source — `"data-columns"` (from table), `"custom-data"`.
+  - `customData` (string): Custom JSON string data.
+  - `InsertDataOption` (string): `"INSERT_ROWS"` or `"OVERWRITE"`.
+  - `valueInputOption` (string): `"RAW"` or `"USER_ENTERED"`.
+  - `assignVariable` (boolean) + `variableName` (string): Save result from Sheet to variable.
+  - `saveData` (boolean): Save result to table.
+  - `keysAsFirstRow` (boolean): Use keys as the first row.
+  - `firstRowAsKey` (boolean): Use first row as keys.
+  - `refKey` (string): Reference key.
+- **Output**: Data from the Sheet or confirmation of a successful write.
 
 ### `notification`
-Hiển thị thông báo đẩy (browser notification) đến người dùng.
+Show browser push notifications to the user.
 - **Input (`data`)**:
-  - `title` (string): Tiêu đề thông báo. Hỗ trợ nội suy biến.
-  - `message` (string): Nội dung thông báo. Hỗ trợ nội suy biến.
-  - `icon` (string): URL icon hiển thị trên thông báo.
-  - `silent` (boolean): Không phát âm thanh thông báo.
-- **Output**: Thông báo hiển thị, workflow tiếp tục chạy.
+  - `title` (string): Notification title. Supports variable interpolation.
+  - `message` (string): Notification message. Supports variable interpolation.
+  - `icon` (string): Icon URL to show on notification.
+  - `silent` (boolean): Disable notification sound.
+- **Output**: Notification is displayed, workflow continues.
 
 ### `parameter-prompt`
-Hiển thị popup yêu cầu người dùng nhập tham số trước khi workflow tiếp tục.
+Show an input prompt popup requesting parameters from the user before continuing.
 - **Input (`data`)**:
-  - `title` (string): Tiêu đề popup.
-  - `description` (string): Mô tả hướng dẫn cho người dùng.
-  - `fields` (array): Danh sách trường nhập liệu — mỗi phần tử: `{ id: "...", label: "...", type: "text"|"number"|"select"|"checkbox"|"file", defaultValue: "...", required: true/false, options: ["op1","op2"] }` (options dùng cho type select).
-  - `buttonText` (string): Text trên nút xác nhận (mặc định "OK").
-- **Output**: Dữ liệu người dùng nhập được lưu vào biến `$params.<id>`.
+  - `title` (string): Popup title.
+  - `description` (string): Guidance description for the user.
+  - `fields` (array): List of input fields — each element: `{ id: "...", label: "...", type: "text"|"number"|"select"|"checkbox"|"file", defaultValue: "...", required: true/false, options: ["op1","op2"] }` (options used for type select).
+  - `buttonText` (string): Text on the confirmation button (default "OK").
+- **Output**: User input data is saved to `$params.<id>` variables.
 
 ### `clipboard`
-Đọc hoặc ghi dữ liệu vào clipboard (bộ nhớ tạm).
+Read from or write data to the clipboard.
 - **Input (`data`)**:
-  - `action` (string): Hành động — `"copy"` (ghi) hoặc `"paste"` (đọc).
-  - `value` (string): Giá trị cần copy (dùng khi `action = "copy"`). Hỗ trợ nội suy biến.
-  - `assignVariable` (boolean) + `variableName` (string): Lưu kết quả paste vào biến (dùng khi `action = "paste"`).
+  - `action` (string): Action — `"copy"` (write) or `"paste"` (read).
+  - `value` (string): Value to copy (used when `action = "copy"`). Supports variable interpolation.
+  - `assignVariable` (boolean) + `variableName` (string): Save pasted result to a variable (used when `action = "paste"`).
 - **Output**: 
-  - Nếu `action = "copy"`: Giá trị được ghi vào clipboard, không trả về dữ liệu.
-  - Nếu `action = "paste"`: Trả về nội dung clipboard.
+  - If `action = "copy"`: Value is written to the clipboard, returns no data.
+  - If `action = "paste"`: Returns clipboard content.
 
 ### `handle-dialog`
-Tự động xử lý các hộp thoại JavaScript (alert, confirm, prompt) của trang web.
+Automatically handle JavaScript dialogs (alert, confirm, prompt) on the webpage.
 - **Input (`data`)**:
-  - `action` (string): Hành động — `"accept"` (đồng ý/OK), `"dismiss"` (hủy/Cancel).
-  - `dialogType` (string): Loại hộp thoại — `"alert"`, `"confirm"`, `"prompt"`, `"beforeunload"`, `"all"`.
-  - `response` (string): Giá trị trả lời cho prompt (dùng khi `dialogType = "prompt"`).
-- **Output**: Hộp thoại được tự động xử lý, workflow không bị chặn.
+  - `action` (string): Action — `"accept"` (OK), `"dismiss"` (Cancel).
+  - `dialogType` (string): Dialog type — `"alert"`, `"confirm"`, `"prompt"`, `"beforeunload"`, `"all"`.
+  - `response` (string): Response value for prompt (used when `dialogType = "prompt"`).
+- **Output**: Dialog is handled automatically, workflow is not blocked.
 
 ### `handle-download`
-Quản lý và theo dõi sự kiện tải file trình duyệt.
+Manage and monitor browser file download events.
 - **Input (`data`)**:
-  - `action` (string): Hành động — `"allow"` (cho phép), `"block"` (chặn), `"save"` (lưu xuống thư mục chỉ định).
-  - `downloadPath` (string): Thư mục lưu file (dùng khi `action = "save"`).
-  - `fileTypes` (array): Danh sách đuôi file được phép (ví dụ `[".pdf", ".csv", ".xlsx"]`).
-  - `renamePattern` (string): Pattern đặt tên (ví dụ `"report_{date}"`).
-  - `assignVariable` (boolean) + `variableName` (string): Lưu thông tin file đã tải vào biến (gồm `filename`, `url`, `fileSize`).
-- **Output**: File được quản lý theo cấu hình, trả về thông tin file nếu có.
+  - `action` (string): Action — `"allow"`, `"block"`, `"save"` (save to a specified directory).
+  - `downloadPath` (string): Directory to save file (used when `action = "save"`).
+  - `fileTypes` (array): List of allowed file extensions (e.g., `[".pdf", ".csv", ".xlsx"]`).
+  - `renamePattern` (string): Renaming pattern (e.g., `"report_{date}"`).
+  - `assignVariable` (boolean) + `variableName` (string): Save downloaded file information to a variable (includes `filename`, `url`, `fileSize`).
+- **Output**: File is handled according to configuration, returns file information if available.
 
 ### `wait-connections`
-Chờ cho đến khi tất cả kết nối mạng (network) của tab hiện tại ở trạng thái nhàn rỗi (idle).
+Wait until all network connections on the current tab are in an idle state.
 - **Input (`data`)**:
-  - `timeout` (number): Thời gian chờ tối đa (ms) trước khi bỏ qua.
-  - `idleTime` (number): Thời gian (ms) không có request nào để coi là idle.
-- **Output**: Tiếp tục khi network không còn request đang xử lý hoặc hết timeout.
+  - `timeout` (number): Maximum wait time (ms) before bypassing.
+  - `idleTime` (number): Time (ms) with no active requests to be considered idle.
+- **Output**: Continues when the network has no active processing requests or times out.
 
 ### `proxy`
-Thiết lập proxy HTTP/SOCKS cho các request mạng của workflow.
+Configure HTTP/SOCKS proxy for the workflow's network requests.
 - **Input (`data`)**:
-  - `protocol` (string): Loại proxy — `"http"`, `"https"`, `"socks4"`, `"socks5"`.
-  - `host` (string): Địa chỉ IP hoặc hostname của proxy.
-  - `port` (number): Cổng proxy.
-  - `username` (string): Tên đăng nhập (nếu proxy yêu cầu auth).
-  - `password` (string): Mật khẩu (nếu proxy yêu cầu auth).
-  - `bypassList` (array): Danh sách URL không qua proxy (ví dụ `["localhost", "*.internal.com"]`).
-  - `enabled` (boolean): Bật/tắt proxy.
-- **Output**: Proxy được áp dụng cho tất cả request từ workflow.
+  - `protocol` (string): Proxy type — `"http"`, `"https"`, `"socks4"`, `"socks5"`.
+  - `host` (string): Proxy IP address or hostname.
+  - `port` (number): Proxy port.
+  - `username` (string): Username (if proxy requires auth).
+  - `password` (string): Password (if proxy requires auth).
+  - `bypassList` (array): List of URLs bypassing the proxy (e.g., `["localhost", "*.internal.com"]`).
+  - `enabled` (boolean): Enable/disable proxy.
+- **Output**: Proxy is applied to all requests from the workflow.
 
 ### `interaction-block`
-Chờ người dùng tương tác thủ công — hiển thị hướng dẫn và nút xác nhận.
+Wait for manual user interaction — show instructions and a confirmation button.
 - **Input (`data`)**:
-  - `message` (string): Nội dung hướng dẫn người dùng (ví dụ "Vui lòng nhập captcha rồi nhấn Tiếp tục").
-  - `title` (string): Tiêu đề popup hướng dẫn.
-  - `timeout` (number): Thời gian chờ tối đa (giây). Hết time mà không tương tác sẽ bỏ qua.
-- **Output**: Workflow tiếp tục khi người dùng xác nhận đã hoàn thành thao tác thủ công.
+  - `message` (string): Instruction for the user (e.g., "Please solve the captcha and click Continue").
+  - `title` (string): Instruction popup title.
+  - `timeout` (number): Maximum wait time (seconds). Automatically bypasses if timed out without interaction.
+- **Output**: Workflow continues when the user confirms the manual action is completed.
 
 ### `google-drive`
-Tương tác với Google Drive API — đọc, tạo, xóa file trên Google Drive.
+Interact with Google Drive API — read, create, delete files on Google Drive.
 - **Input (`data`)**:
-  - `type` (string): Hành động — `"list"` (liệt kê file), `"upload"` (tải lên), `"download"` (tải xuống), `"delete"` (xóa), `"search"` (tìm kiếm).
-  - `fileId` (string): ID của file trên Drive (dùng cho download/delete).
-  - `fileName` (string): Tên file cần tìm hoặc tạo.
-  - `folderId` (string): ID thư mục trên Drive.
-  - `mimeType` (string): Kiểu MIME của file (ví dụ `"text/csv"`, `"application/json"`, `"application/pdf"`).
-  - `dataFrom` (string): Nguồn dữ liệu upload — `"data-columns"` (từ bảng) hoặc `"variable"`.
-  - `assignVariable` (boolean) + `variableName` (string): Lưu kết quả (danh sách file hoặc nội dung file) vào biến.
+  - `type` (string): Action — `"list"` (list files), `"upload"`, `"download"`, `"delete"`, `"search"`.
+  - `fileId` (string): File ID on Drive (used for download/delete).
+  - `fileName` (string): File name to search or create.
+  - `folderId` (string): Folder ID on Drive.
+  - `mimeType` (string): File MIME type (e.g., `"text/csv"`, `"application/json"`, `"application/pdf"`).
+  - `dataFrom` (string): Upload data source — `"data-columns"` (from table) or `"variable"`.
+  - `assignVariable` (boolean) + `variableName` (string): Save result (file list or file content) to a variable.
 - **Output**: 
-  - `list`/`search`: Trả về mảng thông tin file (id, name, mimeType, size, modifiedTime).
-  - `download`: Trả về nội dung file.
-  - `upload`/`delete`: Xác nhận thành công.
+  - `list`/`search`: Returns an array of file info (id, name, mimeType, size, modifiedTime).
+  - `download`: Returns file content.
+  - `upload`/`delete`: Confirmation of success.
 
 ### `google-sheets-drive`
-Kết hợp Google Sheets và Google Drive — tạo Sheet mới từ dữ liệu và lưu vào Drive.
+Combine Google Sheets and Google Drive — create a new Sheet from data and save to Drive.
 - **Input (`data`)**:
-  - `type` (string): Hành động — `"create"` (tạo file Google Sheets mới), `"export-to-drive"` (xuất dữ liệu bảng ra file trên Drive).
-  - `spreadsheetTitle` (string): Tiêu đề file Sheets mới.
-  - `folderId` (string): ID thư mục Drive để lưu file.
-  - `dataFrom` (string): Nguồn dữ liệu — `"data-columns"`, `"variable"`.
-  - `fileName` (string): Tên file xuất ra Drive (dùng khi `type = "export-to-drive"`).
-  - `exportFormat` (string): Định dạng xuất — `"csv"`, `"xlsx"`, `"pdf"`, `"ods"`.
-- **Output**: Đường dẫn file Google Sheets hoặc file trên Drive được tạo.
+  - `type` (string): Action — `"create"` (create new Google Sheets file), `"export-to-drive"` (export table data to a file on Drive).
+  - `spreadsheetTitle` (string): Title of the new Sheets file.
+  - `folderId` (string): Drive folder ID to save the file.
+  - `dataFrom` (string): Data source — `"data-columns"`, `"variable"`.
+  - `fileName` (string): Exported file name on Drive (used when `type = "export-to-drive"`).
+  - `exportFormat` (string): Export format — `"csv"`, `"xlsx"`, `"pdf"`, `"ods"`.
+- **Output**: URL/path of the created Google Sheets or file on Drive.
 
 ### `note`
-Ghi chú (non-executing) — không thực thi, chỉ dùng để chú thích trên canvas.
+Non-executing note — not executed, only used for annotation on the canvas.
 - **Input (`data`)**:
-  - `note` (string): Nội dung ghi chú.
-  - `color` (string): Màu sắc (`"indigo"`, `"red"`, `"green"`, v.v.).
-  - `drawing` (boolean): Chế độ vẽ tay.
-  - `fontSize` (string): Kích cỡ chữ (`"regular"`, `"small"`, `"large"`).
-  - `width` / `height` (number): Kích thước khung ghi chú.
-- **Output**: Không thực thi, không trả về dữ liệu.
+  - `note` (string): Note content.
+  - `color` (string): Color (`"indigo"`, `"red"`, `"green"`, etc.).
+  - `drawing` (boolean): Freehand drawing mode.
+  - `fontSize` (string): Font size (`"regular"`, `"small"`, `"large"`).
+  - `width` / `height` (number): Note frame size.
+- **Output**: Not executed, returns no data.
 
 ---
 
-## Cú pháp nội suy biến (Variable Interpolation)
+## Variable Interpolation Syntax
 
-Các workflow sử dụng cú pháp Handlebars `{{ }}` để tham chiếu dữ liệu:
+Workflows use Handlebars syntax `{{ }}` to reference data:
 
-| Cú pháp | Ý nghĩa | Ví dụ |
+| Syntax | Meaning | Example |
 |---|---|---|
-| `{{loopData.<loopId>.<field>}}` | Field của phần tử trong vòng lặp | `{{loopData.testcases.username}}` |
-| `{{loopData@<loopId>}}` | Phần tử hiện tại (dùng trong selector) | `{{loopData@options}}` |
-| `{{loopData.items}}` | DOM element hiện tại (trong `loop-elements`) | `{{loopData.items}} > div` |
-| `{{variables@$ctxTextSelection}}` | Text được bôi đen từ context menu | `{{variables@$ctxTextSelection}}` |
+| `{{loopData.<loopId>.<field>}}` | Field of an element in a loop | `{{loopData.testcases.username}}` |
+| `{{loopData@<loopId>}}` | Current element (used in selector) | `{{loopData@options}}` |
+| `{{loopData.items}}` | Current DOM element (in `loop-elements`) | `{{loopData.items}} > div` |
+| `{{variables@$ctxTextSelection}}` | Highlighted text from context menu | `{{variables@$ctxTextSelection}}` |
 
 ---
 
-## Cấu trúc luồng (Flow)
+## Flow Structure
 
-Luồng chạy luôn xuất phát từ block có `label: "trigger"`. Dùng mảng `drawflow.edges` để xác định thứ tự:
-- `source` → id của block nguồn.
-- `target` → id của block đích.
-- `sourceHandle` / `targetHandle` — xác định cổng kết nối cụ thể trên block (ví dụ `-output-1`, `-input-1`).
+The execution flow always starts from a block with `label: "trigger"`. The `drawflow.edges` array is used to determine the order:
+- `source` → ID of the source block.
+- `target` → ID of the target block.
+- `sourceHandle` / `targetHandle` — specific connection ports on the blocks (e.g., `-output-1`, `-input-1`).
 
-Đối với block `conditions` và `webhook`, có thể có nhiều cổng output (nhánh đúng/sai, thành công/thất bại).
+For `conditions` and `webhook` blocks, there can be multiple output ports (true/false branch, success/fail).
 
 ---
 
-## Cấu trúc JSON mẫu của một block node
+## Sample JSON Structure of a Node Block
 
-> _(Tham chiếu cấu trúc JSON chính xác tại file automa.schema.json)_
+> _(Reference the exact JSON structure in the automa.schema.json file)_

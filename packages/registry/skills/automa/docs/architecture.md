@@ -1,28 +1,28 @@
-# Cấu trúc Thư mục (Directory Structure) - Automa
+# Directory Structure - Automa
 
-Dự án Automa là một browser extension. Dưới đây là cây thư mục (Directory tree) mô tả tổng quan các thành phần quan trọng trong mã nguồn:
+The Automa project is a browser extension. Below is the directory tree describing an overview of the important components in the source code:
 
 ```text
 ├── src/
-│   ├── assets/                # Chứa file CSS và Fonts
-│   ├── background/            # Các file chạy ngầm của Service Worker
-│   ├── components/            # Vue components chính chia theo Giao diện
+│   ├── assets/                # Contains CSS files and Fonts
+│   ├── background/            # Background scripts for Service Worker
+│   ├── components/            # Main Vue components divided by UI sections
 │   ├── composable/            # Reusable Vue Composables
-│   ├── content/               # Content Script: tiêm vào web để tương tác DOM
-│   ├── db/                    # Chứa logic lưu trữ IndexedDB/Storage
-│   ├── execute/               # File dùng để khởi chạy execution
-│   ├── lib/                   # Thư viện ngoài
-│   ├── locales/               # Đa ngôn ngữ (i18n)
-│   ├── popup/                 # Giao diện Popup extension
-│   ├── service/               # Tầng dịch vụ giao tiếp
+│   ├── content/               # Content Script: injected into web to interact with DOM
+│   ├── db/                    # IndexedDB/Storage storage logic
+│   ├── execute/               # Files used to initialize execution
+│   ├── lib/                   # External libraries
+│   ├── locales/               # Internationalization (i18n)
+│   ├── popup/                 # Extension popup interface
+│   ├── service/               # Communication service layer
 │   ├── stores/                # State Management
-│   ├── utils/                 # Hàm hỗ trợ tiện ích
-│   └── workflowEngine/        # Cốt lõi của Workflow
-└── utils/                     # Script tiện ích cho việc Build
+│   ├── utils/                 # Utility support functions
+│   └── workflowEngine/        # The core of Workflow
+└── utils/                     # Utility scripts for Building
 ```
 
-## Các Vị trí Quan trọng để Mod / Sửa lỗi
-- **Thêm/sửa tính năng của một Block hiện có**: Bạn cần can thiệp ở 2 tầng:
-  1. Giao diện thiết lập thông số (Settings form): Tìm trong thư mục chứa Vue components của workflow editor.
-  2. Logic xử lý tính năng: Nằm tại workflow engine handler (xử lý ngầm) hoặc content blocks handler (tương tác DOM web).
-- **Tùy biến UI/UX của Workflow Editor**: Tìm trong thư mục workflow components của editor.
+## Important Locations for Modding / Bug Fixing
+- **Adding/editing features of an existing Block**: You need to intervene at 2 layers:
+  1. Settings form interface: Look in the directory containing Vue components of the workflow editor.
+  2. Feature processing logic: Located at the workflow engine handler (background processing) or content blocks handler (web DOM interaction).
+- **Customizing UI/UX of the Workflow Editor**: Look in the workflow components directory of the editor.

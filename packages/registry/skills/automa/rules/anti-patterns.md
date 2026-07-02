@@ -1,20 +1,20 @@
 ---
 name: automa-anti-patterns
-description: Các lỗi sai thường gặp khi tạo workflow Automa
+description: Common mistakes when creating Automa workflows
 ---
 
 # Common Mistakes / Anti-patterns
 
-Khi xây dựng workflow Automa, tuyệt đối tránh các lỗi sau:
+When building Automa workflows, strictly avoid the following mistakes:
 
-| Sai | Tại sao sai | Đúng |
-|-----|-------------|------|
-| Bỏ trống edge `label` | Agent/người đọc không hiểu luồng | Luôn viết label: `"Đã điền xong → submit"` |
-| Node `description` chung chung: `"Mở tab"` | Không biết node này làm gì trong nghiệp vụ | `"Mở tab login {{$params.url}} để bắt đầu đăng nhập"` |
-| Hardcode password trong node | Lộ thông tin, không reuse được | Khai báo trong `trigger.parameters`, dùng `{{variables.password}}` |
-| Thêm `element-exists` trước `event-click` | Block `event-click` đã có `waitForSelector` tự kiểm tra | Chỉ dùng `element-exists` khi cần **rẽ nhánh** (có → A, không → B) |
-| Selector tự suy đoán: `input.emailll` | DOM thực tế thường khác với suy nghĩ | Inspect DOM thực tế, ưu tiên XPath |
-| Conditions chỉ có 1 nhánh output | Lỗi không được xử lý, workflow treo | Luôn nối cả output-1 (đúng) và output-2 (sai) |
-| `new-tab` không có `waitTabLoaded: true` | Các block sau chạy khi trang chưa load → fail | Luôn set `"waitTabLoaded": true` |
-| `delay.time` là string `"1000"` | Engine có thể không parse đúng | Luôn là number: `1000` |
-| `drawflow` là string (copy từ file export) | Workflow mới tạo không load được | Khi tạo mới, `drawflow` là **object** `{ nodes, edges }` |
+| Mistake | Why it is wrong | Correct approach |
+|---------|-----------------|------------------|
+| Leaving edge `label` empty | Agent/reader cannot understand the flow | Always write a label: `"Finished filling → submit"` |
+| Generic node `description`: `"Open tab"` | Unclear what this node does in the business logic | `"Open login tab {{$params.url}} to start logging in"` |
+| Hardcode password in node | Exposes information, cannot be reused | Declare in `trigger.parameters`, use `{{variables.password}}` |
+| Adding `element-exists` before `event-click` | The `event-click` block already has `waitForSelector` to self-check | Only use `element-exists` when needing to **branch** (exists → A, does not exist → B) |
+| Guessed selector: `input.emailll` | Actual DOM often differs from expectation | Inspect actual DOM, prioritize XPath |
+| Conditions only have 1 output branch | Errors are unhandled, workflow hangs | Always connect both output-1 (true) and output-2 (false) |
+| `new-tab` without `waitTabLoaded: true` | Subsequent blocks run when the page hasn't loaded → fail | Always set `"waitTabLoaded": true` |
+| `delay.time` is string `"1000"` | Engine might not parse it correctly | Must always be a number: `1000` |
+| `drawflow` is a string (copied from export file) | Newly created workflows cannot load | When creating new, `drawflow` is an **object** `{ nodes, edges }` |

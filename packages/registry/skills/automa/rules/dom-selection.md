@@ -1,89 +1,89 @@
-# Hướng dẫn tìm Selector / XPath
+# DOM Selection / XPath Guidelines
 
-## Quy tắc
+## Rules
 
-- **Ưu tiên XPath** — chính xác hơn, hỗ trợ text, position, quan hệ phức tạp
-- Nếu selector đẹp (có `id`, `data-testid`, `name`) → dùng CSS cho gọn
-- **Phải unique** — xác định duy nhất 1 phần tử
-- **Không suy đoán** — nếu không inspect được, báo lại ngay
+- **Prioritize XPath** — more accurate, supports text, position, complex relationships
+- If the selector is clean (has `id`, `data-testid`, `name`) → use CSS for brevity
+- **Must be unique** — uniquely identifies 1 element
+- **No guessing** — if it cannot be inspected, report back immediately
 
 ---
 
-## Cách inspect
+## How to inspect
 
-1. `F12` → `Ctrl+Shift+C` → click phần tử
-2. Copy: chuột phải Elements → **Copy → Copy XPath**
-3. Kiểm tra Console:
+1. `F12` → `Ctrl+Shift+C` → click the element
+2. Copy: Right-click in Elements → **Copy → Copy XPath**
+3. Verify in Console:
 ```js
 $x("//*[@id='root']/div[2]/form/input[1]")
 ```
 
 ---
 
-## Khi nào dùng XPath / CSS?
+## When to use XPath / CSS?
 
-| Tình huống | Dùng | Ví dụ |
-|-----------|------|-------|
-| Có `id`, `data-testid`, `name` | CSS | `#username`, `[data-testid="btn"]` |
-| Tìm theo **text** | XPath | `//button[contains(text(),'Login')]` |
-| Tìm theo **vị trí** | XPath | `(//div[@class='item'])[3]` |
-| Attribute chứa chuỗi động | XPath | `//a[starts-with(@href, '/product/')]` |
-| Quan hệ cha-con xa | XPath | `//form[@id='login']//input[@type='submit']` |
-| Class ổn định | CSS | `.btn-primary` |
-| Class dễ thay đổi | XPath | `//*[contains(@class, 'btn') and contains(@class, 'primary')]` |
+| Situation | Use | Example |
+|-----------|-----|---------|
+| Has `id`, `data-testid`, `name` | CSS | `#username`, `[data-testid="btn"]` |
+| Find by **text** | XPath | `//button[contains(text(),'Login')]` |
+| Find by **position** | XPath | `(//div[@class='item'])[3]` |
+| Attribute contains dynamic string | XPath | `//a[starts-with(@href, '/product/')]` |
+| Distant parent-child relationship | XPath | `//form[@id='login']//input[@type='submit']` |
+| Stable class | CSS | `.btn-primary` |
+| Volatile class | XPath | `//*[contains(@class, 'btn') and contains(@class, 'primary')]` |
 
 ---
 
-## Chiến lược tìm Unique XPath
+## Unique XPath Strategies
 
-### Cấp 1: ID cha + tag + attribute
+### Level 1: Parent ID + tag + attribute
 ```xpath
 //*[@id='login-form']//input[@type='email']
 //form[@id='search']//button[@type='submit']
 ```
 
-### Cấp 2: Attribute ổn định
+### Level 2: Stable attribute
 ```xpath
 //button[@data-testid='submit']
 //input[@name='email']
 //a[@href='/dashboard']
 ```
 
-### Cấp 3: Text content
+### Level 3: Text content
 ```xpath
-//button[text()='Đăng nhập']
-//span[contains(text(),'Giỏ hàng')]
+//button[text()='Login']
+//span[contains(text(),'Cart')]
 ```
 
-### Cấp 4: Class + vị trí
+### Level 4: Class + position
 ```xpath
 (//div[@class='product-item'])[1]//a
 //ul[@class='nav']/li[3]/a
 ```
 
-### Cấp 5: Role / aria
+### Level 5: Role / aria
 ```xpath
 //*[@role='dialog']//button[@aria-label='Close']
 ```
 
 ---
 
-## Kiểm tra nhanh
+## Quick Validation
 
 ```js
-// CSS — phải ra 1 element, không null
+// CSS — must return 1 element, not null
 document.querySelector('#my-id')
 
-// XPath — phải ra 1 element
+// XPath — must return 1 element
 $x("//button[contains(text(),'Login')]")[0]
 ```
 
 ---
 
-## Báo lỗi đúng cách
+## How to report errors properly
 
-Nếu không inspect được DOM thực tế:
+If the actual DOM cannot be inspected:
 
-> "Không thể xác định selector — cần truy cập trang để inspect DOM. Đề xuất dùng interaction-block hoặc parameter-prompt để người dùng tự nhập."
+> "Cannot determine the selector — need access to the page to inspect the DOM. Recommend using interaction-block or parameter-prompt for the user to input manually."
 
-Luôn bật `waitForSelector: true` + `waitSelectorTimeout: 5000` trên các block DOM.
+Always enable `waitForSelector: true` + `waitSelectorTimeout: 5000` on DOM blocks.

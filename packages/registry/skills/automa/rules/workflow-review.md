@@ -1,17 +1,17 @@
 ---
 name: automa-workflow-review
-description: Checklist review chi tiết một bản nháp Automa Workflow
+description: Detailed review checklist for an Automa Workflow draft
 ---
 
 # Review Checklist
 
-Khi review một Workflow (hoặc trước khi hoàn thành việc khởi tạo), Agent bắt buộc phải tự kiểm tra qua các tiêu chí sau:
+When reviewing a Workflow (or before completing the initialization), the Agent must self-check against the following criteria:
 
-1. **Structure Check**: Node có hợp lý với nghiệp vụ? Không áp đặt loop nếu không thực sự cần thiết (tác vụ 1 lần không cần block loop).
-2. **Logic Check**: Edges đúng luồng? Nhánh conditions/webhook đã nối đủ?
-3. **Documentation Check**: Mỗi node/edge có `description`/`label` chi tiết?
-4. **Reusability Check**: Input có được khai báo đầy đủ trong `trigger.parameters`? Tuyệt đối không hardcode.
-5. **Redundancy Check**: Không thêm `element-exists` trước `element-scroll`, `forms`, `event-click` — các block đó đã có `waitForSelector: true` tự kiểm tra phần tử. `element-exists` chỉ dùng để **rẽ nhánh logic** (ví dụ: có element → làm A, không → làm B).
-6. **Selector Check**: Ưu tiên XPath, inspect thực tế, không suy đoán DOM (đọc `dom-selection.md`).
-7. **Condition Check**: `conditions` luôn có đủ 2 nhánh output (đúng + sai). Không bỏ sót fallback.
-8. **Error Handling Check**: Các block dễ gây lỗi (webhook, new-tab, block DOM) có được xử lý khi thất bại không? (Sử dụng onError trong block hoặc edge fallback).
+1. **Structure Check**: Are the nodes logical for the business requirement? Do not enforce a loop if it is not truly necessary (a one-time task does not need a loop block).
+2. **Logic Check**: Are the edges following the correct flow? Are the conditions/webhook branches fully connected?
+3. **Documentation Check**: Does every node/edge have a detailed `description`/`label`?
+4. **Reusability Check**: Are all inputs fully declared in `trigger.parameters`? Absolutely no hardcoding.
+5. **Redundancy Check**: Do not add `element-exists` before `element-scroll`, `forms`, `event-click` — those blocks already have `waitForSelector: true` to self-check the element. `element-exists` is only used to **branch logic** (e.g., element exists → do A, does not exist → do B).
+6. **Selector Check**: Prioritize XPath, inspect actual DOM, do not guess DOM (read `dom-selection.md`).
+7. **Condition Check**: `conditions` must always have both output branches (true + false). Do not miss the fallback.
+8. **Error Handling Check**: Are blocks prone to errors (webhook, new-tab, DOM blocks) handled upon failure? (Use onError in the block or an edge fallback).

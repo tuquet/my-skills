@@ -1,30 +1,30 @@
 ---
 name: automa-workflow-best-practices
-description: Hướng dẫn tạo, sửa, review workflow Automa JSON. Trigger: automa, workflow json, automa json, review workflow.
+description: Guidelines for creating, editing, and reviewing Automa JSON workflows. Trigger: automa, workflow json, automa json, review workflow.
 crossSkills: [test-cases]
 ---
 
 # Automa Workflow Best Practices
 
-Automa Workflow đòi hỏi sự chính xác tuyệt đối về mặt Cấu trúc Dữ liệu (Schema) và chặt chẽ về mặt Nghiệp vụ. SKILL này được thiết kế theo các Modules để giúp Agent dễ dàng tra cứu kiến thức.
+Automa Workflows require absolute precision regarding Data Structure (Schema) and strict adherence to Business Logic. This SKILL is designed in Modules to help Agents easily look up knowledge.
 
-## 1. Core Rules (Quy tắc bắt buộc)
-Khi tham gia xây dựng hoặc review workflow, phải TUÂN THỦ nghiêm ngặt các quy định sau:
-- **[Anti-patterns](file:///D:/Repository/my-skills/packages/registry/skills/automa/rules/anti-patterns.md)**: Danh sách các lỗi sai cơ bản (thiếu label, dư element-exists, hardcode...) cần tuyệt đối tránh.
-- **[DOM Selection](file:///D:/Repository/my-skills/packages/registry/skills/automa/rules/dom-selection.md)**: Hướng dẫn lấy Selector chuẩn xác (ưu tiên XPath).
-- **[Workflow Review Checklist](file:///D:/Repository/my-skills/packages/registry/skills/automa/rules/workflow-review.md)**: Các bước bắt buộc tự kiểm tra trước khi hoàn thiện một workflow.
+## 1. Core Rules (Mandatory Rules)
+When participating in building or reviewing a workflow, you MUST strictly COMPLY with the following rules:
+- **[Anti-patterns](file:///D:/Repository/my-skills/packages/registry/skills/automa/rules/anti-patterns.md)**: A list of basic mistakes (missing label, redundant element-exists, hardcode...) that must be strictly avoided.
+- **[DOM Selection](file:///D:/Repository/my-skills/packages/registry/skills/automa/rules/dom-selection.md)**: Guidelines for accurate Selector extraction (prioritizing XPath).
+- **[Workflow Review Checklist](file:///D:/Repository/my-skills/packages/registry/skills/automa/rules/workflow-review.md)**: Mandatory self-check steps before finalizing a workflow.
 
-## 2. Documentation (Tài liệu kiến thức)
-- **[Blocks Usage (Semantics)](file:///D:/Repository/my-skills/packages/registry/skills/automa/docs/blocks-usage.md)**: Giải nghĩa vai trò và cách dùng của từng block trong nghiệp vụ.
-- **[Knowledge Base (Q&A)](file:///D:/Repository/my-skills/packages/registry/skills/automa/docs/qa-knowledge.md)**: Các pattern phổ biến, sub-workflow, loop, variable injection, logging.
-- **[Architecture](file:///D:/Repository/my-skills/packages/registry/skills/automa/docs/architecture.md)**: Kiến trúc tổ chức mã nguồn của một dự án workflow lớn.
+## 2. Documentation (Knowledge Base)
+- **[Blocks Usage (Semantics)](file:///D:/Repository/my-skills/packages/registry/skills/automa/docs/blocks-usage.md)**: Explains the role and usage of each block in business logic.
+- **[Knowledge Base (Q&A)](file:///D:/Repository/my-skills/packages/registry/skills/automa/docs/qa-knowledge.md)**: Common patterns, sub-workflow, loop, variable injection, logging.
+- **[Architecture](file:///D:/Repository/my-skills/packages/registry/skills/automa/docs/architecture.md)**: Source code architecture of a large workflow project.
 
-## 3. Schemas & Assets (Chuẩn dữ liệu)
-- **[JSON Schema (Data Types)](file:///D:/Repository/my-skills/packages/registry/skills/automa/schemas/automa.schema.json)**: Source of Truth để đảm bảo định dạng JSON xuất ra là 100% hợp lệ.
-- **[Baseline Template](file:///D:/Repository/my-skills/packages/registry/skills/automa/assets/baseline.json)**: Khuôn mẫu (boilerplate) tiêu chuẩn để bắt đầu khởi tạo mọi workflow mới.
+## 3. Schemas & Assets (Data Standards)
+- **[JSON Schema (Data Types)](file:///D:/Repository/my-skills/packages/registry/skills/automa/schemas/automa.schema.json)**: Source of Truth to ensure the output JSON format is 100% valid.
+- **[Baseline Template](file:///D:/Repository/my-skills/packages/registry/skills/automa/assets/baseline.json)**: Standard boilerplate to start initializing every new workflow.
 
-## 4. Agents (Mẫu cấu hình Agent)
-- **[Workflow Generator Prompt](file:///D:/Repository/my-skills/packages/registry/skills/automa/agents/workflow-generator.yml)**: Hướng dẫn tư duy (System prompt) chuyên biệt cho Agent đảm nhiệm vai trò sản xuất workflow từ mô tả kịch bản.
+## 4. Agents (Agent Configuration Templates)
+- **[Workflow Generator Prompt](file:///D:/Repository/my-skills/packages/registry/skills/automa/agents/workflow-generator.yml)**: Specialized System prompt for the Agent in charge of producing workflows from scenario descriptions.
 
 ## 5. Cross-Skill
-Khi chuyển đổi từ Test Case thành Workflow, hãy xem skill `test-cases` để hiểu cách phân tích yêu cầu → sinh test case → convert sang workflow.
+When converting from Test Case to Workflow, please refer to the `test-cases` skill to understand how to analyze requirements → generate test cases → convert to workflows.
