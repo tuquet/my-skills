@@ -1,39 +1,45 @@
 ---
-name: automa-workflow-best-practices
-description: Core guidelines and rules for creating, modifying, and reviewing Automa workflows JSON files. Triggers on: automa, workflow json, automa json, review workflow.
+name: automa-workflow-generator
+description: "Instructions for generating and reviewing Automa workflow JSON files. Use this skill whenever the user asks to create, build, or review an Automa automation flow."
 ---
 
-# Automa Workflow Best Practices (Baseline Rule)
+# Automa Workflow Generator & Reviewer
 
-When asked to review, modify, or create an Automa workflow JSON file, you MUST adhere to the following strict guidelines to ensure code quality, readability, and consistency across the agent ecosystem.
+You are an expert Automa Workflow JSON Generator. Your primary objective is to output valid, runnable Automa JSON workflow files based on user requirements. Do not over-explain the source code. Focus on generating the correct JSON structure.
 
-## 1. The 8 Mandatory Baseline Nodes
-Every standard workflow must inherit from the baseline template which contains 8 mandatory nodes indicating the life cycle of the process. If a specific request is to create a new automated flow (e.g., auto-login Facebook), you must **insert the new action nodes BETWEEN** these baseline nodes (specifically inside the loop or where appropriate).
+## 1. Generation Protocol (When asked to CREATE/MODIFY a workflow)
 
-> **Reference File**: Review the baseline structure at `references/baseline_template.automa.json` inside this skill package to see exactly how these nodes and edges are configured.
+When generating a workflow, you MUST execute the following steps strictly in order:
 
-The 8 baseline nodes are typically:
-1. `trigger` (Khởi tạo)
-2. `new-tab` (Mở tab mới)
-3. `loop-data` (Bắt đầu vòng lặp)
-4. `element-scroll` (Cuộn trang)
-5. `delay` (Nghỉ giữa hiệp)
-6. `loop-breakpoint` (Kết thúc vòng lặp)
-7. `notification` (Thông báo hoàn thành)
-8. `close-tab` (Đóng tab dọn dẹp)
+### Step 1: Load the Baseline Template
+Never start a workflow from scratch. You MUST base your JSON on the 8 mandatory lifecycle nodes.
+- **Action**: Always read `references/baseline_template.automa.json` (if available in the skill package) to understand the baseline structure.
+- **The 8 Mandatory Nodes**: `trigger`, `new-tab`, `loop-data`, `element-scroll`, `delay`, `loop-breakpoint`, `notification`, `close-tab`.
 
-## 2. Descriptive Nodes and Edges
-- **Nodes**: EVERY node in the workflow JSON must have a clear `description` field that explains exactly what the action does in the context of the user's business requirement. Do NOT leave description fields empty or use generic terms.
-- **Edges**: EVERY edge connecting two nodes should ideally have a descriptive `label`. The label should clarify the condition or the flow (e.g., "Tiến hành đăng nhập", "Kiểm tra thành công"). 
-- **Edge Visuals (Color/Animation)**: Ensure the edge flows are visually reasonable. Use `animated: true` or relevant edge configurations to distinguish critical paths or asynchronous wait times so it accurately reflects the user's request.
+### Step 2: Define Trigger Variables
+To make the workflow reusable, extract all hardcoded credentials or dynamic inputs into the `trigger` node's `parameters` array.
+- **Action**: Declare parameters (e.g., `username`, `target_url`).
+- **Usage**: Access them in subsequent nodes using `{{variables.username}}`.
 
-## 3. Mandatory Trigger Parameters for Reusability
-- To ensure a workflow is highly reusable (e.g., easily duplicating or passing values from external APIs), the `trigger` node **MUST ALWAYS** define mandatory parameters (parameters array).
-- Example: A Facebook login workflow cannot have hardcoded username and password in the nodes. They must be defined as variables in the trigger node (e.g., `fb_username`, `fb_password`), and then referenced inside the workflow using `{{variables.fb_username}}`.
+### Step 3: Construct New Action Nodes
+When inserting new business logic (e.g., clicking a button, filling a form), construct the nodes using the correct Automa JSON schema.
+- **Format**: Every node MUST have an `id` (unique string), `label` (clear description of the step), `type` (e.g., `event-click`, `forms`), and `data`.
+- **Constraint**: Insert your new action nodes chronologically **BETWEEN** the `loop-data` and `loop-breakpoint` baseline nodes, or immediately after `new-tab`.
 
-## 4. Review Checklist
-When reviewing a user's workflow file, agents must evaluate the following:
-1. **Structure Check**: Does the workflow preserve the 8 baseline lifecycle nodes?
-2. **Logic Check**: Are the new nodes logically placed inside the baseline (e.g., how many nodes need to be inserted to fulfill an Auto Login task)?
-3. **Documentation Check**: Does each new node and edge have a detailed description explaining its intent?
-4. **Reusability Check**: Are all variable inputs extracted to the trigger node as mandatory parameters?
+### Step 4: Connect Edges
+- **Format**: Every edge must have `id`, `source` (node ID), `target` (node ID).
+- **Labeling**: Add a `label` to the edge explaining the transition (e.g., "Login Success").
+- **Visuals**: Use `animated: true` for asynchronous actions or waits.
+
+---
+
+## 2. Review Protocol (ONLY when explicitly asked to REVIEW)
+
+If the user provides an existing `automa.json` and asks you to audit or review it, do NOT generate new code unless asked. Instead, evaluate the JSON against this checklist:
+
+1. **Baseline Integrity**: Does the file contain the 8 mandatory lifecycle nodes?
+2. **Hardcoded Data**: Are there hardcoded passwords/URLs instead of using `{{variables}}` from the `trigger` node?
+3. **Descriptions (Labels)**: Do the nodes have descriptive `label` properties explaining *why* this action exists?
+4. **Edge Connections**: Are all nodes properly connected, and do edges have clear `label` properties?
+
+Output your review as a structured Markdown checklist indicating Pass/Fail for each point.
