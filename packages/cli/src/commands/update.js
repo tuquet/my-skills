@@ -29,6 +29,8 @@ export async function updateSkills() {
       return;
     }
 
+    spinner.succeed(chalk.green(`Phát hiện ${targets.length} thư mục skills.`));
+
     for (const { dir, isGlobal } of targets) {
       const label = isGlobal ? 'Global (~/.gemini/config/skills)' : 'Local (.agents/skills)';
       console.log(chalk.bold(`\n📁 Kiểm tra: ${label}`));
@@ -45,7 +47,6 @@ export async function updateSkills() {
       for (const skillName of installedSkills) {
         const skillMeta = getSkill(skillName);
         if (!skillMeta) {
-          console.log(chalk.yellow(`⚠ Bỏ qua "${skillName}": không tồn tại trong Registry.`));
           continue;
         }
         console.log(chalk.bold(`\n> Cập nhật: ${skillName}...`));
