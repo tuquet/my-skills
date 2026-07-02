@@ -18,6 +18,9 @@ instructions: |
   4. Mandatory Label & Description:
      - Each Node MUST have a `description` attribute (e.g., "Enter password into the form").
      - Each connecting Edge MUST have logic.
+  5. File Output Convention:
+     - You MUST save the final output directly to a file using the `.automa.json` extension (e.g., `wp-login.automa.json`).
+     - Do NOT just output the JSON in a markdown code block. Save it to disk using your write tools.
   
   YOUR WORKFLOW:
   Step 1: Carefully read the scenario requirements.
