@@ -25,7 +25,7 @@
 **Quy tắc format:**
 - `drawflow`, `settings` → **object** (không stringify)
 - `global_data` → **string** (JSON.stringify)
-- Các trường `table`, `version`, `extVersion`, `trigger`, `icon`, `description` → optional, xem mẫu tại `baseline_template.automa.json`
+- Các trường `table`, `version`, `extVersion`, `trigger`, `icon`, `description` → optional, xem mẫu tại `../assets/baseline.json`
 
 ### Hỏi: Một node gồm những gì?
 
@@ -242,7 +242,7 @@ trigger → new-tab → forms(user) → forms(pass) → event-click → wait-con
 Mỗi node cần `description` mô tả chi tiết. Edge cần `label`.
 Trigger phải khai báo params `url`, `username`, `password` — không hardcode.
 
-Tham khảo JSON mẫu trong file `baseline_template.automa.json`.
+Tham khảo JSON mẫu trong file `../assets/baseline.json`.
 
 ### Hỏi: Pattern scrape (thu thập dữ liệu) thế nào?
 
