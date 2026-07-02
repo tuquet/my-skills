@@ -4,16 +4,28 @@
 
 ### Hỏi: File .automa.json có cấu trúc thế nào?
 
+### Hỏi: File .automa.json có cấu trúc thế nào?
+
 ```json
 {
   "id": "uuid-của-workflow",
   "name": "Tên workflow",
   "drawflow": {
     "nodes": [],
-    "edges": []
-  }
+    "edges": [],
+    "position": [0, 0],
+    "viewport": { "x": 0, "y": 0, "zoom": 1 },
+    "zoom": 1
+  },
+  "settings": { "execContext": "popup", "onError": "stop-workflow" },
+  "global_data": "{\"loggingUrl\":\"https://server.com/logs\"}"
 }
 ```
+
+**Quy tắc format:**
+- `drawflow`, `settings` → **object** (không stringify)
+- `global_data` → **string** (JSON.stringify)
+- Các trường `table`, `version`, `extVersion`, `trigger`, `icon`, `description` → optional, xem mẫu tại `baseline_template.automa.json`
 
 ### Hỏi: Một node gồm những gì?
 

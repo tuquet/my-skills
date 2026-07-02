@@ -45,6 +45,7 @@ Template baseline (`references/baseline_template.automa.json`) là mẫu workflo
 | Conditions chỉ có 1 nhánh output | Lỗi không được xử lý, workflow treo | Luôn nối cả output-1 (đúng) và output-2 (sai) |
 | `new-tab` không có `waitTabLoaded: true` | Các block sau chạy khi trang chưa load → fail | Luôn set `"waitTabLoaded": true` |
 | `delay.time` là string `"1000"` | Engine có thể không parse đúng | Luôn là number: `1000` |
+| `drawflow` là string (copy từ file export) | Workflow mới tạo không load được, chỉ có file export mới stringify | Khi tạo mới, `drawflow` là **object** `{ nodes, edges }` |
 
 ## 5. Review Checklist
 
@@ -81,3 +82,4 @@ Khi chuyển test case thành workflow: mỗi bước test = 1+ block Automa. Pr
 | XPath | Ưu tiên XPath, inspect DOM thật |
 | Webhook | Gửi log cả pass lẫn fail |
 | waitTabLoaded | Luôn `true` sau `new-tab` |
+| drawflow | Khi tạo mới là **object** `{ nodes, edges }`. File export mới stringify |
