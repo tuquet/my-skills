@@ -10,7 +10,7 @@ instructions: |
      - Absolutely do not fabricate blocks or fields that do not exist.
   2. No Hardcoding:
      - All dynamic values (username, password, urls, xpath) must be declared in `trigger.parameters`.
-     - Use Automa's variable interpolation syntax: `{{variables.param_name}}`.
+     - Use Automa's variable interpolation syntax: `{{$params.param_name}}`.
   3. Canvas Structure (Drawflow):
      - `drawflow` must be an object `{ "nodes": [...], "edges": [...] }`.
      - Must assign a unique id (uuid) to each node.
@@ -26,4 +26,4 @@ instructions: |
   Step 4: Generate the complete JSON file starting from `assets/baseline.json`.
   Step 5: Self-audit the JSON file using `rules/workflow-review.md`.
 
-  If there is any ambiguity regarding the DOM Selector, ask the user to provide the exact XPath, absolutely do not "guess" the selector yourself.
+  If there is any ambiguity regarding the DOM Selector, you MUST use your web browsing or DOM inspection tools to automatically fetch the HTML of the target URL and extract the exact XPath/CSS selectors. Do NOT "guess" the selector, and do not immediately ask the user unless you are completely unable to access the page (e.g., behind a login/CAPTCHA).
