@@ -1,6 +1,6 @@
 {
   "name": "tuquet-skills-cli",
-  "version": "0.1.10",
+  "version": "0.2.0",
   "description": "Install AI agent skills with one command — npx tuquet-skills-cli install <skill-name>",
   "license": "MIT",
   "type": "module",

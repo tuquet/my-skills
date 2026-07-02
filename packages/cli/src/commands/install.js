@@ -1,5 +1,5 @@
 // @ts-check
-import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync } from 'fs';
+import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync, cpSync } from 'fs';
 import { join, resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
@@ -68,33 +68,10 @@ export async function installSkill(skillName, force = false, isGlobal = false) {
     mkdirSync(targetDir, { recursive: true });
 
     // Copy all files (recursive for nested subdirectories)
-    const filesToCopy = ['SKILL.md'];
-    const walkRefs = (dir, acc = []) => {
-      if (!existsSync(dir)) return acc;
-      for (const entry of readdirSync(dir, { withFileTypes: true })) {
-        const full = join(dir, entry.name);
-        if (entry.isDirectory()) walkRefs(full, acc);
-        else if (entry.name.endsWith('.md') || entry.name.endsWith('.json')) acc.push(full.replace(sourceDir, '').replaceAll('\\', '/'));
-      }
-      return acc;
-    };
-    for (const sub of ['references', 'examples']) {
-      for (const f of walkRefs(join(sourceDir, sub))) {
-        if (existsSync(join(sourceDir, f))) filesToCopy.push(f);
-      }
-    }
-
-    for (const f of filesToCopy) {
-      const src = join(sourceDir, f);
-      const dest = join(targetDir, f.replace('references/', 'references/'));
-      mkdirSync(dirname(dest), { recursive: true });
-      const content = readFileSync(src, 'utf-8');
-      writeFileSync(dest, content, 'utf-8');
-    }
+    cpSync(sourceDir, targetDir, { recursive: true });
 
     spinner.succeed(chalk.green(`✓ Skill "${skillName}" installed successfully!`));
     console.log(chalk.dim(`  Location: ${targetDir}`));
-    console.log(chalk.dim(`  Files:    ${filesToCopy.length} files copied`));
     const usagePath = isGlobal
       ? `~/.gemini/config/skills/${skillName}/SKILL.md`
       : `.agents/skills/${skillName}/SKILL.md`;

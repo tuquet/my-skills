@@ -1,55 +1,94 @@
-export const SKILLS = {
-  'automa': {
-    name: 'automa',
-    description: 'Hiểu và thao tác với cấu trúc kịch bản Automa (JSON).',
-    version: '1.0.0',
-    category: 'Automa',
-    author: 'tuquet',
-    keywords: ['automa', 'workflow', 'automation'],
-    path: 'automa/',
-    files: [
-      'SKILL.md',
-      'references/blocks_usage.md',
-      'references/directoring_structure.md',
-      'references/dom_selector_guide.md',
-      'references/qa_knowledge.md',
-      'references/baseline_template.automa.json',
-    ],
-  },
-  'test-cases': {
-    name: 'test-cases',
-    description: 'Phân tích yêu cầu, tạo test case chuẩn. Agent tự sinh test case từ mô tả nghiệp vụ.',
-    version: '1.0.0',
-    category: 'QA / Testing',
-    author: 'tuquet',
-    keywords: ['test case', 'test cases', 'testing', 'qa'],
-    path: 'test-cases/',
-    files: [
-      'SKILL.md',
-      'examples/auth/login/index.md',
-      'examples/auth/login/TC-001-login-success.md',
-      'examples/auth/login/TC-002-login-wrong-password.md',
-      'examples/auth/login/TC-003-login-empty-fields.md',
-    ],
-  },
-};
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { createRequire } from 'module';
 
-export const RULES = {
-  'git-commit': {
-    name: 'git-commit',
-    description: 'Quy tắc đặt tên commit chuẩn (Conventional Commits).',
-    version: '1.0.0',
-    category: 'Standards',
-    file: 'git-commit.md',
-  },
-  'nodejs-esm': {
-    name: 'nodejs-esm',
-    description: 'Quy tắc viết code NodeJS ES Modules chuẩn.',
-    version: '1.0.0',
-    category: 'Standards',
-    file: 'nodejs-esm.md',
-  },
-};
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+function getRegistryDir() {
+  const localPath = path.resolve(__dirname, '../../../registry');
+  if (fs.existsSync(localPath)) return localPath;
+  try {
+    const require = createRequire(import.meta.url);
+    const regJsonPath = require.resolve('tuquet-skills-registry/package.json');
+    return path.dirname(regJsonPath);
+  } catch {
+    return null;
+  }
+}
+
+const registryDir = getRegistryDir();
+
+function loadSkills() {
+  const skills = {};
+  if (!registryDir) return skills;
+  
+  const skillsDir = path.join(registryDir, 'skills');
+  if (!fs.existsSync(skillsDir)) return skills;
+  
+  const entries = fs.readdirSync(skillsDir, { withFileTypes: true });
+  for (const entry of entries) {
+    if (entry.isDirectory()) {
+      const skillName = entry.name;
+      const skillPath = path.join(skillsDir, skillName);
+      const mdPath = path.join(skillPath, 'SKILL.md');
+      
+      let description = '';
+      let name = skillName;
+      if (fs.existsSync(mdPath)) {
+        const content = fs.readFileSync(mdPath, 'utf8');
+        const nameMatch = content.match(/^name:\s*"?([^"\r\n]+)"?/m);
+        if (nameMatch) name = nameMatch[1].trim();
+        
+        const descMatch = content.match(/^description:\s*"?([^"\r\n]+)"?/m);
+        if (descMatch) description = descMatch[1].trim();
+      }
+      
+      skills[skillName] = {
+        name,
+        description,
+        path: `${skillName}/`,
+      };
+    }
+  }
+  return skills;
+}
+
+function loadRules() {
+  const rules = {};
+  if (!registryDir) return rules;
+  
+  const rulesDir = path.join(registryDir, 'rules');
+  if (!fs.existsSync(rulesDir)) return rules;
+  
+  const entries = fs.readdirSync(rulesDir, { withFileTypes: true });
+  for (const entry of entries) {
+    if (entry.isFile() && entry.name.endsWith('.md')) {
+      const ruleId = entry.name.replace('.md', '');
+      const rulePath = path.join(rulesDir, entry.name);
+      
+      let description = '';
+      let name = ruleId;
+      
+      const content = fs.readFileSync(rulePath, 'utf8');
+      const nameMatch = content.match(/^name:\s*"?([^"\r\n]+)"?/m);
+      if (nameMatch) name = nameMatch[1].trim();
+      
+      const descMatch = content.match(/^description:\s*"?([^"\r\n]+)"?/m);
+      if (descMatch) description = descMatch[1].trim();
+      
+      rules[ruleId] = {
+        name,
+        description,
+        file: entry.name,
+      };
+    }
+  }
+  return rules;
+}
+
+export const SKILLS = loadSkills();
+export const RULES = loadRules();
 
 export function getSkillNames() {
   return Object.keys(SKILLS);
@@ -66,4 +105,3 @@ export function getRuleNames() {
 export function getRule(name) {
   return RULES[name] || null;
 }
-
