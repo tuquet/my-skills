@@ -2,11 +2,11 @@
   "trigger": {
     "disableBlock": false,
     "description": "",
-    "type": "manual",
-    "interval": 60,
-    "delay": 5,
+    "type": "",
+    "interval": 0,
+    "delay": 0,
     "date": "",
-    "time": "00:00",
+    "time": "",
     "url": "",
     "shortcut": "",
     "activeInInput": false,
@@ -14,118 +14,147 @@
     "days": [],
     "contextMenuName": "",
     "contextTypes": [],
-    "parameters": [
-      {
-        "defaultValue": "",
-        "name": "keywords",
-        "placeholder": "keyword 1,keyword 2",
-        "type": "string"
-      }
-    ],
+    "parameters": [],
     "preferParamsInTab": false,
-    "observeElement": {
-      "baseElOptions": {
-        "attributeFilter": [],
-        "attributes": false,
-        "characterData": false,
-        "childList": true,
-        "subtree": false
-      },
-      "baseSelector": "",
-      "matchPattern": "",
-      "selector": "",
-      "targetOptions": {
-        "attributeFilter": [],
-        "attributes": false,
-        "characterData": false,
-        "childList": true,
-        "subtree": false
-      }
-    }
+    "observeElement": {}
+  },
+  "ai-workflow": {
+    "disableBlock": false,
+    "flowUuid": "",
+    "flowLabel": "",
+    "description": "",
+    "inputs": [],
+    "outputs": [],
+    "assignVariable": false,
+    "variableName": "",
+    "saveData": false,
+    "dataColumn": ""
+  },
+  "execute-workflow": {
+    "disableBlock": false,
+    "executeId": "",
+    "workflowId": "",
+    "globalData": "",
+    "description": "",
+    "insertAllVars": false,
+    "insertAllGlobalData": false
+  },
+  "active-tab": {
+    "disableBlock": false
   },
   "new-tab": {
     "disableBlock": false,
     "description": "",
-    "url": "http://lipsum.com",
+    "url": "",
     "userAgent": "",
-    "active": true,
+    "active": false,
+    "tabZoom": 0,
     "inGroup": false,
     "waitTabLoaded": false,
-    "updatePrevTab": true,
-    "customUserAgent": false,
-    "onError": {}
+    "updatePrevTab": false,
+    "customUserAgent": false
   },
-  "element-scroll": {
+  "switch-tab": {
     "disableBlock": false,
     "description": "",
-    "findBy": "cssSelector",
-    "waitForSelector": true,
-    "waitSelectorTimeout": 5000,
-    "selector": "#amount",
+    "url": "",
+    "tabIndex": 0,
+    "tabTitle": "",
+    "matchPattern": "",
+    "activeTab": false,
+    "createIfNoMatch": false,
+    "findTabBy": ""
+  },
+  "new-window": {
+    "disableBlock": false,
+    "description": "",
+    "top": 0,
+    "left": 0,
+    "width": 0,
+    "url": "",
+    "height": 0,
+    "type": "",
+    "incognito": false,
+    "windowState": ""
+  },
+  "proxy": {
+    "description": "",
+    "disableBlock": false,
+    "scheme": "",
+    "host": "",
+    "port": 0,
+    "bypassList": "",
+    "clearProxy": false
+  },
+  "go-back": {
+    "disableBlock": false
+  },
+  "forward-page": {
+    "disableBlock": false
+  },
+  "close-tab": {
+    "disableBlock": false,
+    "url": "",
+    "description": "",
+    "activeTab": false,
+    "closeType": "",
+    "allWindows": false
+  },
+  "take-screenshot": {
+    "description": "",
+    "disableBlock": false,
+    "fileName": "",
+    "ext": "",
+    "quality": 0,
+    "dataColumn": "",
+    "variableName": "",
+    "selector": "",
+    "fullPage": false,
+    "saveToColumn": false,
+    "saveToComputer": false,
+    "assignVariable": false,
+    "captureActiveTab": false
+  },
+  "browser-event": {
+    "disableBlock": false,
+    "description": "",
+    "timeout": 0,
+    "eventName": "",
+    "setAsActiveTab": false,
+    "activeTabLoaded": false,
+    "tabLoadedUrl": "",
+    "tabUrl": "",
+    "fileQuery": ""
+  },
+  "event-click": {
+    "disableBlock": false,
+    "description": "",
+    "findBy": "",
+    "waitForSelector": false,
+    "waitSelectorTimeout": 0,
+    "selector": "",
     "markEl": false,
-    "multiple": false,
-    "scrollY": 0,
-    "scrollX": 0,
-    "incX": false,
-    "incY": false,
-    "smooth": true,
-    "scrollIntoView": true
+    "multiple": false
   },
   "delay": {
     "disableBlock": false,
-    "time": "1000"
-  },
-  "forms": {
-    "description": "Lipsum length",
-    "selector": "#amount",
-    "markEl": false,
-    "multiple": false,
-    "selected": true,
-    "type": "text-field",
-    "value": "3",
-    "delay": 0,
-    "events": [],
-    "assignVariable": false,
-    "clearValue": true,
-    "dataColumn": "",
-    "disableBlock": false,
-    "findBy": "cssSelector",
-    "getValue": false,
-    "optionPosition": "1",
-    "saveData": false,
-    "selectOptionBy": "value",
-    "variableName": "",
-    "waitForSelector": false,
-    "waitSelectorTimeout": 5000
-  },
-  "event-click": {
-    "description": "Generate button",
-    "selector": "#generate",
-    "markEl": false,
-    "multiple": false,
-    "disableBlock": false,
-    "findBy": "cssSelector",
-    "waitForSelector": false,
-    "waitSelectorTimeout": 5000
+    "time": 0
   },
   "get-text": {
     "disableBlock": false,
-    "description": "Get text result",
-    "findBy": "cssSelector",
+    "description": "",
+    "findBy": "",
     "waitForSelector": false,
-    "waitSelectorTimeout": 5000,
-    "selector": "#lipsum",
+    "waitSelectorTimeout": 0,
+    "selector": "",
     "markEl": false,
     "multiple": false,
     "regex": "",
     "prefixText": "",
     "suffixText": "",
-    "regexExp": [
-      "g",
-      "g"
-    ],
+    "regexExp": [],
     "dataColumn": "",
-    "saveData": true,
+    "saveData": false,
     "includeTags": false,
     "addExtraRow": false,
     "assignVariable": false,
@@ -134,115 +163,477 @@
     "extraRowValue": "",
     "extraRowDataColumn": ""
   },
-  "repeat-task": {
-    "disableBlock": false,
-    "repeatFor": 2
-  },
   "export-data": {
     "disableBlock": false,
-    "name": "Lipsum",
+    "name": "",
     "refKey": "",
-    "type": "plain-text",
+    "type": "",
     "description": "",
     "variableName": "",
-    "csvDelimiter": ",",
+    "csvDelimiter": "",
     "addBOMHeader": false,
-    "onConflict": "uniquify",
-    "dataToExport": "data-columns"
+    "onConflict": "",
+    "dataToExport": ""
   },
-  "go-back": {
+  "element-scroll": {
     "disableBlock": false,
-    "onError": {
-      "retry": false,
-      "enable": true,
-      "retryTimes": 1,
-      "retryInterval": 2,
-      "toDo": "fallback"
-    }
+    "description": "",
+    "findBy": "",
+    "waitForSelector": false,
+    "waitSelectorTimeout": 0,
+    "selector": "",
+    "markEl": false,
+    "multiple": false,
+    "scrollY": 0,
+    "scrollX": 0,
+    "incX": false,
+    "incY": false,
+    "smooth": false,
+    "scrollIntoView": false
+  },
+  "link": {
+    "disableBlock": false,
+    "description": "",
+    "findBy": "",
+    "waitForSelector": false,
+    "waitSelectorTimeout": 0,
+    "selector": "",
+    "markEl": false,
+    "disableMultiple": false,
+    "openInNewTab": false
+  },
+  "attribute-value": {
+    "disableBlock": false,
+    "description": "",
+    "findBy": "",
+    "waitForSelector": false,
+    "waitSelectorTimeout": 0,
+    "selector": "",
+    "markEl": false,
+    "multiple": false,
+    "attributeValue": "",
+    "attributeName": "",
+    "assignVariable": false,
+    "variableName": "",
+    "dataColumn": "",
+    "saveData": false,
+    "action": "",
+    "addExtraRow": false,
+    "extraRowValue": "",
+    "extraRowDataColumn": ""
+  },
+  "forms": {
+    "disableBlock": false,
+    "description": "",
+    "findBy": "",
+    "waitForSelector": false,
+    "waitSelectorTimeout": 0,
+    "selector": "",
+    "markEl": false,
+    "multiple": false,
+    "selected": false,
+    "clearValue": false,
+    "getValue": false,
+    "saveData": false,
+    "dataColumn": "",
+    "selectOptionBy": "",
+    "optionPosition": "",
+    "assignVariable": false,
+    "variableName": "",
+    "type": "",
+    "value": "",
+    "delay": 0,
+    "events": []
+  },
+  "repeat-task": {
+    "disableBlock": false,
+    "repeatFor": ""
   },
   "javascript-code": {
-    "code": "const keywords = automaRefData('variables', 'keywords');\nautomaSetVariable(\n  'keywords', \n  keywords.split(',').map((keyword) => keyword.trim())\n)",
-    "description": "",
     "disableBlock": false,
-    "everyNewTab": false,
+    "description": "",
+    "timeout": 0,
+    "context": "",
+    "code": "",
     "preloadScripts": [],
-    "runBeforeLoad": false,
-    "timeout": 20000
+    "everyNewTab": false,
+    "runBeforeLoad": false
   },
-  "loop-data": {
+  "trigger-event": {
     "disableBlock": false,
-    "loopId": "keywords",
-    "maxLoop": 0,
-    "toNumber": 10,
-    "fromNumber": 1,
-    "startIndex": 0,
-    "loopData": "[]",
     "description": "",
-    "variableName": "keywords",
-    "referenceKey": "",
-    "elementSelector": "",
+    "findBy": "",
     "waitForSelector": false,
-    "waitSelectorTimeout": 5000,
-    "resumeLastWorkflow": false,
-    "loopThrough": "variable"
-  },
-  "insert-data": {
-    "dataList": [
-      {
-        "name": "25D2q",
-        "type": "table",
-        "value": "{{loopData@keywords}}"
-      }
-    ],
-    "description": "",
-    "disableBlock": false
-  },
-  "loop-breakpoint": {
-    "disableBlock": false,
-    "loopId": "keywords",
-    "clearLoop": false
-  },
-  "loop-elements": {
-    "disableBlock": false,
-    "loopId": "items",
-    "selector": "[data-testid=\"trend\"]",
-    "maxLoop": "0",
-    "description": "",
-    "reverseLoop": false,
-    "actionElSelector": "",
-    "findBy": "cssSelector",
-    "actionElMaxWaitTime": 5,
-    "actionPageMaxWaitTime": 10,
-    "loadMoreAction": "scroll",
-    "scrollToBottom": true,
-    "waitForSelector": true,
-    "waitSelectorTimeout": 5000
+    "waitSelectorTimeout": 0,
+    "selector": "",
+    "markEl": false,
+    "multiple": false,
+    "eventName": "",
+    "eventType": "",
+    "eventParams": {}
   },
   "google-sheets": {
     "disableBlock": false,
     "range": "",
     "refKey": "",
-    "type": "update",
+    "type": "",
     "customData": "",
     "description": "",
     "spreadsheetId": "",
     "dataColumn": "",
-    "saveData": true,
+    "saveData": false,
     "assignVariable": false,
     "variableName": "",
     "firstRowAsKey": false,
-    "keysAsFirstRow": true,
-    "valueInputOption": "RAW",
-    "InsertDataOption": "INSERT_ROWS",
-    "dataFrom": "data-columns"
+    "keysAsFirstRow": false,
+    "valueInputOption": "",
+    "InsertDataOption": "",
+    "dataFrom": ""
   },
+  "google-sheets-drive": {
+    "disableBlock": false,
+    "range": "",
+    "refKey": "",
+    "type": "",
+    "customData": "",
+    "description": "",
+    "spreadsheetId": "",
+    "dataColumn": "",
+    "inputSpreadsheetId": "",
+    "saveData": false,
+    "sheetName": "",
+    "assignVariable": false,
+    "variableName": "",
+    "firstRowAsKey": false,
+    "keysAsFirstRow": false,
+    "valueInputOption": "",
+    "InsertDataOption": "",
+    "dataFrom": ""
+  },
+  "google-drive": {
+    "disableBlock": false,
+    "action": "",
+    "filePaths": []
+  },
+  "conditions": {
+    "description": "",
+    "disableBlock": false,
+    "conditions": [],
+    "retryConditions": false,
+    "retryCount": 0,
+    "retryTimeout": 0
+  },
+  "element-exists": {
+    "disableBlock": false,
+    "description": "",
+    "findBy": "",
+    "selector": "",
+    "tryCount": 0,
+    "timeout": 0,
+    "markEl": false,
+    "throwError": false
+  },
+  "webhook": {
+    "disableBlock": false,
+    "description": "",
+    "url": "",
+    "body": "",
+    "headers": [],
+    "method": "",
+    "timeout": 0,
+    "dataPath": "",
+    "contentType": "",
+    "variableName": "",
+    "assignVariable": false,
+    "saveData": false,
+    "dataColumn": "",
+    "responseType": ""
+  },
+  "while-loop": {
+    "disableBlock": false,
+    "description": "",
+    "conditions": ""
+  },
+  "loop-data": {
+    "disableBlock": false,
+    "loopId": "",
+    "maxLoop": 0,
+    "toNumber": 0,
+    "fromNumber": 0,
+    "startIndex": 0,
+    "loopData": "",
+    "description": "",
+    "variableName": "",
+    "referenceKey": "",
+    "reverseLoop": false,
+    "elementSelector": "",
+    "waitForSelector": false,
+    "waitSelectorTimeout": 0,
+    "resumeLastWorkflow": false,
+    "loopThrough": ""
+  },
+  "loop-elements": {
+    "disableBlock": false,
+    "loopId": "",
+    "selector": "",
+    "maxLoop": "",
+    "description": "",
+    "reverseLoop": false,
+    "actionElSelector": "",
+    "findBy": "",
+    "actionElMaxWaitTime": 0,
+    "actionPageMaxWaitTime": 0,
+    "loadMoreAction": "",
+    "scrollToBottom": false,
+    "waitForSelector": false,
+    "waitSelectorTimeout": 0
+  },
+  "loop-breakpoint": {
+    "disableBlock": false,
+    "loopId": "",
+    "clearLoop": false
+  },
+  "blocks-group": {
+    "disableBlock": false,
+    "name": "",
+    "blocks": []
+  },
+  "clipboard": {
+    "disableBlock": false,
+    "description": "",
+    "type": "",
+    "assignVariable": false,
+    "variableName": "",
+    "saveData": false,
+    "dataColumn": "",
+    "dataToCopy": "",
+    "copySelectedText": false
+  },
+  "insert-data": {
+    "disableBlock": false,
+    "description": "",
+    "dataList": []
+  },
+  "switch-to": {
+    "disableBlock": false,
+    "findBy": "",
+    "selector": "",
+    "windowType": ""
+  },
+  "upload-file": {
+    "disableBlock": false,
+    "findBy": "",
+    "waitForSelector": false,
+    "waitSelectorTimeout": 0,
+    "selector": "",
+    "filePaths": []
+  },
+  "hover-element": {
+    "disableBlock": false,
+    "description": "",
+    "findBy": "",
+    "waitForSelector": false,
+    "waitSelectorTimeout": 0,
+    "selector": "",
+    "markEl": false,
+    "multiple": false
+  },
+  "save-assets": {
+    "disableBlock": false,
+    "description": "",
+    "findBy": "",
+    "waitForSelector": false,
+    "waitSelectorTimeout": 0,
+    "selector": "",
+    "markEl": false,
+    "multiple": false,
+    "type": "",
+    "url": "",
+    "filename": "",
+    "saveDownloadIds": false,
+    "onConflict": "",
+    "dataColumn": "",
+    "saveData": false,
+    "assignVariable": false,
+    "variableName": "",
+    "saveToGDrive": false
+  },
+  "press-key": {
+    "disableBlock": false,
+    "keys": "",
+    "selector": "",
+    "pressTime": "",
+    "description": "",
+    "keysToPress": "",
+    "action": ""
+  },
+  "handle-dialog": {
+    "disableBlock": false,
+    "description": "",
+    "accept": false,
+    "promptText": ""
+  },
+  "handle-download": {
+    "disableBlock": false,
+    "description": "",
+    "filename": "",
+    "timeout": 0,
+    "onConflict": "",
+    "waitForDownload": false,
+    "dataColumn": "",
+    "saveData": false,
+    "assignVariable": false,
+    "variableName": "",
+    "downloadId": ""
+  },
+  "reload-tab": {
+    "disableBlock": false
+  },
+  "delete-data": {
+    "disableBlock": false,
+    "description": "",
+    "deleteList": []
+  },
+  "wait-connections": {
+    "disableBlock": false,
+    "description": "",
+    "timeout": 0,
+    "specificFlow": false,
+    "flowBlockId": ""
+  },
+  "notification": {
+    "disableBlock": false,
+    "description": "",
+    "message": "",
+    "iconUrl": "",
+    "imageUrl": "",
+    "title": ""
+  },
+  "log-data": {
+    "disableBlock": false,
+    "description": "",
+    "workflowId": "",
+    "dataColumn": "",
+    "saveData": false,
+    "assignVariable": false,
+    "variableName": ""
+  },
+  "tab-url": {
+    "disableBlock": false,
+    "description": "",
+    "type": "",
+    "dataColumn": "",
+    "saveData": false,
+    "assignVariable": false,
+    "variableName": "",
+    "qTitle": "",
+    "qMatchPatterns": ""
+  },
+  "slice-variable": {
+    "disableBlock": false,
+    "description": "",
+    "endIdxEnabled": false,
+    "startIdxEnabled": false,
+    "endIndex": 0,
+    "startIndex": 0,
+    "variableName": ""
+  },
+  "increase-variable": {
+    "disableBlock": false,
+    "description": "",
+    "increaseBy": 0,
+    "variableName": ""
+  },
+  "regex-variable": {
+    "disableBlock": false,
+    "method": "",
+    "replaceVal": "",
+    "description": "",
+    "expression": "",
+    "flag": []
+  },
+  "data-mapping": {
+    "disableBlock": false,
+    "description": "",
+    "dataSource": "",
+    "sources": [],
+    "varSourceName": "",
+    "dataColumn": "",
+    "saveData": false,
+    "assignVariable": false,
+    "variableName": ""
+  },
+  "sort-data": {
+    "disableBlock": false,
+    "description": "",
+    "sortByProperty": false,
+    "itemProperties": [],
+    "dataSource": "",
+    "varSourceName": "",
+    "dataColumn": "",
+    "saveData": false,
+    "assignVariable": false,
+    "variableName": ""
+  },
+  "create-element": {
+    "disableBlock": false,
+    "description": "",
+    "javascript": "",
+    "html": "",
+    "css": "",
+    "preloadScripts": [],
+    "findBy": "",
+    "insertAt": "",
+    "runBeforeLoad": false,
+    "waitForSelector": false,
+    "waitSelectorTimeout": 0,
+    "selector": ""
+  },
+  "cookie": {
+    "disableBlock": false,
+    "description": "",
+    "type": "",
+    "jsonCode": "",
+    "useJson": false,
+    "getAll": false,
+    "domain": "",
+    "expirationDate": "",
+    "path": "",
+    "sameSite": "",
+    "name": "",
+    "url": "",
+    "value": "",
+    "httpOnly": false,
+    "secure": false,
+    "session": false,
+    "assignVariable": false,
+    "variableName": "",
+    "saveData": false,
+    "dataColumn": ""
+  },
+  "block-package": {},
   "note": {
     "disableBlock": false,
-    "note": "Read the documentation about the Google Sheets block before running this workflow",
+    "note": "",
     "drawing": false,
-    "width": 280,
-    "height": 168,
-    "color": "indigo",
-    "fontSize": "regular"
+    "width": 0,
+    "height": 0,
+    "color": "",
+    "fontSize": ""
+  },
+  "workflow-state": {
+    "disableBlock": false,
+    "description": "",
+    "type": "",
+    "exceptCurrent": false,
+    "workflowsToStop": [],
+    "throwError": false,
+    "errorMessage": ""
+  },
+  "parameter-prompt": {
+    "disableBlock": false,
+    "description": "",
+    "timeout": 0,
+    "parameters": []
   }
 }
