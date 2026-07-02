@@ -4,8 +4,6 @@
 
 ### Q: What is the structure of the .automa.json file?
 
-### Q: What is the structure of the .automa.json file?
-
 ```json
 {
   "id": "workflow-uuid",
