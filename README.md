@@ -13,6 +13,7 @@ npx tuquet-skills-cli install <skill-name>
 | Skill | Mô tả |
 |-------|-------|
 | `automa` | Workflow automation — JSON structure, blocks, patterns, debugging |
+| `test-cases` | QA Testing — tạo, quản lý test case chuẩn, agent-readable |
 
 ## Commands
 

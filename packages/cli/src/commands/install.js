@@ -1,5 +1,5 @@
 // @ts-check
-import { existsSync, mkdirSync, writeFileSync, readFileSync, cpSync, readdirSync } from 'fs';
+import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync } from 'fs';
 import { join, resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
@@ -67,14 +67,20 @@ export async function installSkill(skillName, force = false, isGlobal = false) {
     // Create target directory
     mkdirSync(targetDir, { recursive: true });
 
-    // Copy all files
+    // Copy all files (recursive for nested subdirectories)
     const filesToCopy = ['SKILL.md'];
-    const refDir = join(sourceDir, 'references');
-    if (existsSync(refDir)) {
-      const refFiles = readdirSync(refDir).filter(f => f.endsWith('.md') || f.endsWith('.json')).map(f => `references/${f}`);
-      for (const f of refFiles) {
-        const src = join(sourceDir, f);
-        if (existsSync(src)) filesToCopy.push(f);
+    const walkRefs = (dir, acc = []) => {
+      if (!existsSync(dir)) return acc;
+      for (const entry of readdirSync(dir, { withFileTypes: true })) {
+        const full = join(dir, entry.name);
+        if (entry.isDirectory()) walkRefs(full, acc);
+        else if (entry.name.endsWith('.md') || entry.name.endsWith('.json')) acc.push(full.replace(sourceDir, '').replaceAll('\\', '/'));
+      }
+      return acc;
+    };
+    for (const sub of ['references', 'examples']) {
+      for (const f of walkRefs(join(sourceDir, sub))) {
+        if (existsSync(join(sourceDir, f))) filesToCopy.push(f);
       }
     }
 

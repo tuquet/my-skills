@@ -251,6 +251,117 @@ trigger → new-tab → forms(field1) → forms(field2) → ... → upload-file 
 
 Mỗi field dùng 1 block `forms` riêng. Set `delay: 50` để tránh chống bot. Dùng `clearValue: true` nếu field đã có giá trị mặc định.
 
+### Hỏi: Pattern test automation — chạy test case tự động thế nào?
+
+Chuyển test case thành workflow: mỗi bước test = 1+ block. Dùng `webhook` gửi kết quả pass/fail về server.
+
+```text
+trigger(params) → new-tab → [test steps] → conditions(verify)
+    → webhook({status:"pass", testCase:"TC-001"})
+    └── webhook({status:"fail", testCase:"TC-001", error:"..."})
+```
+
+**Ví dụ: TC-001 login success → workflow**
+
+```json
+{
+  "name": "TC-001 Login Success",
+  "drawflow": {
+    "nodes": [
+      {
+        "id": "n1", "label": "trigger", "type": "BlockBasic",
+        "position": { "x": 100, "y": 100 },
+        "data": {
+          "type": "manual",
+          "parameters": [
+            { "id": "url", "label": "Login URL", "type": "text", "required": true },
+            { "id": "email", "label": "Email", "type": "text", "required": true },
+            { "id": "password", "label": "Password", "type": "text", "required": true },
+            { "id": "logUrl", "label": "Report endpoint", "type": "text", "defaultValue": "https://api.test-runner.com/report" }
+          ]
+        }
+      },
+      {
+        "id": "n2", "label": "new-tab", "type": "BlockBasic",
+        "position": { "x": 300, "y": 100 },
+        "data": { "url": "{{$params.url}}", "active": true, "waitTabLoaded": true }
+      },
+      {
+        "id": "n3", "label": "forms", "type": "BlockBasic",
+        "position": { "x": 500, "y": 100 },
+        "data": { "selector": "#email", "value": "{{$params.email}}", "waitForSelector": true, "waitSelectorTimeout": 5000 }
+      },
+      {
+        "id": "n4", "label": "forms", "type": "BlockBasic",
+        "position": { "x": 500, "y": 250 },
+        "data": { "selector": "#password", "value": "{{$params.password}}" }
+      },
+      {
+        "id": "n5", "label": "event-click", "type": "BlockBasic",
+        "position": { "x": 500, "y": 400 },
+        "data": { "selector": "button[type='submit']", "waitForSelector": true, "waitSelectorTimeout": 5000 }
+      },
+      {
+        "id": "n6", "label": "wait-connections", "type": "BlockBasic",
+        "position": { "x": 700, "y": 400 },
+        "data": { "timeout": 10000, "idleTime": 2000 }
+      },
+      {
+        "id": "n7", "label": "conditions", "type": "BlockBasic",
+        "position": { "x": 900, "y": 400 },
+        "data": {
+          "conditions": [
+            { "id": "ok", "variable": "$tabUrl", "comparison": "contains", "value": "dashboard" }
+          ]
+        }
+      },
+      {
+        "id": "n8", "label": "webhook", "type": "BlockBasic",
+        "position": { "x": 1100, "y": 200 },
+        "data": {
+          "url": "{{$params.logUrl}}",
+          "method": "POST",
+          "headers": [{"name": "Content-Type", "value": "application/json"}],
+          "body": "{\"testCase\":\"TC-001\",\"status\":\"pass\",\"url\":\"{{$params.url}}\"}"
+        }
+      },
+      {
+        "id": "n9", "label": "webhook", "type": "BlockBasic",
+        "position": { "x": 1100, "y": 550 },
+        "data": {
+          "url": "{{$params.logUrl}}",
+          "method": "POST",
+          "headers": [{"name": "Content-Type", "value": "application/json"}],
+          "body": "{\"testCase\":\"TC-001\",\"status\":\"fail\",\"error\":\"dashboard not found\"}"
+        }
+      }
+    ],
+    "edges": [
+      { "source": "n1", "sourceHandle": "-output-1", "target": "n2", "targetHandle": "-input-1" },
+      { "source": "n2", "sourceHandle": "-output-1", "target": "n3", "targetHandle": "-input-1" },
+      { "source": "n3", "sourceHandle": "-output-1", "target": "n4", "targetHandle": "-input-1" },
+      { "source": "n4", "sourceHandle": "-output-1", "target": "n5", "targetHandle": "-input-1" },
+      { "source": "n5", "sourceHandle": "-output-1", "target": "n6", "targetHandle": "-input-1" },
+      { "source": "n6", "sourceHandle": "-output-1", "target": "n7", "targetHandle": "-input-1" },
+      { "source": "n7", "sourceHandle": "-output-1", "target": "n8", "targetHandle": "-input-1" },
+      { "source": "n7", "sourceHandle": "-output-2", "target": "n9", "targetHandle": "-input-1" }
+    ]
+  }
+}
+```
+
+**Kết nối với skill test-cases:** Khi tạo test case theo skill `test-cases`, mapping các bước như sau:
+
+| Bước trong Test Case | → Block |
+|---|---|
+| Nhập email | `forms` `selector="#email"` |
+| Nhập password | `forms` `selector="#password"` |
+| Click nút | `event-click` |
+| Kiểm tra URL / text | `conditions` hoặc `get-text` + `conditions` |
+| Trigger params | `trigger.parameters` ← test data từ Pre-conditions |
+
+**Kết quả:** Mỗi test case chạy riêng 1 workflow. Workflow cha gọi `execute-workflow` từng TC. Kết quả gửi về server qua webhook POST.
+
 ---
 
 ## 6. Logging & Báo lỗi qua HTTP

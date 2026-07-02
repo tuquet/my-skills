@@ -16,6 +16,22 @@ export const SKILLS = {
       'references/baseline_template.automa.json',
     ],
   },
+  'test-cases': {
+    name: 'test-cases',
+    description: 'Phân tích yêu cầu, tạo test case chuẩn. Agent tự sinh test case từ mô tả nghiệp vụ.',
+    version: '1.0.0',
+    category: 'QA / Testing',
+    author: 'tuquet',
+    keywords: ['test case', 'test cases', 'testing', 'qa'],
+    path: 'test-cases/',
+    files: [
+      'SKILL.md',
+      'examples/auth/login/index.md',
+      'examples/auth/login/TC-001-login-success.md',
+      'examples/auth/login/TC-002-login-wrong-password.md',
+      'examples/auth/login/TC-003-login-empty-fields.md',
+    ],
+  },
 };
 
 export const RULES = {
