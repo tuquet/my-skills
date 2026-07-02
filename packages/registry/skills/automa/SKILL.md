@@ -9,10 +9,10 @@ crossSkills: [test-cases]
 Automa Workflows require absolute precision regarding Data Structure (Schema) and strict adherence to Business Logic. This SKILL is designed in Modules to help Agents easily look up knowledge.
 
 ## 1. Core Rules (Mandatory Rules)
-When participating in building or reviewing a workflow, you MUST strictly COMPLY with the following rules:
-- **[Anti-patterns](file:///D:/Repository/my-skills/packages/registry/skills/automa/rules/anti-patterns.md)**: A list of basic mistakes (missing label, redundant element-exists, hardcode...) that must be strictly avoided.
-- **[DOM Selection](file:///D:/Repository/my-skills/packages/registry/skills/automa/rules/dom-selection.md)**: Guidelines for accurate Selector extraction (prioritizing XPath).
-- **[Workflow Review Checklist](file:///D:/Repository/my-skills/packages/registry/skills/automa/rules/workflow-review.md)**: Mandatory self-check steps before finalizing a workflow.
+- **[Anti-Patterns](file:///D:/Repository/my-skills/packages/registry/skills/automa/rules/anti-patterns.md)**: Common logical mistakes to avoid.
+- **[DOM Selection Rules](file:///D:/Repository/my-skills/packages/registry/skills/automa/rules/dom-selection.md)**: Strategy for resolving exact UI elements.
+- **[Workflow Review Checklist](file:///D:/Repository/my-skills/packages/registry/skills/automa/rules/workflow-review.md)**: Quality assurance step.
+- **[Data Scopes & Parameters](file:///D:/Repository/my-skills/packages/registry/skills/automa/docs/data-scopes.md)**: Guide on how `globalData` and `trigger.parameters` are interpolated for reusable workflows.
 
 ## 2. Documentation (Knowledge Base)
 - **[Blocks Usage (Semantics)](file:///D:/Repository/my-skills/packages/registry/skills/automa/docs/blocks-usage.md)**: Explains the role and usage of each block in business logic.
