@@ -64,7 +64,8 @@ Khi chuyển test case thành workflow: mỗi bước test = 1+ block Automa. Pr
 
 ## 7. Reference Files
 
-- **Chi tiết block I/O**: [references/blocks_usage.md](./references/blocks_usage.md) — cấu trúc `data` của từng block, tra cứu nhanh.
+- **Chi tiết block I/O (Semantics)**: [references/blocks_usage.md](./references/blocks_usage.md) — Giải thích ý nghĩa nghiệp vụ của từng trường dữ liệu trong block.
+- **JSON Schema chuẩn (Data Types)**: [references/automa.schema.json](./references/automa.schema.json) — Cấu trúc dữ liệu chính xác tuyệt đối (dùng làm Source of Truth khi sinh JSON).
 - **Hỏi & Đáp về Workflow**: [references/qa_knowledge.md](./references/qa_knowledge.md) — JSON structure, variables, conditions, sub-workflow, patterns, logging, troubleshooting, test automation.
 - **DOM Selector / XPath**: [references/dom_selector_guide.md](./references/dom_selector_guide.md) — inspect, ưu tiên XPath, kiểm tra, báo lỗi.
 - **Cấu trúc thư mục**: [references/directoring_structure.md](./references/directoring_structure.md) — kiến trúc mã nguồn dự án.
