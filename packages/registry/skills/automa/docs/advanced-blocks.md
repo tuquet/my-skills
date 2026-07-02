@@ -67,3 +67,38 @@ If you need to sanitize data (e.g., stripping '$' signs or whitespace) before in
 **NEVER** place an `export-data` or `google-sheets` block *inside* your extraction loop. 
 *   Doing so will fire an API call for every single row you scrape, leading to heavy rate-limiting and incredibly slow execution.
 *   **Correct Pattern**: Use the loop exclusively to scrape and populate the internal Table (`insert-data`). Connect the `google-sheets` block *after* the `loop-breakpoint` exits, allowing you to bulk-upload the entire table array in one single, fast API request.
+
+---
+
+## 4. JavaScript Transformations (`javascript-code`)
+
+The `javascript-code` block is a powerful escape hatch for when standard blocks (like `regex-variable` or `data-mapping`) aren't flexible enough. It executes within a secure Sandbox environment but provides specialized helper functions to interact with the workflow state.
+
+### Built-in Helper Functions
+*   `automaRefData(keyword, path)`: Extracts data from the workflow's state. 
+    *   *Example*: `const myVar = automaRefData('variables', 'myVar');`
+    *   *Example*: `const myConst = automaRefData('globalData', 'myConst');`
+*   `automaSetVariable(name, value)`: Dynamically sets or overwrites a workflow variable.
+    *   *Example*: `automaSetVariable('cleanPrice', 1500);`
+*   `automaNextBlock(data, insert)`: Advances the workflow to the next block. 
+    *   If you omit this, Automa automatically appends `automaNextBlock()` to the end of your script.
+    *   *Tip*: You can pass an object to insert it directly into the table, e.g., `automaNextBlock({ price: 1500 }, true)`.
+
+### Common Use-Case: Data Formatting
+When scraping messy text, use JavaScript to clean it before inserting it into your table or passing it to an API.
+```javascript
+// 1. Retrieve the raw scraped variable
+const rawText = automaRefData('variables', 'scraped_text');
+
+// 2. Transform the data (e.g., extracting numbers)
+const sanitized = rawText.replace(/[^0-9.]/g, '');
+
+// 3. Save it back to a new variable
+automaSetVariable('clean_price', sanitized);
+
+// 4. Continue workflow
+automaNextBlock();
+```
+
+### Interpolation (`{{ }}`) inside JS
+While you can use `{{variables.xx}}` inside the JS code block, it's safer and cleaner to use `automaRefData()` to prevent syntax errors if the variable contains unexpected quotes or line breaks. Save string interpolation for UI blocks (like URLs or CSS Selectors).
