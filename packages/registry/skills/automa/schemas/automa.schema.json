@@ -15,6 +15,21 @@
     "extVersion": {
       "type": "string"
     },
+    "id": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "table": {
+      "type": "array"
+    },
+    "settings": {
+      "type": "object"
+    },
+    "global_data": {
+      "type": "string"
+    },
     "drawflow": {
       "type": "object",
       "properties": {
@@ -25,6 +40,17 @@
             "properties": {
               "id": {
                 "type": "string"
+              },
+              "position": {
+                "type": "object",
+                "properties": {
+                  "x": {
+                    "type": "number"
+                  },
+                  "y": {
+                    "type": "number"
+                  }
+                }
               },
               "label": {
                 "type": "string",
@@ -2833,8 +2859,27 @@
               }
             }
           }
+        },
+        "position": {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            }
+          }
+        },
+        "zoom": {
+          "type": "number"
         }
       }
     }
-  }
+  },
+  "required": [
+    "name",
+    "drawflow",
+    "settings"
+  ]
 }
