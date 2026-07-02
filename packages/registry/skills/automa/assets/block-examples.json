@@ -1,0 +1,248 @@
+{
+  "trigger": {
+    "disableBlock": false,
+    "description": "",
+    "type": "manual",
+    "interval": 60,
+    "delay": 5,
+    "date": "",
+    "time": "00:00",
+    "url": "",
+    "shortcut": "",
+    "activeInInput": false,
+    "isUrlRegex": false,
+    "days": [],
+    "contextMenuName": "",
+    "contextTypes": [],
+    "parameters": [
+      {
+        "defaultValue": "",
+        "name": "keywords",
+        "placeholder": "keyword 1,keyword 2",
+        "type": "string"
+      }
+    ],
+    "preferParamsInTab": false,
+    "observeElement": {
+      "baseElOptions": {
+        "attributeFilter": [],
+        "attributes": false,
+        "characterData": false,
+        "childList": true,
+        "subtree": false
+      },
+      "baseSelector": "",
+      "matchPattern": "",
+      "selector": "",
+      "targetOptions": {
+        "attributeFilter": [],
+        "attributes": false,
+        "characterData": false,
+        "childList": true,
+        "subtree": false
+      }
+    }
+  },
+  "new-tab": {
+    "disableBlock": false,
+    "description": "",
+    "url": "http://lipsum.com",
+    "userAgent": "",
+    "active": true,
+    "inGroup": false,
+    "waitTabLoaded": false,
+    "updatePrevTab": true,
+    "customUserAgent": false,
+    "onError": {}
+  },
+  "element-scroll": {
+    "disableBlock": false,
+    "description": "",
+    "findBy": "cssSelector",
+    "waitForSelector": true,
+    "waitSelectorTimeout": 5000,
+    "selector": "#amount",
+    "markEl": false,
+    "multiple": false,
+    "scrollY": 0,
+    "scrollX": 0,
+    "incX": false,
+    "incY": false,
+    "smooth": true,
+    "scrollIntoView": true
+  },
+  "delay": {
+    "disableBlock": false,
+    "time": "1000"
+  },
+  "forms": {
+    "description": "Lipsum length",
+    "selector": "#amount",
+    "markEl": false,
+    "multiple": false,
+    "selected": true,
+    "type": "text-field",
+    "value": "3",
+    "delay": 0,
+    "events": [],
+    "assignVariable": false,
+    "clearValue": true,
+    "dataColumn": "",
+    "disableBlock": false,
+    "findBy": "cssSelector",
+    "getValue": false,
+    "optionPosition": "1",
+    "saveData": false,
+    "selectOptionBy": "value",
+    "variableName": "",
+    "waitForSelector": false,
+    "waitSelectorTimeout": 5000
+  },
+  "event-click": {
+    "description": "Generate button",
+    "selector": "#generate",
+    "markEl": false,
+    "multiple": false,
+    "disableBlock": false,
+    "findBy": "cssSelector",
+    "waitForSelector": false,
+    "waitSelectorTimeout": 5000
+  },
+  "get-text": {
+    "disableBlock": false,
+    "description": "Get text result",
+    "findBy": "cssSelector",
+    "waitForSelector": false,
+    "waitSelectorTimeout": 5000,
+    "selector": "#lipsum",
+    "markEl": false,
+    "multiple": false,
+    "regex": "",
+    "prefixText": "",
+    "suffixText": "",
+    "regexExp": [
+      "g",
+      "g"
+    ],
+    "dataColumn": "",
+    "saveData": true,
+    "includeTags": false,
+    "addExtraRow": false,
+    "assignVariable": false,
+    "useTextContent": false,
+    "variableName": "",
+    "extraRowValue": "",
+    "extraRowDataColumn": ""
+  },
+  "repeat-task": {
+    "disableBlock": false,
+    "repeatFor": 2
+  },
+  "export-data": {
+    "disableBlock": false,
+    "name": "Lipsum",
+    "refKey": "",
+    "type": "plain-text",
+    "description": "",
+    "variableName": "",
+    "csvDelimiter": ",",
+    "addBOMHeader": false,
+    "onConflict": "uniquify",
+    "dataToExport": "data-columns"
+  },
+  "go-back": {
+    "disableBlock": false,
+    "onError": {
+      "retry": false,
+      "enable": true,
+      "retryTimes": 1,
+      "retryInterval": 2,
+      "toDo": "fallback"
+    }
+  },
+  "javascript-code": {
+    "code": "const keywords = automaRefData('variables', 'keywords');\nautomaSetVariable(\n  'keywords', \n  keywords.split(',').map((keyword) => keyword.trim())\n)",
+    "description": "",
+    "disableBlock": false,
+    "everyNewTab": false,
+    "preloadScripts": [],
+    "runBeforeLoad": false,
+    "timeout": 20000
+  },
+  "loop-data": {
+    "disableBlock": false,
+    "loopId": "keywords",
+    "maxLoop": 0,
+    "toNumber": 10,
+    "fromNumber": 1,
+    "startIndex": 0,
+    "loopData": "[]",
+    "description": "",
+    "variableName": "keywords",
+    "referenceKey": "",
+    "elementSelector": "",
+    "waitForSelector": false,
+    "waitSelectorTimeout": 5000,
+    "resumeLastWorkflow": false,
+    "loopThrough": "variable"
+  },
+  "insert-data": {
+    "dataList": [
+      {
+        "name": "25D2q",
+        "type": "table",
+        "value": "{{loopData@keywords}}"
+      }
+    ],
+    "description": "",
+    "disableBlock": false
+  },
+  "loop-breakpoint": {
+    "disableBlock": false,
+    "loopId": "keywords",
+    "clearLoop": false
+  },
+  "loop-elements": {
+    "disableBlock": false,
+    "loopId": "items",
+    "selector": "[data-testid=\"trend\"]",
+    "maxLoop": "0",
+    "description": "",
+    "reverseLoop": false,
+    "actionElSelector": "",
+    "findBy": "cssSelector",
+    "actionElMaxWaitTime": 5,
+    "actionPageMaxWaitTime": 10,
+    "loadMoreAction": "scroll",
+    "scrollToBottom": true,
+    "waitForSelector": true,
+    "waitSelectorTimeout": 5000
+  },
+  "google-sheets": {
+    "disableBlock": false,
+    "range": "",
+    "refKey": "",
+    "type": "update",
+    "customData": "",
+    "description": "",
+    "spreadsheetId": "",
+    "dataColumn": "",
+    "saveData": true,
+    "assignVariable": false,
+    "variableName": "",
+    "firstRowAsKey": false,
+    "keysAsFirstRow": true,
+    "valueInputOption": "RAW",
+    "InsertDataOption": "INSERT_ROWS",
+    "dataFrom": "data-columns"
+  },
+  "note": {
+    "disableBlock": false,
+    "note": "Read the documentation about the Google Sheets block before running this workflow",
+    "drawing": false,
+    "width": 280,
+    "height": 168,
+    "color": "indigo",
+    "fontSize": "regular"
+  }
+}

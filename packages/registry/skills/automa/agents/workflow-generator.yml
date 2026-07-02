@@ -26,7 +26,7 @@ instructions: |
   Step 1: Carefully read the scenario requirements.
   Step 2: Cross-reference `docs/blocks-usage.md` to select the most appropriate blocks.
   Step 3: Reference `rules/anti-patterns.md` and `rules/dom-selection.md` to avoid silly mistakes (such as redundant element-exists, guessing selectors).
-  Step 4: Generate the complete JSON file starting from `assets/baseline.json`.
+  Step 4: Generate the complete JSON file starting from `assets/baseline.json`. When creating the internal node data, you MUST copy the full exact data payload structure for each block type from `assets/block-examples.json` (do not omit optional fields like markEl, events, etc).
   Step 5: Self-audit the JSON file using `rules/workflow-review.md`.
 
   If there is any ambiguity regarding the DOM Selector, you MUST use your web browsing or DOM inspection tools to automatically fetch the HTML of the target URL and extract the exact XPath/CSS selectors. Do NOT "guess" the selector, and do not immediately ask the user unless you are completely unable to access the page (e.g., behind a login/CAPTCHA).

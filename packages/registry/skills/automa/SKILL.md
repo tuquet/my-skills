@@ -21,6 +21,7 @@ When participating in building or reviewing a workflow, you MUST strictly COMPLY
 ## 3. Schemas & Assets (Data Standards)
 - **[JSON Schema (Data Types)](file:///D:/Repository/my-skills/packages/registry/skills/automa/schemas/automa.schema.json)**: Source of Truth to ensure the output JSON format is 100% valid.
 - **[Baseline Template](file:///D:/Repository/my-skills/packages/registry/skills/automa/assets/baseline.json)**: Standard boilerplate to start initializing every new workflow.
+- **[Block Examples](file:///D:/Repository/my-skills/packages/registry/skills/automa/assets/block-examples.json)**: Exact real-world data structures for all node blocks to prevent missing fields.
 
 ## 4. Agents (Agent Configuration Templates)
 - **[Workflow Generator Prompt](file:///D:/Repository/my-skills/packages/registry/skills/automa/agents/workflow-generator.yml)**: Specialized System prompt for the Agent in charge of producing workflows from scenario descriptions.

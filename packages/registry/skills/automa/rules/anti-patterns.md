@@ -18,3 +18,4 @@ When building Automa workflows, strictly avoid the following mistakes:
 | `new-tab` without `waitTabLoaded: true` | Subsequent blocks run when the page hasn't loaded → fail | Always set `"waitTabLoaded": true` |
 | `delay.time` is string `"1000"` | Engine might not parse it correctly | Must always be a number: `1000` |
 | `drawflow` is a string (copied from export file) | Newly created workflows cannot load | When creating new, `drawflow` is an **object** `{ nodes, edges }` |
+| Omitting standard UI fields like `markEl`, `events` | Omitting "optional" fields in `forms`, `get-text` breaks engine compatibility | ALWAYS copy the full exact data payload from `assets/block-examples.json` and adjust values. Do NOT omit any keys! |
