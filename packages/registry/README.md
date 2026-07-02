@@ -1,4 +1,4 @@
-# @tuquet/skills-registry
+# tuquet-skills-registry
 
 Registry of OpenCode AI skills. Skills are installed via the CLI.
 

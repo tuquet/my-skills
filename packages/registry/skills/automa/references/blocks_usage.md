@@ -4,6 +4,82 @@ Dưới đây là chi tiết cấu hình đầu vào (`data`) và đầu ra củ
 
 > **Trường chung của mọi block**: `description` (string), `disableBlock` (boolean), `selected` (boolean), `inGroup` (boolean), `onError` (string). Các trường này không được liệt kê lại ở từng block để tránh trùng lặp.
 
+## Mục lục
+
+### 1. Khối Khởi tạo & Sự kiện
+- [`trigger`](#trigger) — Bắt đầu workflow
+- [`browser-event`](#browser-event) — Lắng nghe sự kiện trình duyệt
+- [`trigger-event`](#trigger-event) — Bắn sự kiện DOM giả lập
+- [`workflow-state`](#workflow-state) — Quản lý trạng thái workflow
+
+### 2. Khối Trình duyệt & Cửa sổ
+- [`new-tab`](#new-tab) — Mở tab mới
+- [`go-back`](#go-back) — Quay lại trang trước
+- [`reload-tab`](#reload-tab) — Tải lại trang
+- [`close-tab`](#close-tab) — Đóng tab
+- [`active-tab`](#active-tab) — Chuyển focus tab
+- [`switch-tab`](#switch-tab) — Chuyển tab
+- [`new-window`](#new-window) — Mở cửa sổ mới
+- [`switch-to`](#switch-to) — Chuyển iframe/shadow DOM
+- [`forward-page`](#forward-page) — Tiến trang
+- [`tab-url`](#tab-url) — Điều hướng URL
+
+### 3. Khối Tương tác DOM & Website
+- [`event-click`](#event-click) — Click phần tử
+- [`forms`](#forms) — Nhập/đọc form
+- [`get-text`](#get-text) — Trích xuất text
+- [`element-scroll`](#element-scroll) — Cuộn trang
+- [`hover-element`](#hover-element) — Hover chuột
+- [`attribute-value`](#attribute-value) — Lấy thuộc tính HTML
+- [`element-exists`](#element-exists) — Kiểm tra phần tử
+- [`take-screenshot`](#take-screenshot) — Chụp màn hình
+- [`upload-file`](#upload-file) — Tải file lên
+- [`press-key`](#press-key) — Gõ phím
+- [`create-element`](#create-element) — Tạo thẻ HTML
+- [`verify-selector`](#verify-selector) — Xác minh selector
+- [`link`](#link) — Trích xuất link
+- [`save-assets`](#save-assets) — Lưu tài nguyên
+
+### 4. Khối Điều khiển & Vòng lặp
+- [`delay`](#delay) — Tạm dừng
+- [`conditions`](#conditions) — Rẽ nhánh If/Else
+- [`loop-data`](#loop-data) — Lặp qua mảng
+- [`loop-elements`](#loop-elements) — Lặp qua DOM
+- [`loop-breakpoint`](#loop-breakpoint) — Break/Continue loop
+- [`while-loop`](#while-loop) — Lặp theo điều kiện
+- [`repeat-task`](#repeat-task) — Lặp số lần cố định
+- [`execute-workflow`](#execute-workflow) — Gọi sub-workflow
+- [`blocks-group`](#blocks-group) — Nhóm block
+- [`block-package`](#block-package) — Gói mở rộng
+- [`ai-workflow`](#ai-workflow) — Tích hợp AI
+
+### 5. Khối Xử lý Dữ liệu & Biến
+- [`insert-data`](#insert-data) — Lưu vào bảng
+- [`export-data`](#export-data) — Xuất file
+- [`log-data`](#log-data) — Ghi log
+- [`increase-variable`](#increase-variable) — Tăng/giảm biến
+- [`slice-variable`](#slice-variable) — Cắt chuỗi/mảng
+- [`regex-variable`](#regex-variable) — Regex trên biến
+- [`data-mapping`](#data-mapping) — Ánh xạ dữ liệu
+- [`sort-data`](#sort-data) — Sắp xếp
+- [`delete-data`](#delete-data) — Xóa dữ liệu
+
+### 6. Khối Tích hợp & Nâng cao
+- [`javascript-code`](#javascript-code) — Chạy JS tùy chỉnh
+- [`webhook`](#webhook) — Gọi HTTP API
+- [`google-sheets`](#google-sheets) — Google Sheets
+- [`notification`](#notification) — Thông báo
+- [`parameter-prompt`](#parameter-prompt) — Popup nhập liệu
+- [`clipboard`](#clipboard) — Copy/Paste
+- [`handle-dialog`](#handle-dialog) — Xử lý alert/confirm
+- [`handle-download`](#handle-download) — Quản lý tải file
+- [`wait-connections`](#wait-connections) — Chờ network idle
+- [`proxy`](#proxy) — Thiết lập proxy
+- [`interaction-block`](#interaction-block) — Chờ tương tác thủ công
+- [`google-drive`](#google-drive) — Google Drive
+- [`google-sheets-drive`](#google-sheets-drive) — Sheets + Drive
+- [`note`](#note) — Ghi chú
+
 ---
 
 ## 1. Khối Khởi tạo & Sự kiện (Triggers & Events)

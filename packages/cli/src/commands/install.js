@@ -1,5 +1,5 @@
 // @ts-check
-import { existsSync, mkdirSync, writeFileSync, readFileSync, cpSync } from 'fs';
+import { existsSync, mkdirSync, writeFileSync, readFileSync, readdirSync } from 'fs';
 import { join, resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
@@ -41,7 +41,7 @@ export async function installSkill(skillName, force = false, isGlobal = false) {
     const skill = getSkill(skillName);
 
     if (!skill) {
-      spinner.fail(chalk.red(`Skill "${skillName}" not found. Run "npx skills list" to see available skills.`));
+      spinner.fail(chalk.red(`Skill "${skillName}" not found. Run "npx tuquet-skills-cli list" to see available skills.`));
       process.exit(1);
     }
 
@@ -67,14 +67,20 @@ export async function installSkill(skillName, force = false, isGlobal = false) {
     // Create target directory
     mkdirSync(targetDir, { recursive: true });
 
-    // Copy all files
+    // Copy all files (recursive for nested subdirectories)
     const filesToCopy = ['SKILL.md'];
-    const refDir = join(sourceDir, 'references');
-    if (existsSync(refDir)) {
-      const refFiles = ['references/blocks_usage.md', 'references/directoring_structure.md'];
-      for (const f of refFiles) {
-        const src = join(sourceDir, f);
-        if (existsSync(src)) filesToCopy.push(f);
+    const walkRefs = (dir, acc = []) => {
+      if (!existsSync(dir)) return acc;
+      for (const entry of readdirSync(dir, { withFileTypes: true })) {
+        const full = join(dir, entry.name);
+        if (entry.isDirectory()) walkRefs(full, acc);
+        else if (entry.name.endsWith('.md') || entry.name.endsWith('.json')) acc.push(full.replace(sourceDir, '').replaceAll('\\', '/'));
+      }
+      return acc;
+    };
+    for (const sub of ['references', 'examples']) {
+      for (const f of walkRefs(join(sourceDir, sub))) {
+        if (existsSync(join(sourceDir, f))) filesToCopy.push(f);
       }
     }
 
