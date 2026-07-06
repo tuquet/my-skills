@@ -1,20 +1,26 @@
+import * as p from '@clack/prompts';
 import chalk from 'chalk';
 import { getSkill } from '../registry.js';
 
 export async function showInfo(skillName) {
   const skill = getSkill(skillName);
 
+  p.intro(chalk.bgHex('#6366F1').black(' Tuquet Skills Info '));
+
   if (!skill) {
-    console.log(chalk.red(`Skill "${skillName}" not found.`));
+    p.note(chalk.red(`Không tìm thấy skill "${skillName}".`), 'Lỗi');
+    p.outro(chalk.dim('Kết thúc.'));
     process.exit(1);
   }
 
-  console.log(chalk.bold(`\n  ${skill.name}\n`));
-  console.log(`  ${chalk.dim('Description:')}  ${skill.description}`);
-  console.log(`  ${chalk.dim('Category:')}     ${skill.category}`);
-  console.log(`  ${chalk.dim('Version:')}      ${skill.version}`);
-  console.log(`  ${chalk.dim('Files:')}        ${skill.files.length} files`);
-  console.log(`  ${chalk.dim('Keywords:')}     ${skill.keywords.join(', ')}`);
+  let infoStr = ``;
+  infoStr += `${chalk.bold('Mô tả:')}    ${chalk.dim(skill.description)}\n`;
+  infoStr += `${chalk.bold('Category:')} ${chalk.dim(skill.category)}\n`;
+  infoStr += `${chalk.bold('Version:')}  ${chalk.dim(skill.version)}\n`;
+  infoStr += `${chalk.bold('Files:')}    ${chalk.dim(skill.filesCount + ' mục')}\n`;
+  infoStr += `${chalk.bold('Tags:')}     ${chalk.dim(skill.tags.length ? skill.tags.join(', ') : 'None')}`;
 
-  console.log(chalk.dim(`\n  Install: npx tuquet-skills-cli install ${skill.name}\n`));
+  p.note(infoStr, chalk.cyan(skill.name));
+
+  p.outro(chalk.dim(`Cài đặt: npx tuquet-skills-cli install ${skill.name}`));
 }

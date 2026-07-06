@@ -24,6 +24,23 @@ program
   });
 
 program
+  .command('create <skill>')
+  .description('Scaffold a new skill template in the Registry')
+  .action(async (skill) => {
+    const { createSkill } = await import('../src/commands/create.js');
+    await createSkill(skill);
+  });
+
+program
+  .command('uninstall <skill>')
+  .description('Remove an installed skill')
+  .option('-g, --global', 'Uninstall from global ~/.gemini/config/skills/')
+  .action(async (skill, opts) => {
+    const { uninstallSkill } = await import('../src/commands/uninstall.js');
+    await uninstallSkill(skill, opts.global);
+  });
+
+program
   .command('install-rule <rule>')
   .description('Download and append a rule template to .agents/AGENTS.md')
   .option('-f, --force', 'Overwrite the existing AGENTS.md file completely')

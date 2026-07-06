@@ -1,15 +1,11 @@
 {
   "name": "skills-monorepo",
   "private": true,
-  "workspaces": [
-    "packages/registry",
-    "packages/cli"
-  ],
   "scripts": {
     "cli": "node packages/cli/bin/index.js",
-    "publish:registry": "npm publish -w packages/registry",
-    "publish:cli": "npm publish -w packages/cli",
-    "publish:all": "npm run publish:registry && npm run publish:cli"
+    "publish:registry": "pnpm publish -w packages/registry",
+    "publish:cli": "pnpm publish -w packages/cli",
+    "publish:all": "pnpm run publish:registry && pnpm run publish:cli"
   },
   "engines": {
     "node": ">=18"

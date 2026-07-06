@@ -5,19 +5,14 @@ import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
 import os from 'os';
 import chalk from 'chalk';
-import ora from 'ora';
+import * as p from '@clack/prompts';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-/**
- * Resolve path to skill files in the registry package
- */
 function getSkillSourceDir(skillName) {
-  // Try local registry first (monorepo development)
   const localPath = resolve(__dirname, '../../../registry/skills', skillName);
   if (existsSync(localPath)) return localPath;
 
-  // Fallback: resolve from installed tuquet-skills-registry package
   try {
     const require = createRequire(import.meta.url);
     const regJsonPath = require.resolve('tuquet-skills-registry/package.json');
@@ -30,55 +25,44 @@ function getSkillSourceDir(skillName) {
   }
 }
 
-/**
- * Install a skill to the target .agents/skills/ directory
- */
 export async function installSkill(skillName, force = false, isGlobal = false) {
-  const spinner = ora().start();
+  const spinner = p.spinner();
+  spinner.start(`Đang cài đặt skill "${skillName}"...`);
 
   try {
     const { getSkill } = await import('../registry.js');
     const skill = getSkill(skillName);
 
     if (!skill) {
-      spinner.fail(chalk.red(`Skill "${skillName}" not found. Run "npx tuquet-skills-cli list" to see available skills.`));
-      process.exit(1);
+      spinner.stop(chalk.red(`Không tìm thấy skill "${skillName}" trong Registry.`));
+      throw new Error(`Skill not found`);
     }
 
     const sourceDir = getSkillSourceDir(skillName);
     if (!sourceDir) {
-      spinner.fail(chalk.red(`Cannot locate skill files for "${skillName}". Is tuquet-skills-registry installed?`));
-      process.exit(1);
+      spinner.stop(chalk.red(`Mất kết nối với thư mục nguồn của "${skillName}".`));
+      throw new Error(`Source not found`);
     }
 
     const targetDir = isGlobal
       ? resolve(os.homedir(), '.gemini/config/skills', skillName)
       : resolve(process.cwd(), '.agents/skills', skillName);
 
-    // Check if already installed
     if (existsSync(targetDir) && !force) {
-      spinner.fail(
-        chalk.yellow(`Skill "${skillName}" already exists at ${targetDir}\n`) +
-        chalk.dim('  Use --force to overwrite.')
-      );
-      process.exit(1);
+      spinner.stop(chalk.yellow(`Skill "${skillName}" đã tồn tại. Dùng --force để ghi đè.`));
+      throw new Error(`Already exists`);
     }
 
-    // Create target directory
     mkdirSync(targetDir, { recursive: true });
-
-    // Copy all files (recursive for nested subdirectories)
     cpSync(sourceDir, targetDir, { recursive: true });
 
-    spinner.succeed(chalk.green(`✓ Skill "${skillName}" installed successfully!`));
-    console.log(chalk.dim(`  Location: ${targetDir}`));
-    const usagePath = isGlobal
-      ? `~/.gemini/config/skills/${skillName}/SKILL.md`
-      : `.agents/skills/${skillName}/SKILL.md`;
-    console.log(chalk.dim(`  Usage:    Refer to ${usagePath} for instructions`));
+    spinner.stop(chalk.green(`✓ Skill "${skillName}" đã cài đặt thành công!`));
+    p.note(`Location: ${targetDir}`, 'Thông tin');
 
   } catch (err) {
-    spinner.fail(chalk.red(`Installation failed: ${err.message}`));
-    process.exit(1);
+    if (err.message !== 'Skill not found' && err.message !== 'Source not found' && err.message !== 'Already exists') {
+      spinner.stop(chalk.red(`Lỗi cài đặt: ${err.message}`));
+    }
+    throw err;
   }
 }

@@ -6,7 +6,7 @@ import { createRequire } from 'module';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function getRegistryDir() {
-  const localPath = path.resolve(__dirname, '../../../registry');
+  const localPath = path.resolve(__dirname, '../../registry');
   if (fs.existsSync(localPath)) return localPath;
   try {
     const require = createRequire(import.meta.url);
@@ -35,18 +35,45 @@ function loadSkills() {
       
       let description = '';
       let name = skillName;
+      let category = 'Uncategorized';
+      let version = '1.0.0';
+      let tags = [];
+      let filesCount = 0;
+
+      try {
+        filesCount = fs.readdirSync(skillPath).length;
+      } catch (e) {}
+
       if (fs.existsSync(mdPath)) {
         const content = fs.readFileSync(mdPath, 'utf8');
-        const nameMatch = content.match(/^name:\s*"?([^"\r\n]+)"?/m);
+        const fmMatch = content.match(/^---\n([\s\S]*?)\n---/);
+        const fm = fmMatch ? fmMatch[1] : content;
+
+        const nameMatch = fm.match(/^name:\s*"?([^"\r\n]+)"?/m);
         if (nameMatch) name = nameMatch[1].trim();
         
-        const descMatch = content.match(/^description:\s*"?([^"\r\n]+)"?/m);
+        const descMatch = fm.match(/^description:\s*"?([^"\r\n]+)"?/m);
         if (descMatch) description = descMatch[1].trim();
+
+        const catMatch = fm.match(/^category:\s*"?([^"\r\n]+)"?/m);
+        if (catMatch) category = catMatch[1].trim();
+
+        const verMatch = fm.match(/^version:\s*"?([^"\r\n]+)"?/m);
+        if (verMatch) version = verMatch[1].trim();
+
+        const tagsMatch = fm.match(/^(?:tags|keywords):\s*"?([^"\r\n]+)"?/m);
+        if (tagsMatch) {
+          tags = tagsMatch[1].replace(/[\[\]]/g, '').split(',').map(s => s.trim()).filter(Boolean);
+        }
       }
       
       skills[skillName] = {
         name,
         description,
+        category,
+        version,
+        tags,
+        filesCount,
         path: `${skillName}/`,
       };
     }

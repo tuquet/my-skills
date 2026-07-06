@@ -2,3 +2,7 @@ node_modules/
 omnidesk.*
 workflows
 scratch
+
+# MemPalace per-project files (issue #185)
+mempalace.yaml
+entities.json

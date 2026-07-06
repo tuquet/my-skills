@@ -15,6 +15,8 @@ export async function runWizard() {
     message: 'Chọn tác vụ:',
     options: [
       { value: 'install-skill', label: '📦  Cài đặt Skill' },
+      { value: 'uninstall-skill', label: '🗑️  Gỡ cài đặt Skill' },
+      { value: 'create-skill', label: '✨  Tạo Skill mới (Scaffold)' },
       { value: 'install-rule', label: '📋  Cài đặt Rule' },
       { value: 'update', label: '🔄  Cập nhật Skills đã cài' },
       { value: 'sync', label: '🔗  Đồng bộ Rules sang IDE' },
@@ -92,6 +94,74 @@ export async function runWizard() {
     } else {
       p.outro(chalk.yellow(`✓ ${success} thành công, ${fail} thất bại.`));
     }
+  }
+
+  if (action === 'uninstall-skill') {
+    const skillNames = getSkillNames();
+    if (skillNames.length === 0) {
+      p.note('Chưa có skill nào trong Registry.', 'Thông báo');
+      p.outro(chalk.gray('Kết thúc.'));
+      process.exit(0);
+    }
+
+    const selected = await p.multiselect({
+      message: 'Chọn skill muốn gỡ bỏ (Space để chọn, Enter để xác nhận):',
+      options: skillNames.map(name => ({
+        value: name,
+        label: name,
+      })),
+      required: true,
+    });
+
+    if (p.isCancel(selected)) {
+      p.outro(chalk.gray('Đã hủy.'));
+      process.exit(0);
+    }
+
+    const location = await p.select({
+      message: 'Nơi gỡ cài đặt:',
+      options: [
+        { value: 'local', label: '📁  Workspace hiện tại  (.agents/skills/)' },
+        { value: 'global', label: '🌍  Toàn cục           (~/.gemini/config/skills/)' },
+      ],
+    });
+
+    if (p.isCancel(location)) {
+      p.outro(chalk.gray('Đã hủy.'));
+      process.exit(0);
+    }
+
+    p.note(chalk.cyan(`Đang gỡ ${selected.length} skill...`), '⏳');
+
+    const { uninstallSkill } = await import('./uninstall.js');
+    for (const name of selected) {
+      try {
+        await uninstallSkill(name, location === 'global');
+      } catch (e) {
+        // Continue if one fails
+      }
+    }
+    p.outro(chalk.green(`✓ Đã hoàn tất gỡ cài đặt.`));
+  }
+
+  if (action === 'create-skill') {
+    const skillName = await p.text({
+      message: 'Nhập tên skill mới (viết liền, không dấu):',
+      placeholder: 'my-awesome-skill',
+      validate(value) {
+        if (!value) return 'Tên không được bỏ trống!';
+        if (value.includes(' ')) return 'Tên không được chứa khoảng trắng!';
+        if (typeof value !== 'string') return 'Tên không hợp lệ!';
+      },
+    });
+
+    if (p.isCancel(skillName)) {
+      p.outro(chalk.gray('Đã hủy.'));
+      process.exit(0);
+    }
+
+    const { createSkill } = await import('./create.js');
+    await createSkill(skillName.toString());
   }
 
   if (action === 'install-rule') {
