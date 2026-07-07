@@ -2,6 +2,9 @@
   "name": "skills-monorepo",
   "private": true,
   "scripts": {
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "changeset publish",
     "cli": "node packages/cli/bin/index.js",
     "publish:registry": "pnpm publish -w packages/registry",
     "publish:cli": "pnpm publish -w packages/cli",
@@ -9,5 +12,8 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.31.0"
   }
 }
