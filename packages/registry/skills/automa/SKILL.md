@@ -1,6 +1,6 @@
 ---
-name: automa-workflow-best-practices
-description: Guidelines for creating, editing, and reviewing Automa JSON workflows. Trigger: automa, workflow json, automa json, review workflow.
+name: automa
+description: "Guidelines for creating, editing, and reviewing Automa JSON workflows. Trigger: automa, workflow json, automa json, review workflow."
 ---
 
 # Automa Workflow Best Practices
