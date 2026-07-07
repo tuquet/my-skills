@@ -27,7 +27,7 @@ importers:
         specifier: ^8.0.0
         version: 8.2.0
       tuquet-skills-registry:
-        specifier: workspace:^0.3.0
+        specifier: workspace:^0.3.1
         version: link:../registry
 
   packages/registry: {}
