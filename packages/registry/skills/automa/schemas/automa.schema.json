@@ -2725,20 +2725,33 @@
                     "data": {
                       "type": "object",
                       "properties": {
-                        "packageId": {
-                          "type": "string",
-                          "description": "Installed package ID"
+                        "id": {
+                          "type": "string"
                         },
-                        "blockName": {
-                          "type": "string",
-                          "description": "Block name inside the package"
+                        "data": {
+                          "type": "object"
                         },
-                        "config": {
-                          "type": "object",
-                          "description": "Custom configuration based on the package definition"
+                        "inputs": {
+                          "type": "array"
+                        },
+                        "outputs": {
+                          "type": "array"
+                        },
+                        "icon": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
                         }
                       },
-                      "required": ["packageId", "blockName"]
+                      "required": [
+                        "id",
+                        "data",
+                        "inputs",
+                        "outputs",
+                        "icon",
+                        "name"
+                      ]
                     }
                   }
                 }

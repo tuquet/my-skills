@@ -10,6 +10,7 @@ Automa Workflows require absolute precision regarding Data Structure (Schema) an
 ## 1. Core Rules (Mandatory Rules)
 - **[Anti-Patterns](./rules/anti-patterns.md)**: Common logical mistakes to avoid.
 - **[DOM Selection Rules](./rules/dom-selection.md)**: Strategy for resolving exact UI elements.
+- **[Icons Rule](./rules/icons.md)**: List of valid UI icon codes (vRemixicon) to use for Packages and Workflows.
 - **[Workflow Review Checklist](./rules/workflow-review.md)**: Quality assurance step.
 - **[Data Scopes & Parameters](./docs/data-scopes.md)**: Guide on how `globalData` and `trigger.parameters` are interpolated for reusable workflows.
 
