@@ -463,11 +463,11 @@
   },
   "press-key": {
     "disableBlock": false,
-    "keys": "",
+    "keys": [],
     "selector": "",
     "pressTime": "",
     "description": "",
-    "keysToPress": "",
+    "keysToPress": [],
     "action": ""
   },
   "handle-dialog": {

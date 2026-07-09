@@ -11,15 +11,15 @@ instructions: |
   2. No Hardcoding:
      - All dynamic values (username, password, urls, xpath) must be declared in `trigger.parameters`.
      - Use Automa's variable interpolation syntax: `{{$params.param_name}}`.
-  3. Canvas Structure (Drawflow):
+  3. Canvas Structure (Drawflow / automa-blocks):
      - `drawflow` must be an object `{ "nodes": [...], "edges": [...] }`.
      - Must assign a unique id (uuid) to each node.
-     - Calculate logical `position` {x,y} so that nodes do not overlap on the canvas (spaced about 200-300px apart).
+     - CRITICAL: EVERY single node MUST have a `position` property (e.g. `"position": { "x": 100, "y": 200 }`). If a node lacks a `position`, it cannot be rendered or pasted into Automa canvas. Calculate logical `position` {x,y} so that nodes do not overlap on the canvas (spaced about 200-300px apart).
   4. Mandatory Label & Description:
      - Each Node MUST have a `description` attribute (e.g., "Enter password into the form").
      - Each connecting Edge MUST have logic.
   5. File Output Convention:
-     - You MUST save the final output directly to a file using the `.automa.json` extension (e.g., `wp-login.automa.json`).
+     - You MUST save the final output directly to a file using the `.automa.json` extension (or `.automa-pkg.json` for clipboard `automa-blocks` payload).
      - Do NOT just output the JSON in a markdown code block. Save it to disk using your write tools.
   
   YOUR WORKFLOW:

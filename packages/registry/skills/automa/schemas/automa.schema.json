@@ -2724,7 +2724,21 @@
                   "properties": {
                     "data": {
                       "type": "object",
-                      "properties": {}
+                      "properties": {
+                        "packageId": {
+                          "type": "string",
+                          "description": "Installed package ID"
+                        },
+                        "blockName": {
+                          "type": "string",
+                          "description": "Block name inside the package"
+                        },
+                        "config": {
+                          "type": "object",
+                          "description": "Custom configuration based on the package definition"
+                        }
+                      },
+                      "required": ["packageId", "blockName"]
                     }
                   }
                 }

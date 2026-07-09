@@ -447,12 +447,19 @@ Group blocks together to organize and collapse the canvas UI.
 - **Output**: Does not affect data flow, only organizes the interface.
 
 ### `block-package`
-Use an extension package within the workflow.
+Use an extension package within the workflow. Custom packages are incredibly powerful because they can act as a **Test Case Branching Router**.
 - **Input (`data`)**:
   - `packageId` (string): Installed package ID.
   - `blockName` (string): Block name inside the package.
   - `config` (object): Custom configuration based on the package definition.
-- **Output**: (Depends on the specific extension package)
+- **Output**:
+  - Packages can define **Multiple Source Handles (Outputs)** depending on the execution result. 
+  - **Best Practice (Test Automation):** Instead of using complex `Conditions` blocks, a custom package (e.g., "Test Login Form") can evaluate the UI and expose multiple output paths such as:
+    - 🟢 `output-success` ➔ Route to "Continue Test / Log Success"
+    - 🔴 `output-failed` ➔ Route to "Take Error Screenshot"
+    - 🟡 `output-wrong-pass` ➔ Route to "Log Validation Error"
+    - 🟠 `output-network-error` ➔ Route to "Retry Logic"
+  - This turns Automa into a highly visual and maintainable flow-based testing tool.
 
 ### `ai-workflow`
 AI integration block — calls AI services (chat, text generation, analysis) within the workflow.
