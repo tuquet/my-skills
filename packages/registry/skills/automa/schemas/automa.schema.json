@@ -1874,7 +1874,39 @@
                           "type": "string"
                         },
                         "dataList": {
-                          "type": "array"
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "table",
+                                  "variable"
+                                ]
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "value": {
+                                "type": "string"
+                              },
+                              "filePath": {
+                                "type": "string"
+                              },
+                              "isFile": {
+                                "type": "boolean"
+                              },
+                              "action": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "name",
+                              "value"
+                            ]
+                          }
                         }
                       }
                     }
