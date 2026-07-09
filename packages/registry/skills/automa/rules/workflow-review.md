@@ -14,7 +14,7 @@ When reviewing a Workflow (or before completing the initialization), the Agent m
 3.2. **Execute Workflow Context Check**: When using `execute-workflow`, you MUST inspect the target workflow's JSON to determine if it relies on `globalData` (e.g., `{{globalData.startUrl}}`) or `variables` (e.g., `{{variables.team_id}}`). Then, explicitly pass the correct context using `insertAllGlobalData: true` or `insertAllVars: true` in the block data. NEVER hallucinate or hardcode values inside the block's `globalData` string unless explicitly required.
 4. **Reusability Check**: Are all inputs fully declared in `trigger.parameters`? Absolutely no hardcoding.
 5. **Redundancy Check**: Do not add `element-exists` before `element-scroll`, `forms`, `event-click` — those blocks already have `waitForSelector: true` to self-check the element. `element-exists` is only used to **branch logic** (e.g., element exists → do A, does not exist → do B).
-6. **Selector Check**: Prioritize XPath, inspect actual DOM, do not guess DOM (read `dom-selection.md`).
+6. **Selector Check**: Prioritize XPath, inspect actual DOM, do not guess DOM (read `dom-selection.md`). Mọi selector như `//input[@type='password']` nếu tự đoán mà không có HTML thực tế đều bị coi là lỗi nghiêm trọng. Phải yêu cầu user cung cấp HTML hoặc Selector chính xác nếu chưa có!
 7. **Condition Check**: `conditions` must always have both output branches (true + false). Do not miss the fallback.
 8. **Resiliency & Self-Healing Check**: Does the workflow anticipate failures?
    - Are `onError: "fallback"` paths explicitly defined for critical network or DOM operations (and connected to a recovery block)?
