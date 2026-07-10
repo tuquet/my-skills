@@ -19,6 +19,7 @@ Automa Workflows require absolute precision regarding Data Structure (Schema) an
 - **[Advanced Blocks](./docs/advanced-blocks.md)**: Guide on Loops (`loop-elements`, `loop-data`), Data Tables, Google Sheets syncing, and Branching Logic (`conditions`).
 - **[Self-Healing Workflows](./docs/self-healing.md)**: Design patterns for error recovery, retries, fallbacks, and defensive DOM operations.
 - **[Knowledge Base (Q&A)](./docs/qa-knowledge.md)**: Common patterns, sub-workflow, loop, variable injection, logging.
+- **[Credentials & Encryption](./docs/credentials-and-encryption.md)**: Architecture for Double Encryption during sync and fixing JSON.parse Number typing quirks for pure numeric passwords.
 
 ## 3. Schemas & Assets (Data Standards)
 - **[Workflow Schema](./schemas/automa.schema.json)**: Source of Truth to ensure the output JSON format for Workflows is 100% valid.

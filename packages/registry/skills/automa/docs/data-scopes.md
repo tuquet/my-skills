@@ -48,11 +48,22 @@ Use the Mustache syntax to read variables in any block field:
 
 ---
 
+## 3. Storage Variables (Global Environment Variables)
+This is a static, extension-level configuration stored in `dbStorage.variables`. Automa automatically prefixes these variables with `$$` when loading them into `referenceData`. Therefore, the mandatory syntax to access them is `{{variables.$$[name]}}` (e.g., `{{variables.$$loginUrl}}`).
+
+## 4. Credentials (Secrets)
+This is an encrypted, extension-level store for credentials (using AES-256 via crypto-js).
+**QUAN TRỌNG**: Value của credentials trong Automa chỉ là string thuần. KHÔNG LƯU JSON OBJECT.
+Sử dụng cấu trúc flat naming (ví dụ: `nvtuan_username`, `commonPassword`).
+Cú pháp truy xuất: `{{secrets@[credentialName]}}` (ví dụ: `{{secrets@commonPassword}}`).
+
+---
+
 ## Summary: When to use what?
 
-| Feature | `globalData` | `trigger.parameters` (Variables) |
-| :--- | :--- | :--- |
-| **Purpose** | Configurations, Constants, Default States | User Inputs, Webhook Payloads, Mid-flow Data |
-| **Lifecycle** | Static (Preloaded from Workflow Settings) | Dynamic (Injected per execution or mid-execution) |
-| **Syntax** | `{{globalData.key}}` | `{{variables.key}}` |
-| **Use Case** | `{"baseUrl": "api.example.com", "maxRetries": 3}` | Username, password, specific search term for this run |
+| Feature | `globalData` | `trigger.parameters` (Variables) | Storage Variables | Credentials |
+| :--- | :--- | :--- | :--- | :--- |
+| **Purpose** | Configurations, Constants, Default States | User Inputs, Webhook Payloads, Mid-flow Data | Extension-level static configuration | Encrypted extension-level secrets |
+| **Lifecycle** | Static (Preloaded from Workflow Settings) | Dynamic (Injected per execution or mid-execution) | Static (Stored in `dbStorage.variables`) | Static (AES-256 Encrypted) |
+| **Syntax** | `{{globalData.key}}` | `{{variables.key}}` | `{{variables.$$[name]}}` | `{{secrets@[credentialName]}}` |
+| **Use Case** | `{"baseUrl": "api.example.com", "maxRetries": 3}` | Username, password, specific search term for this run | `loginUrl`, global shared settings | `commonPassword`, API keys |
