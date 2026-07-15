@@ -22,8 +22,6 @@ Automa Workflows require absolute precision regarding Data Structure (Schema) an
 ## 3. Schemas & Assets (Data Standards)
 - **[Workflow Schema](./schemas/automa.schema.json)**: Source of Truth to ensure the output JSON format for Workflows is 100% valid.
 - **[Package Schema](./schemas/package.schema.json)**: Source of Truth for generating reusable Automa Packages (Custom Blocks with multiple outputs).
-- **[Baseline Template](./assets/baseline.json)**: Standard boilerplate to start initializing every new workflow.
-- **[Block Examples](./assets/block-examples.json)**: Exact real-world data structures for all node blocks to prevent missing fields.
 
 ## 4. Agent Workflow Guidelines (Recommended Flow)
 When asked to create or modify an Automa Workflow, the Agent MUST follow this workflow:
