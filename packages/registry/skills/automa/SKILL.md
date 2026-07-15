@@ -12,7 +12,6 @@ Automa Workflows require absolute precision regarding Data Structure (Schema) an
 - **[DOM Selection Rules](./rules/dom-selection.md)**: Strategy for resolving exact UI elements.
 - **[Single Node Generation](./rules/single-node-generation.md)**: Rules for answering requests that ask for exactly 1 workflow node.
 - **[Workflow Review Checklist](./rules/workflow-review.md)**: Quality assurance step.
-- **[Programmatic Injection](./docs/programmatic-injection.md)**: Guide on how to dynamically inject visual node blocks into existing workflows using Node.js.
 
 ## 2. Documentation (Knowledge Base)
 - **[Blocks Usage (Semantics)](./docs/blocks-usage.md)**: Explains the role and usage of each block in business logic.
@@ -42,6 +41,3 @@ When asked to create or modify an Automa Workflow, the Agent MUST follow this wo
 
 ## 5. Prompt Templates (User Interfaces)
 - **[Workflow Request Form](./templates/workflow_request.md)**: **STRICT RULE**: When a user asks you to create a workflow, you MUST ensure they have provided the information listed in this template. If they do not provide exact DOM selectors, you MUST ask them to fill out this template or provide the selectors before you generate the JSON. Never guess or hallucinate DOM selectors.
-
-## 6. Cross-Skill
-When converting from Test Case to Workflow, please refer to the `test-cases` skill to understand how to analyze requirements → generate test cases → convert to workflows.
