@@ -102,7 +102,7 @@ Block khởi đầu workflow, định nghĩa cách kịch bản được kích h
   - `days` (array): Các ngày trong tuần (`["mon","tue","wed","thu","fri","sat","sun"]`).
   - `observeElement` (object): Cấu hình theo dõi phần tử DOM — gồm `selector`, `baseSelector`, `baseElOptions`, `targetOptions`, `matchPattern`.
   - `preferParamsInTab` (boolean): Hiện popup nhập tham số trong tab thay vì popup nhỏ.
-- **Output**: Khởi tạo workflow context và truyền điều khiển tới block kế tiếp. Nếu có `parameters`, dữ liệu nhập từ người dùng được lưu vào biến `$params.<tên>`.
+- **Output**: Khởi tạo workflow context và truyền điều khiển tới block kế tiếp. Nếu có `parameters`, dữ liệu nhập từ người dùng được lưu vào biến `$variables.<tên>`.
 
 ### `browser-event`
 Lắng nghe sự kiện từ trình duyệt (như tab được tạo, tab được cập nhật, tab được đóng, cửa sổ thay đổi).
@@ -612,7 +612,7 @@ Hiển thị popup yêu cầu người dùng nhập tham số trước khi workf
   - `description` (string): Mô tả hướng dẫn cho người dùng.
   - `fields` (array): Danh sách trường nhập liệu — mỗi phần tử: `{ id: "...", label: "...", type: "text"|"number"|"select"|"checkbox"|"file", defaultValue: "...", required: true/false, options: ["op1","op2"] }` (options dùng cho type select).
   - `buttonText` (string): Text trên nút xác nhận (mặc định "OK").
-- **Output**: Dữ liệu người dùng nhập được lưu vào biến `$params.<id>`.
+- **Output**: Dữ liệu người dùng nhập được lưu vào biến `$variables.<id>`.
 
 ### `clipboard`
 Đọc hoặc ghi dữ liệu vào clipboard (bộ nhớ tạm).

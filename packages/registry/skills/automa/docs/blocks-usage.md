@@ -104,7 +104,7 @@ The starting block of the workflow, defining how the script is activated.
   - `days` (array): Days of the week (`["mon","tue","wed","thu","fri","sat","sun"]`).
   - `observeElement` (object): Observe DOM element configuration — includes `selector`, `baseSelector`, `baseElOptions`, `targetOptions`, `matchPattern`.
   - `preferParamsInTab` (boolean): Show parameter prompt popup in tab instead of a small popup.
-- **Output**: Initializes workflow context and transfers control to the next block. If `parameters` exist, user input data is saved to `$params.<name>` variables.
+- **Output**: Initializes workflow context and transfers control to the next block. If `parameters` exist, user input data is saved to `$variables.<name>` variables.
 
 ### `browser-event`
 Listen to browser events (such as tab created, tab updated, tab removed, window changed).
@@ -621,7 +621,7 @@ Show an input prompt popup requesting parameters from the user before continuing
   - `description` (string): Guidance description for the user.
   - `fields` (array): List of input fields — each element: `{ id: "...", label: "...", type: "text"|"number"|"select"|"checkbox"|"file", defaultValue: "...", required: true/false, options: ["op1","op2"] }` (options used for type select).
   - `buttonText` (string): Text on the confirmation button (default "OK").
-- **Output**: User input data is saved to `$params.<id>` variables.
+- **Output**: User input data is saved to `$variables.<id>` variables.
 
 ### `clipboard`
 Read from or write data to the clipboard.

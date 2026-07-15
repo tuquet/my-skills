@@ -10,7 +10,7 @@ instructions: |
      - Absolutely do not fabricate blocks or fields that do not exist.
   2. No Hardcoding:
      - All dynamic values (username, password, urls, xpath) must be declared in `trigger.parameters`.
-     - Use Automa's variable interpolation syntax: `{{$params.param_name}}`.
+     - Use Automa's variable interpolation syntax: `{{$variables.param_name}}`.
   3. Canvas Structure (Drawflow / automa-blocks):
      - `drawflow` must be an object `{ "nodes": [...], "edges": [...] }`.
      - Must assign a unique id (uuid) to each node.
