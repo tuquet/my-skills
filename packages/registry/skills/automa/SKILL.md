@@ -11,12 +11,15 @@ Automa Workflows require absolute precision regarding Data Structure (Schema) an
 - **[Anti-Patterns](./rules/anti-patterns.md)**: Common logical mistakes to avoid.
 - **[DOM Selection Rules](./rules/dom-selection.md)**: Strategy for resolving exact UI elements.
 - **[Icons Rule](./rules/icons.md)**: List of valid UI icon codes (vRemixicon) to use for Packages and Workflows.
+- **[Single Node Generation](./rules/single-node-generation.md)**: Rules for answering requests that ask for exactly 1 workflow node.
 - **[Workflow Review Checklist](./rules/workflow-review.md)**: Quality assurance step.
 - **[Data Scopes & Parameters](./docs/data-scopes.md)**: Guide on how `globalData` and `trigger.parameters` are interpolated for reusable workflows.
+- **[Programmatic Injection](./docs/programmatic-injection.md)**: Guide on how to dynamically inject visual node blocks into existing workflows using Node.js.
 
 ## 2. Documentation (Knowledge Base)
 - **[Blocks Usage (Semantics)](./docs/blocks-usage.md)**: Explains the role and usage of each block in business logic.
 - **[Advanced Blocks](./docs/advanced-blocks.md)**: Guide on Loops (`loop-elements`, `loop-data`), Data Tables, Google Sheets syncing, and Branching Logic (`conditions`).
+- **[Ant Design Vue & SPA Interaction](./docs/ant-design-vue-interaction.md)**: Vital techniques for interacting with Virtual DOM, robust UI selection, bypassing framework interception, and dealing with complex elements like `ant-select`, `ant-picker`, and `ant-drawer`.
 - **[Self-Healing Workflows](./docs/self-healing.md)**: Design patterns for error recovery, retries, fallbacks, and defensive DOM operations.
 - **[Knowledge Base (Q&A)](./docs/qa-knowledge.md)**: Common patterns, sub-workflow, loop, variable injection, logging.
 - **[Credentials & Encryption](./docs/credentials-and-encryption.md)**: Architecture for Double Encryption during sync and fixing JSON.parse Number typing quirks for pure numeric passwords.
