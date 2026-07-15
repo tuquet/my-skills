@@ -21,3 +21,7 @@ When reviewing a Workflow (or before completing the initialization), the Agent m
    - Are `waitForSelector` and safe `waitSelectorTimeout` (e.g., 5000ms+) configured for dynamic elements?
    - If using `conditions`, are `retryConditions`, `retryCount`, and `retryTimeout` appropriately configured to poll for async events rather than failing instantly?
    - Do `javascript-code` blocks wrap risky parsing in `try...catch` and exit via `automaNextBlock({ $error: true })`?
+9. **Automated Linter Check (Mandatory Gate)**: The workflow MUST pass the local static linter. Run `npm run lint -- --project=<projectName>` inside `automa-vault` to execute `lint-workflows.js` and verify rules.
+   The linter statically validates:
+   - Node Schema Integrity: Checks each block's properties against `automa.schema.json`.
+   - Variable Declarations: Ensures any interpolated variable `{{variables.varName}}` or javascript-referenced variable `automaRefData('variables', 'varName')` is declared in either `trigger.parameters` or the project's global/database variables. Undeclared variables will result in lint errors.
