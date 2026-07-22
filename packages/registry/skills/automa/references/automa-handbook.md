@@ -1,3 +1,345 @@
+---
+name: automa-handbook
+description: Master handbook containing all rules, blocks usage, and self-healing guidelines for Automa Workflows
+---
+
+# Automa Workflow Master Handbook
+
+This document is the single source of truth for Automa workflows. It contains all mandatory rules, DOM strategies, block semantics, and self-healing patterns.
+
+
+# Part 1: Rules & Anti-Patterns
+
+---
+name: automa-anti-patterns
+description: Common mistakes when creating Automa workflows
+---
+
+# Common Mistakes / Anti-patterns
+
+When building Automa workflows, strictly avoid the following mistakes:
+
+| Mistake | Why it is wrong | Correct approach |
+|---------|-----------------|------------------|
+| Leaving edge `label` empty | Agent/reader cannot understand the flow | Always write a label: `"Finished filling → submit"` |
+| Generic node `description`: `"Open tab"` | Unclear what this node does in the business logic | `"Open login tab {{variables.url}} to start logging in"` |
+| Hardcode password in node | Exposes information, cannot be reused | Declare in `trigger.parameters`, use `{{variables.password}}` |
+| Adding `element-exists` before `event-click` | The `event-click` block already has `waitForSelector` to self-check | Only use `element-exists` when needing to **branch** (exists → A, does not exist → B) |
+| Guessed selector: `input.emailll` | Actual DOM often differs from expectation | Inspect actual DOM, prioritize XPath |
+| Conditions only have 1 output branch | Errors are unhandled, workflow hangs | Always connect both output-1 (true) and output-2 (false) |
+| `new-tab` without `waitTabLoaded: true` | Subsequent blocks run when the page hasn't loaded → fail | Always set `"waitTabLoaded": true` |
+| `delay.time` is string `"1000"` | Engine might not parse it correctly | Must always be a number: `1000` |
+| `drawflow` is a string (copied from export file) | Newly created workflows cannot load | When creating new, `drawflow` is an **object** `{ nodes, edges }` |
+| Omitting standard UI fields like `markEl`, `events` | Omitting "optional" fields in `forms`, `get-text` breaks engine compatibility | Refer to `schemas/automa.schema.json` or verified vault files for the full exact block payload structure. Do NOT omit any required/optional keys! |
+| Connecting generic edges to `BlockPackage` nodes (`node-input-1`) | The wires will connect to the visual boundary (top/bottom) instead of the actual package ports (`start`/`end`), causing the flow to break | Always inspect the `inputs` and `outputs` arrays of the embedded Package JSON and use their exact `id`s for the handles: e.g., `<nodeId>-input-<inputId>` and `<nodeId>-output-<outputId>`. |
+| Using `element-exists` with short `timeout` (e.g. 1000) and `throwError: true` to verify page transitions | If the network is slightly slow, it throws `element-not-found` instantly, causing flaky workflows | Always set `timeout` to an adequate value (e.g. 5000) for network-dependent actions. If using it as a condition check, use `onError: { enable: true, toDo: "fallback" }` instead of `throwError: true` and route the fallback output! |
+
+
+---
+---
+name: automa-workflow-review
+description: Detailed review checklist for an Automa Workflow draft
+---
+
+# Review Checklist
+
+When reviewing a Workflow (or before completing the initialization), the Agent must self-check against the following criteria:
+
+1. **Structure Check**: Are the nodes logical for the business requirement? Do not enforce a loop if it is not truly necessary (a one-time task does not need a loop block).
+2. **Logic Check**: Are the edges following the correct flow? Are the conditions/webhook branches fully connected?
+3. **Documentation Check**: Does every node/edge have a detailed `description`/`label`?
+3.1. **Package Edge Check**: If using `BlockPackage`, are the handles correctly mapped to the embedded package's `inputs` and `outputs` IDs (e.g., `<nodeId>-input-<inputId>`) instead of generic `-input-1`?
+3.2. **Execute Workflow Context Check**: When using `execute-workflow`, you MUST inspect the target workflow's JSON to determine if it relies on `globalData` (e.g., `{{globalData.startUrl}}`) or `variables` (e.g., `{{variables.team_id}}`). Then, explicitly pass the correct context using `insertAllGlobalData: true` or `insertAllVars: true` in the block data. NEVER hallucinate or hardcode values inside the block's `globalData` string unless explicitly required.
+4. **Reusability Check**: Are all inputs fully declared in `trigger.parameters`? Absolutely no hardcoding.
+5. **Redundancy Check**: Do not add `element-exists` before `element-scroll`, `forms`, `event-click` — those blocks already have `waitForSelector: true` to self-check the element. `element-exists` is only used to **branch logic** (e.g., element exists → do A, does not exist → do B).
+6. **Selector Check**: Prioritize XPath, inspect actual DOM, do not guess DOM (read `dom-selection.md`). Mọi selector như `//input[@type='password']` nếu tự đoán mà không có HTML thực tế đều bị coi là lỗi nghiêm trọng. Phải yêu cầu user cung cấp HTML hoặc Selector chính xác nếu chưa có!
+---
+name: automa-anti-patterns
+description: Common mistakes when creating Automa workflows
+---
+
+# Common Mistakes / Anti-patterns
+
+When building Automa workflows, strictly avoid the following mistakes:
+
+| Mistake | Why it is wrong | Correct approach |
+|---------|-----------------|------------------|
+| Leaving edge `label` empty | Agent/reader cannot understand the flow | Always write a label: `"Finished filling → submit"` |
+| Generic node `description`: `"Open tab"` | Unclear what this node does in the business logic | `"Open login tab {{variables.url}} to start logging in"` |
+| Hardcode password in node | Exposes information, cannot be reused | Declare in `trigger.parameters`, use `{{variables.password}}` |
+| Adding `element-exists` before `event-click` | The `event-click` block already has `waitForSelector` to self-check | Only use `element-exists` when needing to **branch** (exists → A, does not exist → B) |
+| Guessed selector: `input.emailll` | Actual DOM often differs from expectation | Inspect actual DOM, prioritize XPath |
+| Conditions only have 1 output branch | Errors are unhandled, workflow hangs | Always connect both output-1 (true) and output-2 (false) |
+| `new-tab` without `waitTabLoaded: true` | Subsequent blocks run when the page hasn't loaded → fail | Always set `"waitTabLoaded": true` |
+| `delay.time` is string `"1000"` | Engine might not parse it correctly | Must always be a number: `1000` |
+| `drawflow` is a string (copied from export file) | Newly created workflows cannot load | When creating new, `drawflow` is an **object** `{ nodes, edges }` |
+| Omitting standard UI fields like `markEl`, `events` | Omitting "optional" fields in `forms`, `get-text` breaks engine compatibility | Refer to `schemas/automa.schema.json` or verified vault files for the full exact block payload structure. Do NOT omit any required/optional keys! |
+| Connecting generic edges to `BlockPackage` nodes (`node-input-1`) | The wires will connect to the visual boundary (top/bottom) instead of the actual package ports (`start`/`end`), causing the flow to break | Always inspect the `inputs` and `outputs` arrays of the embedded Package JSON and use their exact `id`s for the handles: e.g., `<nodeId>-input-<inputId>` and `<nodeId>-output-<outputId>`. |
+| Using `element-exists` with short `timeout` (e.g. 1000) and `throwError: true` to verify page transitions | If the network is slightly slow, it throws `element-not-found` instantly, causing flaky workflows | Always set `timeout` to an adequate value (e.g. 5000) for network-dependent actions. If using it as a condition check, use `onError: { enable: true, toDo: "fallback" }` instead of `throwError: true` and route the fallback output! |
+
+
+---
+---
+name: automa-workflow-review
+description: Detailed review checklist for an Automa Workflow draft
+---
+
+# Review Checklist
+
+When reviewing a Workflow (or before completing the initialization), the Agent must self-check against the following criteria:
+
+1. **Structure Check**: Are the nodes logical for the business requirement? Do not enforce a loop if it is not truly necessary (a one-time task does not need a loop block).
+2. **Logic Check**: Are the edges following the correct flow? Are the conditions/webhook branches fully connected?
+3. **Documentation Check**: Does every node/edge have a detailed `description`/`label`?
+3.1. **Package Edge Check**: If using `BlockPackage`, are the handles correctly mapped to the embedded package's `inputs` and `outputs` IDs (e.g., `<nodeId>-input-<inputId>`) instead of generic `-input-1`?
+3.2. **Execute Workflow Context Check**: When using `execute-workflow`, you MUST inspect the target workflow's JSON to determine if it relies on `globalData` (e.g., `{{globalData.startUrl}}`) or `variables` (e.g., `{{variables.team_id}}`). Then, explicitly pass the correct context using `insertAllGlobalData: true` or `insertAllVars: true` in the block data. NEVER hallucinate or hardcode values inside the block's `globalData` string unless explicitly required.
+4. **Reusability Check**: Are all inputs fully declared in `trigger.parameters`? Absolutely no hardcoding.
+5. **Redundancy Check**: Do not add `element-exists` before `element-scroll`, `forms`, `event-click` — those blocks already have `waitForSelector: true` to self-check the element. `element-exists` is only used to **branch logic** (e.g., element exists → do A, does not exist → do B).
+6. **Selector Check**: Prioritize XPath, inspect actual DOM, do not guess DOM (read `dom-selection.md`). Mọi selector như `//input[@type='password']` nếu tự đoán mà không có HTML thực tế đều bị coi là lỗi nghiêm trọng. Phải yêu cầu user cung cấp HTML hoặc Selector chính xác nếu chưa có!
+7. **Condition Check**: `conditions` must always have both output branches (true + false). Do not miss the fallback.
+8. **Resiliency & Self-Healing Check**: Does the workflow anticipate failures?
+   - Are `onError` objects (with `toDo: "fallback"`) explicitly defined for critical network or DOM operations (and connected to a recovery block)?
+   - Are `waitForSelector` and safe `waitSelectorTimeout` (e.g., 5000ms+) configured for dynamic elements?
+   - If using `conditions`, are `retryConditions`, `retryCount`, and `retryTimeout` appropriately configured to poll for async events rather than failing instantly?
+   - Do `javascript-code` blocks wrap risky parsing in `try...catch` and exit via `automaNextBlock({ $error: true })`?
+9. **Automated Linter Check (Mandatory Gate)**: The workflow MUST pass the static linter. Run `node <skillPath>/scripts/lint_automa.js <target_json_file>` to execute the linter and verify rules.
+   The linter statically validates:
+   - Node Schema Integrity: Checks each block's properties against `automa.schema.json`.
+   - Variable Declarations: Ensures any interpolated variable `{{variables.varName}}` or javascript-referenced variable `automaRefData('variables', 'varName')` is declared in either `trigger.parameters` or the project's global/database variables. Undeclared variables will result in lint errors.
+
+
+---
+# Single Node Generation Rule
+
+**Trigger:** When the user explicitly asks to design, generate, or fix a SINGLE node (e.g., "Thiết kế cho tôi node click-element", "Cho tôi 1 node xử lý tab").
+
+## Core Behavior
+
+1. **Do not ask for full workflow requirements:** If the user asks for a single node, assume they are building the workflow themselves on the Automa canvas and just need a quick copy-paste snippet for a specific functionality.
+2. **Output Format:**
+   - Output the exact JSON structure for that node wrapped inside a JSON array (because Automa's clipboard format for nodes is an array of objects).
+   - Example format:
+     ```json
+     [
+       {
+         "id": "random-uuid-or-descriptive-id",
+         "label": "name-of-the-block",
+         "type": "BlockBasic",
+         "position": { "x": 0, "y": 0 },
+         "data": { ... }
+       }
+     ]
+     ```
+3. **Data Accuracy:** Always refer to `assets/block-examples.json` to ensure the `data` object has all the required fields for that specific block type.
+4. **Brief Explanation:** After providing the JSON, briefly explain 1-2 key fields (like `selector` or `onError`) so the user knows what to tweak if needed. Do not output a long tutorial unless requested.
+
+
+---
+
+# Part 2: DOM Selection & SPA Interaction
+
+# DOM Selection / XPath Guidelines
+
+## Rules
+
+- **Prioritize XPath** — more accurate, supports text, position, complex relationships
+- If the selector is clean (has `id`, `data-testid`, `name`) → use CSS for brevity
+- **Must be unique** — uniquely identifies 1 element
+- **No guessing** — if it cannot be inspected, report back immediately
+
+---
+
+## How to inspect
+
+1. `F12` → `Ctrl+Shift+C` → click the element
+2. Copy: Right-click in Elements → **Copy → Copy XPath**
+3. Verify in Console:
+```js
+$x("//*[@id='root']/div[2]/form/input[1]")
+```
+
+---
+
+## When to use XPath / CSS?
+
+| Situation | Use | Example |
+|-----------|-----|---------|
+| Has `id`, `data-testid`, `name` | CSS | `#username`, `[data-testid="btn"]` |
+| Find by **text** | XPath | `//button[contains(text(),'Login')]` |
+| Find by **position** | XPath | `(//div[@class='item'])[3]` |
+| Attribute contains dynamic string | XPath | `//a[starts-with(@href, '/product/')]` |
+| Distant parent-child relationship | XPath | `//form[@id='login']//input[@type='submit']` |
+| Stable class | CSS | `.btn-primary` |
+| Volatile class | XPath | `//*[contains(@class, 'btn') and contains(@class, 'primary')]` |
+
+---
+
+## Unique XPath Strategies
+
+### Level 1: Parent ID + tag + attribute
+```xpath
+//*[@id='login-form']//input[@type='email']
+//form[@id='search']//button[@type='submit']
+```
+
+### Level 2: Stable attribute
+```xpath
+//button[@data-testid='submit']
+//input[@name='email']
+//a[@href='/dashboard']
+```
+
+### Level 3: Text content
+```xpath
+//button[text()='Login']
+//span[contains(text(),'Cart')]
+```
+
+### Level 4: Class + position
+```xpath
+(//div[@class='product-item'])[1]//a
+//ul[@class='nav']/li[3]/a
+```
+
+### Level 5: Role / aria
+```xpath
+//*[@role='dialog']//button[@aria-label='Close']
+```
+
+---
+
+## Quick Validation
+
+```js
+// CSS — must return 1 element, not null
+document.querySelector('#my-id')
+
+// XPath — must return 1 element
+$x("//button[contains(text(),'Login')]")[0]
+```
+
+---
+
+## How to report errors properly
+
+If the actual DOM cannot be inspected:
+
+> "Cannot determine the selector — need access to the page to inspect the DOM. Recommend using interaction-block or parameter-prompt for the user to input manually."
+
+Always enable `waitForSelector: true` + `waitSelectorTimeout: 5000` on DOM blocks.
+
+---
+# Interaction with Ant Design Vue (UI Automation)
+
+When creating or fixing Automa workflows that interact with modern SPA frameworks (especially Vue.js + Ant Design Vue), agents must apply specific patterns. Native browser methods like `element.click()` or `element.value = 'abc'` frequently fail or get ignored by the Virtual DOM event listeners.
+
+## 1. The `simulateClick` Pattern
+
+Ant Design Vue buttons and UI components often bind listeners to `mousedown` or `pointerdown` rather than standard `click`. Always use the following `simulateClick` pattern in `javascript-code` blocks:
+
+```javascript
+const simulateClick = (element) => {
+  if (!element) return;
+  element.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true, view: window }));
+  element.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true, view: window }));
+  element.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, cancelable: true, view: window }));
+  element.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true, view: window }));
+  element.click();
+};
+```
+
+**Pro-tip for Buttons:** If a button contains an inner `span` (e.g., `<button><span>Move</span></button>`), Vue sometimes registers the click on the `span`. If a click fails, ensure the button is scrolled into view and click BOTH the button and the inner `span`:
+```javascript
+btn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+setTimeout(() => {
+  simulateClick(btn);
+  const innerSpan = btn.querySelector('span');
+  if (innerSpan) simulateClick(innerSpan);
+}, 200);
+```
+
+## 2. The `simulateInput` Pattern
+
+When you need to force a value into an `input` and ensure Vue reacts to it (e.g. updating the `v-model`), bypassing the framework's property interception is necessary:
+
+```javascript
+const simulateInput = (element, text) => {
+  element.focus();
+  // Bypass framework setter overrides
+  const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+  if (setter) setter.call(element, text);
+  else element.value = text;
+  
+  // Force framework reaction
+  element.dispatchEvent(new Event('input', { bubbles: true }));
+  element.dispatchEvent(new Event('change', { bubbles: true })); 
+};
+```
+
+## 3. Working with Ant Design Select (`ant-select`)
+
+Never try to interact with hidden, native `<select>` tags in Ant Design. You must interact with the complex DOM structure:
+
+1. Click the selector box to open the dropdown.
+2. Wait for the popup animation.
+3. Fill the hidden input (if searchable).
+4. Find the correct `.ant-select-item-option` from the visible dropdown.
+5. Click it.
+
+```javascript
+// 1. Open Dropdown
+const teamSelector = document.querySelector('.ant-select-selector');
+const teamInput = document.querySelector('.ant-select-selection-search-input'); // or just 'input'
+if (teamSelector && teamInput) {
+  simulateClick(teamSelector);
+  await sleep(1000); // Wait for popup animation
+  
+  // 2. Search
+  simulateInput(teamInput, targetValue);
+  await sleep(1000); // Wait for filter
+  
+  // 3. Select Option
+  const options = Array.from(document.querySelectorAll('.ant-select-dropdown:not(.ant-select-dropdown-hidden) .ant-select-item-option'));
+  const match = options.find(o => o.innerText.toLowerCase().includes(targetValue.toLowerCase())) || options[0];
+  if (match) { 
+    simulateClick(match); 
+    await sleep(500); 
+  }
+}
+```
+
+## 4. Working with Ant Design DatePicker (`ant-picker`)
+
+To pick "Today":
+```javascript
+const dateInput = document.querySelector('.ant-picker-input input');
+if (dateInput) {
+  simulateClick(dateInput);
+  await sleep(1000); // Wait for popup
+  
+  const todayBtn = document.querySelector('.ant-picker-today-btn');
+  if (todayBtn) { 
+    simulateClick(todayBtn); 
+    await sleep(500); 
+  } else {
+    // Fallback: Type directly
+    const today = new Date().toISOString().split('T')[0];
+    simulateInput(dateInput, today);
+    simulateClick(document.body); // Click outside to close
+  }
+}
+```
+
+## 5. Drawers and Modals Animation Timing
+
+If a workflow involves opening an `ant-drawer` or `ant-modal` and taking an action inside it (or capturing an HTML snapshot), **never** execute immediately.
+You must insert a `delay` block (or `await sleep(...)`) of **at least 1500ms - 2500ms** after clicking the trigger button to ensure the DOM tree has fully mounted and transitions are complete before attempting to interact with the modal's contents.
+
+
+---
+
+# Part 3: Block Usage & Advanced Logic
+
 # Detailed Input / Output for Node Blocks
 
 Below are the details of the blocks in Automa.
@@ -743,3 +1085,227 @@ For `conditions` and `webhook` blocks, there can be multiple output ports (true/
 ## Sample JSON Structure of a Node Block
 
 > _(Reference the exact JSON structure in the automa.schema.json file)_
+
+
+---
+---
+name: automa-advanced-blocks
+description: Guide on Advanced Blocks including Loops, Data Tables, Google Sheets, and Conditions
+---
+
+# Advanced Blocks: Loops, Tables & Conditions
+
+To build resilient, scalable data extraction pipelines in Automa, you must master branching (`conditions`), iteration (`loop-data`, `loop-elements`), and data management (`insert-data`, `google-sheets`).
+
+---
+
+## 1. Branching with Conditions (`conditions`)
+
+The `conditions` block dynamically routes the workflow based on logical expressions. It evaluates an array of branches (e.g., `output-1`, `output-2`) from top to bottom.
+
+### Core Mechanics
+*   **First Match Wins**: The engine stops evaluating at the first branch that evaluates to `true` and routes the execution specifically to that block's output port.
+*   **Logical AND**: Inside a single branch, you can have multiple items (e.g., `value` and `compare`). They are evaluated sequentially and all must pass.
+*   **The Fallback Edge**: If NO conditions are met, Automa routes to the `fallback` output ID. **CRITICAL: You must always connect a block to the fallback node.** If there is no connection on the fallback port, the workflow will reach a dead-end and silently hang or crash.
+
+### Best Practices
+*   **Retry Logic**: For asynchronous checks (e.g., waiting for a dynamically rendered element to exist), utilize `retryConditions: true`, `retryCount`, and `retryTimeout` rather than instantly failing over to the fallback.
+*   **Type Coercion**: Ensure you compare apples to apples by using type casting prefixes (e.g., `"number::100"`) when evaluating variables.
+
+---
+
+## 2. Iteration (Loops)
+
+Automa manages loops through a triad of blocks, managed via a unique `loopId`. 
+
+### `loop-data` & `loop-elements`
+*   **`loop-data`**: Iterates through structured arrays (JSON data, numbers, internal table, Google Sheets rows).
+*   **`loop-elements`**: Iterates through a physical NodeList of DOM elements on the active tab. It natively supports lazy-loading (pagination) via the `loadMoreAction` (scroll/click) property.
+
+### `loop-breakpoint`
+*   **Mandatory Closing Block**: Every loop branch must end with a `loop-breakpoint` block that references the same `loopId`. 
+*   This block signals the engine to either `continue` (increment index and loop again) or `break` (exit the loop and clear state). 
+*   **Flow Structure**: You must connect an edge *from* the `loop-breakpoint` *back* to the original `loop-data`/`loop-elements` block to physically close the loop.
+
+### Interpolation Variables
+During a loop, the engine injects state variables:
+*   `{{loopData.myLoop.data}}`: Retrieves the raw value of the current iteration.
+*   `{{loopData.myLoop.$index}}`: Retrieves the current iteration index (0-based).
+*   `{{loopData@myLoop}}`: A special syntax used in CSS selectors during `loop-elements`. Instead of querying the whole document (`document.querySelector`), this restricts the selector context strictly to the current DOM element being iterated over (e.g., `{{loopData@myLoop}} > h2.title`).
+
+---
+
+## 3. Data Extraction Pipeline (Tables & Sheets)
+
+Automa uses an internal **Table (Data Columns)** as a temporary database for the lifecycle of a workflow execution. 
+
+### Inserting Data
+1.  **Automatic Extraction**: Blocks like `get-text` or `attribute-value` have a `saveData: true` parameter. When enabled, you specify a `dataColumn` name, and the scraped value is instantly appended to the current row.
+2.  **Explicit Insertion**: The `insert-data` block allows you to construct a completely custom row (using `{ column, value }` pairs) and append it to the table manually.
+
+### Data Cleanup
+If you need to sanitize data (e.g., stripping '$' signs or whitespace) before inserting:
+*   Use `get-text` to assign the raw text to a variable (`assignVariable: true`).
+*   Format the variable using `regex-variable` or `javascript-code`.
+*   Finally, use `insert-data` to save the clean variable into the Table.
+
+### Exporting & Syncing
+*   **`export-data`**: Exports the internal table to disk (CSV, JSON). Enables `addBOMHeader` for Excel compatibility.
+*   **`google-sheets`**: Appends or overwrites the internal table (`data-columns`) directly to a remote spreadsheet using `insertDataOption: "INSERT_ROWS"`.
+
+### 🚨 Critical Anti-Pattern: Network Calls Inside Loops
+**NEVER** place an `export-data` or `google-sheets` block *inside* your extraction loop. 
+*   Doing so will fire an API call for every single row you scrape, leading to heavy rate-limiting and incredibly slow execution.
+*   **Correct Pattern**: Use the loop exclusively to scrape and populate the internal Table (`insert-data`). Connect the `google-sheets` block *after* the `loop-breakpoint` exits, allowing you to bulk-upload the entire table array in one single, fast API request.
+
+---
+
+## 4. JavaScript Transformations (`javascript-code`)
+
+The `javascript-code` block is a powerful escape hatch for when standard blocks (like `regex-variable` or `data-mapping`) aren't flexible enough. It executes within a secure Sandbox environment but provides specialized helper functions to interact with the workflow state.
+
+### Built-in Helper Functions
+*   `automaRefData(keyword, path)`: Extracts data from the workflow's state. 
+    *   *Example*: `const myVar = automaRefData('variables', 'myVar');`
+    *   *Example*: `const myConst = automaRefData('globalData', 'myConst');`
+*   `automaSetVariable(name, value)`: Dynamically sets or overwrites a workflow variable.
+    *   *Example*: `automaSetVariable('cleanPrice', 1500);`
+*   `automaNextBlock(data, insert)`: Advances the workflow to the next block. 
+    *   If you omit this, Automa automatically appends `automaNextBlock()` to the end of your script.
+    *   *Tip*: You can pass an object to insert it directly into the table, e.g., `automaNextBlock({ price: 1500 }, true)`.
+
+### Common Use-Case: Data Formatting
+When scraping messy text, use JavaScript to clean it before inserting it into your table or passing it to an API.
+```javascript
+// 1. Retrieve the raw scraped variable
+const rawText = automaRefData('variables', 'scraped_text');
+
+// 2. Transform the data (e.g., extracting numbers)
+const sanitized = rawText.replace(/[^0-9.]/g, '');
+
+// 3. Save it back to a new variable
+automaSetVariable('clean_price', sanitized);
+
+// 4. Continue workflow
+automaNextBlock();
+```
+
+### Interpolation (`{{ }}`) inside JS
+While you can use `{{variables.xx}}` inside the JS code block, it's safer and cleaner to use `automaRefData()` to prevent syntax errors if the variable contains unexpected quotes or line breaks. Save string interpolation for UI blocks (like URLs or CSS Selectors).
+
+
+---
+
+# Part 4: Self-Healing & Resilience
+
+---
+name: automa-self-healing
+description: Design patterns and best practices for building resilient, self-healing workflows
+---
+
+# Building Self-Healing Workflows
+
+A production-grade Automa workflow must anticipate and gracefully handle failures (e.g., dynamic UI changes, missing DOM elements, network latency, or bad payloads) without crashing the entire automation pipeline. 
+
+This guide details the core mechanisms available in Automa to build resilient, **self-healing** workflows.
+
+---
+
+## 1. Block-Level Error Handling (`onError`)
+
+Every executable block in Automa contains an `onError` property. By default, it may be omitted. To build a self-healing pipeline, you must override this behavior on critical or risky blocks (like web scraping or API calls) by providing an `onError` object.
+
+**CRITICAL RULE**: `onError` MUST be an object. NEVER use a string like `"onError": "fallback"`. Using a string will cause the UI to crash and the fallback port will disappear.
+
+### Correct `onError` Schema:
+```json
+"onError": {
+  "enable": true,
+  "toDo": "fallback",
+  "retry": false,
+  "retryTimes": 1,
+  "retryInterval": 2,
+  "insertData": false
+}
+```
+
+### Available `toDo` Strategies:
+*   `"error"` (Default): The workflow fails and stops immediately. Use this only for fatal errors where continuing would cause data corruption.
+*   `"continue"`: Ignores the error and proceeds to the next block as if nothing happened.
+    *   *Use Case*: Clicking a "Close Ad" popup button. If the ad isn't there, it errors out, but the workflow should just continue.
+*   `"fallback"`: Routes execution to a secondary branch specifically designed to handle the error.
+    *   *Use Case*: If `get-text` fails to find a price element, the `fallback` edge routes to a `javascript-code` block that manually inserts `null` into the data table.
+
+### How to use `fallback` routing:
+When a block is configured with the `onError` object and `"toDo": "fallback"`, a special output node (the black handle on the bottom) becomes active. You **must** connect this handle to your recovery block using an edge targeting `[sourceNode.id]-output-fallback`.
+
+---
+
+## 2. Defensive DOM Operations (Wait & Verify)
+
+Web pages are inherently unpredictable. A selector that worked yesterday might load 3 seconds slower today due to network latency.
+
+### The Wait For Selector Pattern
+**Never assume an element exists immediately.** On blocks that interact with the page (`event-click`, `get-text`, `forms`), always:
+1.  Set `waitForSelector: true`
+2.  Set a safe `waitSelectorTimeout` (e.g., `5000` to `10000` milliseconds).
+
+### The "Check First" Pattern (`element-exists`)
+If a workflow needs to perform a massive branch of logic depending on the UI state (e.g., "Is the user logged in or logged out?"):
+1.  Use the `element-exists` block to check for the presence of the User Avatar.
+2.  Route the `fallback` output to the Login Sub-workflow.
+3.  Route the primary output to the Main Dashboard logic.
+
+---
+
+## 3. Conditional Fallbacks & Polling (`conditions`)
+
+When checking the status of variables or the DOM, the `conditions` block acts as the traffic controller.
+
+### Preventing Dead-Ends
+A massive anti-pattern in Automa is failing to connect the `fallback` port on a `conditions` block. If no conditions match and `fallback` is disconnected, the workflow enters a "Dead-End" and hangs. **Always route the fallback**, even if it just points to a block that logs a safe warning.
+
+### Retry Logic (Polling)
+If a condition evaluates variables populated by a slow asynchronous webhook or page load, don't immediately route to fallback. 
+*   Enable `retryConditions: true`.
+*   Configure `retryCount` (e.g., 5).
+*   Configure `retryTimeout` (e.g., 2000ms).
+This forces the engine to repeatedly test the condition before finally giving up and taking the fallback path, effectively creating an auto-polling self-healing loop.
+
+---
+
+## 4. Sub-Workflow Recovery (`execute-workflow`)
+
+For enterprise pipelines, failures should be logged and escalated rather than silently ignored.
+
+If a critical pipeline (e.g., scraping a competitor's pricing) fails on the core logic:
+1.  Set the parent block's `onError` to `"fallback"`.
+2.  Route the fallback edge into an `execute-workflow` block.
+3.  Have the `execute-workflow` block call a dedicated **"Alerting Workflow"**.
+4.  Pass the error details into the Alerting Workflow via `Insert Variables` (e.g., `automaSetVariable('error_log', 'Failed on block X')`).
+5.  The Alerting Workflow triggers a Slack Webhook or Email to notify the engineering team, while the parent workflow safely halts.
+
+---
+
+## 5. JavaScript Sandbox Recovery
+
+When writing custom `javascript-code`, wrap risky logic in a `try...catch` block. If parsing JSON or manipulating strings fails, catch the error and route cleanly using `automaNextBlock`.
+
+```javascript
+try {
+  const rawData = automaRefData('variables', 'api_response');
+  const parsed = JSON.parse(rawData);
+  automaSetVariable('extractedId', parsed.data.id);
+  
+  // Success, continue normally
+  automaNextBlock(); 
+} catch (error) {
+  // Graceful degradation: Log the error and move to the fallback port
+  console.error("Failed to parse API response", error);
+  automaNextBlock({ $error: true, message: error.message });
+}
+```
+*Note: Passing `{ $error: true }` to `automaNextBlock` forces the JS block to exit via its `fallback` connection.*
+
+
+---

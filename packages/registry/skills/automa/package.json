@@ -1,0 +1,13 @@
+{
+  "name": "@tuquet/skill-automa",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "lint": "node scripts/lint.js"
+  },
+  "devDependencies": {
+    "ajv": "^8.12.0",
+    "ajv-formats": "^3.0.1",
+    "ajv-errors": "^3.0.0"
+  }
+}

@@ -19,7 +19,8 @@
       "type": "string"
     },
     "icon": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^(mdiPackageVariantClosed|riGlobalLine|riFileTextLine|riEqualizerLine|riTimerLine|riCalendarLine|riFlashlightLine|riLightbulbFlashLine|riDatabase2Line|riWindowLine|riCursorLine|riDownloadLine|riCommandLine|https?://.*)$"
     },
     "table": {
       "type": "array"
@@ -2770,7 +2771,8 @@
                           "type": "array"
                         },
                         "icon": {
-                          "type": "string"
+                          "type": "string",
+                          "pattern": "^(mdiPackageVariantClosed|riGlobalLine|riFileTextLine|riEqualizerLine|riTimerLine|riCalendarLine|riFlashlightLine|riLightbulbFlashLine|riDatabase2Line|riWindowLine|riCursorLine|riDownloadLine|riCommandLine|https?://.*)$"
                         },
                         "name": {
                           "type": "string"
@@ -2895,6 +2897,1338 @@
                     }
                   }
                 }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "enum": [
+                        "get-text",
+                        "attribute-value",
+                        "forms",
+                        "take-screenshot",
+                        "ai-workflow",
+                        "google-sheets",
+                        "google-sheets-drive",
+                        "webhook",
+                        "data-mapping",
+                        "sort-data",
+                        "save-assets",
+                        "clipboard",
+                        "log-data",
+                        "tab-url",
+                        "cookie",
+                        "handle-download"
+                      ]
+                    },
+                    "data": {
+                      "properties": {
+                        "assignVariable": {
+                          "const": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "properties": {
+                        "variableName": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "variableName"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "If assignVariable is true, variableName is required and cannot be empty."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "enum": [
+                        "get-text",
+                        "attribute-value",
+                        "forms",
+                        "ai-workflow",
+                        "google-sheets",
+                        "google-sheets-drive",
+                        "webhook",
+                        "data-mapping",
+                        "sort-data",
+                        "save-assets",
+                        "clipboard",
+                        "log-data",
+                        "tab-url",
+                        "cookie",
+                        "handle-download"
+                      ]
+                    },
+                    "data": {
+                      "properties": {
+                        "saveData": {
+                          "const": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "properties": {
+                        "dataColumn": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "dataColumn"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "If saveData is true, dataColumn is required and cannot be empty."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "take-screenshot"
+                    },
+                    "data": {
+                      "properties": {
+                        "saveToColumn": {
+                          "const": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "properties": {
+                        "dataColumn": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "dataColumn"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "If saveToColumn is true, dataColumn is required."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "enum": [
+                        "forms",
+                        "element-scroll",
+                        "hover-element",
+                        "trigger-event",
+                        "upload-file",
+                        "loop-elements",
+                        "get-text",
+                        "attribute-value",
+                        "link",
+                        "create-element"
+                      ]
+                    },
+                    "data": {
+                      "properties": {
+                        "waitForSelector": {
+                          "const": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "waitSelectorTimeout"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "If waitForSelector is true, waitSelectorTimeout is required."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "trigger"
+                    },
+                    "data": {
+                      "properties": {
+                        "type": {
+                          "const": "interval"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "interval"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "Interval trigger requires 'interval'."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "trigger"
+                    },
+                    "data": {
+                      "properties": {
+                        "type": {
+                          "const": "date"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "date",
+                        "time"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "Date trigger requires 'date' and 'time'."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "trigger"
+                    },
+                    "data": {
+                      "properties": {
+                        "type": {
+                          "const": "specific-day"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "days",
+                        "time"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "Specific day trigger requires 'days' and 'time'."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "trigger"
+                    },
+                    "data": {
+                      "properties": {
+                        "type": {
+                          "const": "keyboard-shortcut"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "shortcut"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "Shortcut trigger requires 'shortcut'."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "trigger"
+                    },
+                    "data": {
+                      "properties": {
+                        "type": {
+                          "const": "context-menu"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "contextMenuName",
+                        "contextTypes"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "Context menu trigger requires 'contextMenuName' and 'contextTypes'."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "conditions"
+                    },
+                    "data": {
+                      "properties": {
+                        "retryConditions": {
+                          "const": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "retryCount",
+                        "retryTimeout"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "retryConditions requires retryCount and retryTimeout."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "workflow-state"
+                    },
+                    "data": {
+                      "properties": {
+                        "throwError": {
+                          "const": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "errorMessage"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "throwError requires errorMessage."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "workflow-state"
+                    },
+                    "data": {
+                      "properties": {
+                        "type": {
+                          "const": "stop"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "workflowsToStop"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "type 'stop' requires workflowsToStop."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "delay"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "time"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "Delay block requires 'time'."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "new-tab"
+                    },
+                    "data": {
+                      "properties": {
+                        "customUserAgent": {
+                          "const": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "userAgent"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "customUserAgent requires userAgent."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "switch-tab"
+                    },
+                    "data": {
+                      "properties": {
+                        "findTabBy": {
+                          "const": "match-pattern"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "matchPattern"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "findTabBy match-pattern requires matchPattern."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "switch-tab"
+                    },
+                    "data": {
+                      "properties": {
+                        "findTabBy": {
+                          "const": "url"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "url"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "findTabBy url requires url."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "switch-tab"
+                    },
+                    "data": {
+                      "properties": {
+                        "findTabBy": {
+                          "const": "title"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "tabTitle"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "findTabBy title requires tabTitle."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "switch-tab"
+                    },
+                    "data": {
+                      "properties": {
+                        "findTabBy": {
+                          "const": "index"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "tabIndex"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "findTabBy index requires tabIndex."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "proxy"
+                    },
+                    "data": {
+                      "properties": {
+                        "clearProxy": {
+                          "const": false
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "host",
+                        "port"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "If clearProxy is false, host and port are required."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "loop-data"
+                    },
+                    "data": {
+                      "properties": {
+                        "loopThrough": {
+                          "const": "google-sheets"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "referenceKey"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "loopThrough google-sheets requires referenceKey."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "loop-data"
+                    },
+                    "data": {
+                      "properties": {
+                        "loopThrough": {
+                          "const": "variable"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "variableName"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "loopThrough variable requires variableName."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "loop-data"
+                    },
+                    "data": {
+                      "properties": {
+                        "loopThrough": {
+                          "const": "elements"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "elementSelector"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "loopThrough elements requires elementSelector."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "loop-data"
+                    },
+                    "data": {
+                      "properties": {
+                        "loopThrough": {
+                          "const": "numbers"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "fromNumber",
+                        "toNumber"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "loopThrough numbers requires fromNumber and toNumber."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "loop-data"
+                    },
+                    "data": {
+                      "properties": {
+                        "loopThrough": {
+                          "pattern": "^(?!numbers$).*$"
+                        },
+                        "resumeLastWorkflow": {
+                          "const": false
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "startIndex",
+                        "maxLoop"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "loop-data requires startIndex and maxLoop when not looping numbers and resumeLastWorkflow is false."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "google-sheets"
+                    },
+                    "data": {
+                      "properties": {
+                        "type": {
+                          "const": "update"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "dataFrom",
+                        "valueInputOption"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "type update requires dataFrom and valueInputOption."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "google-sheets"
+                    },
+                    "data": {
+                      "properties": {
+                        "type": {
+                          "const": "append"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "dataFrom",
+                        "valueInputOption"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "type append requires dataFrom and valueInputOption."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "google-sheets"
+                    },
+                    "data": {
+                      "properties": {
+                        "dataFrom": {
+                          "const": "data-columns"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "keysAsFirstRow"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "dataFrom data-columns requires keysAsFirstRow."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "cookie"
+                    },
+                    "data": {
+                      "properties": {
+                        "type": {
+                          "const": "set"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "value",
+                        "domain",
+                        "path",
+                        "expirationDate"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "cookie type set requires value, domain, path, expirationDate."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "browser-event"
+                    },
+                    "data": {
+                      "properties": {
+                        "eventName": {
+                          "const": "tab:loaded"
+                        },
+                        "activeTabLoaded": {
+                          "const": false
+                        },
+                        "matchPattern": {
+                          "const": ""
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "tabUrl"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "browser-event requires tabUrl or matchPattern when activeTabLoaded is false."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "browser-event"
+                    },
+                    "data": {
+                      "properties": {
+                        "eventName": {
+                          "const": "tab:loaded"
+                        },
+                        "activeTabLoaded": {
+                          "const": false
+                        },
+                        "tabUrl": {
+                          "const": ""
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "matchPattern"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "browser-event requires tabUrl or matchPattern when activeTabLoaded is false."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "export-data"
+                    },
+                    "data": {
+                      "properties": {
+                        "dataToExport": {
+                          "const": "google-sheets"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "refKey"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "dataToExport google-sheets requires refKey."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "export-data"
+                    },
+                    "data": {
+                      "properties": {
+                        "dataToExport": {
+                          "const": "variable"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "variableName"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "dataToExport variable requires variableName."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "switch-to"
+                    },
+                    "data": {
+                      "properties": {
+                        "windowType": {
+                          "const": "iframe"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "selector"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "windowType 'iframe' requires selector."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "element-scroll"
+                    },
+                    "data": {
+                      "properties": {
+                        "scrollIntoView": {
+                          "const": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "selector"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "scrollIntoView requires selector."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "take-screenshot"
+                    },
+                    "data": {
+                      "properties": {
+                        "saveToComputer": {
+                          "const": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "fileName"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "saveToComputer requires fileName."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "insert-data"
+                    },
+                    "data": {
+                      "properties": {
+                        "isFile": {
+                          "const": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "filePath"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "isFile requires filePath."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "enum": [
+                        "data-mapping",
+                        "sort-data"
+                      ]
+                    },
+                    "data": {
+                      "properties": {
+                        "dataSource": {
+                          "const": "variable"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "varSourceName"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "dataSource 'variable' requires varSourceName."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "sort-data"
+                    },
+                    "data": {
+                      "properties": {
+                        "sortByProperty": {
+                          "const": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "itemProperties"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "sortByProperty requires itemProperties."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "google-sheets-drive"
+                    },
+                    "data": {
+                      "properties": {
+                        "dataFrom": {
+                          "const": "custom"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "customData"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "dataFrom 'custom' requires customData."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "save-assets"
+                    },
+                    "data": {
+                      "properties": {
+                        "type": {
+                          "const": "url"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "url"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "type 'url' requires url."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "note"
+                    },
+                    "data": {
+                      "properties": {
+                        "drawing": {
+                          "const": false
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "note"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "If drawing is false, note text is required."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "slice-variable"
+                    },
+                    "data": {
+                      "properties": {
+                        "startIdxEnabled": {
+                          "const": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "startIndex"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "startIdxEnabled requires startIndex."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "slice-variable"
+                    },
+                    "data": {
+                      "properties": {
+                        "endIdxEnabled": {
+                          "const": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "endIndex"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "endIdxEnabled requires endIndex."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "regex-variable"
+                    },
+                    "data": {
+                      "properties": {
+                        "method": {
+                          "const": "replace"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "replaceVal"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "method 'replace' requires replaceVal."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "cookie"
+                    },
+                    "data": {
+                      "properties": {
+                        "useJson": {
+                          "const": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "jsonCode"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "useJson requires jsonCode."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "handle-download"
+                    },
+                    "data": {
+                      "properties": {
+                        "waitForDownload": {
+                          "const": true
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "timeout"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "waitForDownload requires timeout."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "label": {
+                      "const": "loop-elements"
+                    },
+                    "data": {
+                      "properties": {
+                        "loadMoreAction": {
+                          "const": "click"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "actionElSelector"
+                      ]
+                    }
+                  }
+                },
+                "errorMessage": "loadMoreAction 'click' requires actionElSelector."
+              },
+              {
+                "if": {
+                  "properties": {
+                    "data": {
+                      "properties": {
+                        "selector": {
+                          "pattern": "^\\s*(/|\\./|\\(|\\.\\./)"
+                        }
+                      }
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "properties": {
+                        "findBy": {
+                          "const": "xpath"
+                        }
+                      }
+                    }
+                  }
+                },
+                "errorMessage": "Selector Type Mismatch: Node uses an XPath selector but 'findBy' is not set to 'xpath'."
               }
             ]
           }
