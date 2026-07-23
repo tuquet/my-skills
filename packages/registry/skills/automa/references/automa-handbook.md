@@ -1309,3 +1309,15 @@ try {
 
 
 ---
+
+
+---
+# Unknown Block Investigation Protocol
+
+When asked to manipulate or generate a block that you are unfamiliar with (e.g., 
+ote, proxy, locks-group), **DO NOT GUESS** the JSON structure. You must follow this strict investigation protocol:
+
+1. **Check the Schema (utoma.schema.json)**: Look inside drawflow.properties.nodes.items.allOf. Find the rule matching the block label and inspect 	hen.properties.data.properties.
+2. **Check the Default Tasks (utomaTasks.json)**: This file contains the default templates for all blocks. It is the fastest way to see the baseline structure.
+3. **Check the Linter Source Code (lint_automa.js)**: The linter enforces custom rules not strictly defined in the JSON schema (e.g., forbidding empty strings for description, requiring disableBlock: false). Always read the linter's custom checks.
+4. **Check Vue Flow Core Properties**: Every node must have a 	ype property matching the internal Vue component (e.g., BlockNote). Missing the 	ype property will cause the block to render as a blank fallback node in the UI.
